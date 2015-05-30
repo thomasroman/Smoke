@@ -7,7 +7,7 @@ use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
- * This rule checks if the http status code of a request is less than 400
+ * This rule checks if the http status code of a request is less than 400.
  */
 class SuccessStatusRule implements Rule
 {

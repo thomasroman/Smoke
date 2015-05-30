@@ -2,65 +2,52 @@
 
 namespace whm\Smoke\Http;
 
-class Response
+class Response extends \Ivory\HttpAdapter\Message\Response
 {
-    private $status;
-    private $body;
-    private $duration;
-    private $header;
-    private $request;
-
-    public function __construct($body, $header, $status, $duration = null, Request $request = null)
-    {
-        $this->body = $body;
-        $this->header = $header;
-        $this->status = $status;
-        $this->duration = $duration;
-        $this->request = $request;
-    }
-
-    public function getRequest()
-    {
-        return $this->request;
-    }
+    private $contents;
 
     public function getStatus()
     {
-        return $this->status;
-    }
-
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-    /**
-     * Returns the duration in milliseconds.
-     */
-    public function getDuration()
-    {
-        return $this->duration;
-    }
-
-    public function getHeader($normalized = false)
-    {
-        if ($normalized) {
-            return strtolower(str_replace(' ', '', $this->header));
-        }
-
-        return $this->header;
+        return $this->getStatusCode();
     }
 
     public function getContentType()
     {
-        $header = $this->getHeader(true);
+        $exploded = explode(';', $this->hasHeader('Content-Type') ? $this->getHeader('Content-Type')[0] : null);
 
-        preg_match('/(^|\n)content-type:(.*?)(;|\n|$)/im', $header, $matches);
+        return array_shift($exploded);
+    }
 
-        if (!array_key_exists(2, $matches)) {
-            return false;
-        } else {
-            return preg_replace('/[^A-Za-z0-9\-\/]/', '', $matches[2]);
+    public function getUri()
+    {
+        return (string) $this->getParameter('request')->getUri();
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->getParameter('request');
+    }
+
+    public function getDuration()
+    {
+        return $this->getParameter('duration');
+    }
+
+    public function getBody()
+    {
+        if (!$this->contents) {
+            $contents = parent::getBody()->getContents();
+
+            if (false !== $content = @gzdecode($contents)) {
+                $contents = $content;
+            }
+
+            $this->contents = $contents;
         }
+
+        return $this->contents;
     }
 }
