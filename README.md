@@ -129,7 +129,7 @@ class FooTest implements Rule
 ###Use with config file
 Within your Smoke config file, you may reference your rule like this:
 
-```
+```yaml
 rules:
   MyFooTest:
     class: MyApplication\FooTest
