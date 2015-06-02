@@ -34,7 +34,7 @@ class Document
         $this->findUrls($crawler, $urls, '//script', 'src');
 
         usort($urls, function (Uri $a, Uri $b) {
-            if (!(string) $a || !(string) $b) {
+            if (!(string)$a || !(string)$b) {
                 return 0;
             }
             if (strpos($this->content, (string)$a) === strpos($this->content, (string)$b)) {
@@ -69,7 +69,7 @@ class Document
     private function followableUrl($url)
     {
         if ($urlParts = parse_url($url)) {
-            if (isset($urlParts['scheme']) && !in_array($urlParts['scheme'], ['http','https'], true)) {
+            if (isset($urlParts['scheme']) && !in_array($urlParts['scheme'], ['http', 'https'], true)) {
                 return false;
             }
 
