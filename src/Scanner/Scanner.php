@@ -18,10 +18,13 @@ class Scanner
 
     private $progressBar;
     private $configuration;
+
     /**
      * @var HttpClient
      */
     private $client;
+
+    private $status = 0;
 
     public function __construct(Configuration $config, HttpClient $client, ProgressBar $progressBar = null)
     {
@@ -49,14 +52,12 @@ class Scanner
 
     public function scan()
     {
-        $violations = [];
-
         do {
             $urls = $this->pageContainer->pop($this->configuration->getParallelRequestCount());
             $responses = $this->client->request($urls);
 
             foreach ($responses as $response) {
-                $currentUri = new Uri((string) $response->getUri());
+                $currentUri = new Uri((string)$response->getUri());
 
                 // only extract urls if the content type is text/html
                 if ('text/html' === $response->getContentType()) {
@@ -66,13 +67,21 @@ class Scanner
                 $violation = $this->checkResponse($response);
                 $violation['parent'] = $this->pageContainer->getParent($currentUri);
                 $violation['contentType'] = $response->getContentType();
-                $violations[$response->getUri()] = $violation;
+                $violation['url'] = $response->getUri();
 
+                if ($violation["type"] === self::ERROR) {
+                    $this->status = 1;
+                }
+
+                $this->configuration->getReporter()->process($violation);
                 $this->progressBar->advance();
             }
         } while (count($urls) > 0);
+    }
 
-        return $violations;
+    public function getStatus()
+    {
+        return $this->status;
     }
 
     private function checkResponse(Response $response)

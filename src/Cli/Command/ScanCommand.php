@@ -48,6 +48,8 @@ class ScanCommand extends Command
             $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')));
 
+        $this->initReporter($output, $config);
+
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
         $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
 
@@ -63,21 +65,21 @@ class ScanCommand extends Command
         $progressBar->start();
 
         $scanner = new Scanner($config, new HttpClient(HttpAdapterFactory::guess()), $progressBar);
-        $scanResults = $scanner->scan();
+
+        $scanner->scan();
+
         $progressBar->finish();
+        $config->getReporter()->finish();
 
-        $this->renderResults($scanResults, $output, $config);
-
-        return $this->getStatus($scanResults);
+        return $scanner->getStatus();
     }
 
-    private function renderResults($results, $output, Configuration $config)
+    private function initReporter($output, Configuration $config)
     {
         $reporter = $config->getReporter();
         if (method_exists($reporter, 'setOutput')) {
             $reporter->setOutput($output);
         }
-        $reporter->render($results);
     }
 
     private function getStatus($scanResults)
