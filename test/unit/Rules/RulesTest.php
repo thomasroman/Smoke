@@ -31,7 +31,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
 
         return [
             //HTTP
-            [new Rules\Http\DurationRule(), [1500], '', 200, [], ['duration'=> 1000]],
+            [new Rules\Http\DurationRule(), [1500], '', 200, [], ['duration' => 1000]],
             [new Rules\Http\Header\Cache\ExpiresRule(), [], '', 200, ['Expires' => ['Thu, 19 Nov 2050 08:52:00 GMT']]],
             [new Rules\Http\Header\Cache\MaxAgeRule(), [], '', 200, ['Cache-Control' => ['max-age=200']]],
             [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Cache-Control' => ['max-age=200']]],

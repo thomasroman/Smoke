@@ -132,10 +132,10 @@ class Configuration
     public function isUriAllowed(Uri $uri)
     {
         if (!$this->scanForeignDomains()) {
-            $tlds = explode(".", $uri->getHost());
+            $tlds = explode('.', $uri->getHost());
             $currentTld = array_pop($tlds);
 
-            $tlds = explode(".", $this->startUri->getHost());
+            $tlds = explode('.', $this->startUri->getHost());
             $startTld = array_pop($tlds);
 
             if ($currentTld !== $startTld) {
@@ -144,9 +144,9 @@ class Configuration
         }
 
         foreach ($this->whitelist as $whitelist) {
-            if (preg_match($whitelist, (string)$uri)) {
+            if (preg_match($whitelist, (string) $uri)) {
                 foreach ($this->blacklist as $blacklist) {
-                    if (preg_match($blacklist, (string)$uri)) {
+                    if (preg_match($blacklist, (string) $uri)) {
                         return false;
                     }
                 }
