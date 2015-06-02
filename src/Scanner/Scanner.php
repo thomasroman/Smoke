@@ -42,7 +42,11 @@ class Scanner
 
         foreach ($referencedUris as $uri) {
             if (!$uri->getScheme()) {
-                $uri = $currentUri->withPath($uri->getPath());
+                if($uri->getHost() === "" ) {
+                    $uri = $currentUri->withPath($uri->getPath());
+                }else{
+                    $uri = new Uri($currentUri->getScheme() . "://" . $uri->getHost() . ($uri->getPath()));
+                }
             }
             if ($this->configuration->isUriAllowed($uri)) {
                 $this->pageContainer->push($uri, $currentUri);
