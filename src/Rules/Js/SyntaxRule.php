@@ -18,7 +18,7 @@ class SyntaxRule implements Rule
      * @param $jsHintExecutable string The path to the jshint executable
      * @param $tmpDir string The directory the temporary js file should be stored
      */
-    public function init($jsHintExecutable = "", $tmpDir = "/tmp")
+    public function init($jsHintExecutable = '', $tmpDir = '/tmp')
     {
         $this->jsHintExecutable = $jsHintExecutable;
         $this->tmpDir = $tmpDir;
@@ -26,20 +26,22 @@ class SyntaxRule implements Rule
 
     public function validate(Response $response)
     {
-        if ($response->getContentType() === "application/javascript") {
-            $filename = $this->tmpDir . DIRECTORY_SEPARATOR . md5($response->getBody()) . ".js";
-            file_put_contents($filename, $response->getBody());
-            $conf = __DIR__ . DIRECTORY_SEPARATOR . "jsHint.conf";
+        if ($response->getContentType() !== 'application/javascript') {
+            return;
+        }
 
-            $command = $this->jsHintExecutable . " --config " . $conf . " --verbose " . $filename . " | grep -E E[0-9]+.$";
-            $validationResult = shell_exec($command);
+        $filename = $this->tmpDir . DIRECTORY_SEPARATOR . md5($response->getBody()) . '.js';
+        file_put_contents($filename, $response->getBody());
+        $conf = __DIR__ . DIRECTORY_SEPARATOR . 'jsHint.conf';
 
-            unlink($filename);
+        $command = $this->jsHintExecutable . ' --config ' . $conf . ' --verbose ' . $filename . ' | grep -E E[0-9]+.$';
+        $validationResult = shell_exec($command);
 
-            if (!is_null($validationResult)) {
-                $errorMsg = str_replace($filename . ":", "", $validationResult);
-                throw new ValidationFailedException("JavaScript error found: " . $errorMsg);
-            }
+        unlink($filename);
+
+        if (!is_null($validationResult)) {
+            $errorMsg = str_replace($filename . ':', '', $validationResult);
+            throw new ValidationFailedException('JavaScript error found: ' . $errorMsg);
         }
     }
 }

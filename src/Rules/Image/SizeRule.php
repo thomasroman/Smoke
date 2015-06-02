@@ -23,11 +23,13 @@ class SizeRule implements Rule
 
     public function validate(Response $response)
     {
-        if (strpos($response->getContentType(), 'image') !== false) {
-            $size = strlen($response->getBody()) / 1000;
-            if ($size > $this->maxSize) {
-                throw new ValidationFailedException('the size of the file is too big (' . $size . ' KB)');
-            }
+        if (strpos($response->getContentType(), 'image') === false) {
+            return;
+        }
+
+        $size = strlen($response->getBody()) / 1000;
+        if ($size > $this->maxSize) {
+            throw new ValidationFailedException('the size of the file is too big (' . $size . ' KB)');
         }
     }
 }

@@ -8,9 +8,9 @@
     "php": ">= 5.4.0",
     "symfony/yaml": "~2.2",
     "symfony/console": "~2.2",
-    "guzzlehttp/guzzle": "^5.3",
-    "phmlabs/base": "dev-master",
-    "phmlabs/init": "dev-master"
+    "symfony/dom-crawler": "~2.2",
+    "phmlabs/init": "dev-master",
+    "egeloen/http-adapter": "dev-timings"
   },
   "require-dev": {
     "fabpot/php-cs-fixer": "dev-master"
@@ -19,6 +19,21 @@
     "psr-4": {
       "whm\\Smoke\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "whm\\Smoke\\Test\\": "test/unit"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:digitalkaoz/ivory-http-adapter.git"
+    }
+  ],
+  "scripts" : {
+     "cs" : "vendor/bin/php-cs-fixer fix $1",
+     "test" : "vendor/bin/phpunit $1"
   },
   "bin": [
     "bin/Smoke.php"

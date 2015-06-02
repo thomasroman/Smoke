@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: langn
  * Date: 26.05.15
- * Time: 21:15
+ * Time: 21:15.
  */
-
 namespace whm\Smoke\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
