@@ -3,6 +3,7 @@
 namespace whm\Smoke\Cli\Command;
 
 use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -88,7 +89,7 @@ class ExplainCommand extends Command
             $configArray = [];
         }
 
-        $config = new Configuration(new Uri(''), $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
+        $config = new Configuration(new Uri(''), new Dispatcher(), $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
 
         return $config;
     }
