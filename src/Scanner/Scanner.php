@@ -42,10 +42,10 @@ class Scanner
 
         foreach ($referencedUris as $uri) {
             if (!$uri->getScheme()) {
-                if($uri->getHost() === "" ) {
+                if ($uri->getHost() === '') {
                     $uri = $currentUri->withPath($uri->getPath());
-                }else{
-                    $uri = new Uri($currentUri->getScheme() . "://" . $uri->getHost() . ($uri->getPath()));
+                } else {
+                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
                 }
             }
             if ($this->configuration->isUriAllowed($uri)) {
@@ -61,7 +61,7 @@ class Scanner
             $responses = $this->client->request($urls);
 
             foreach ($responses as $response) {
-                $currentUri = new Uri((string)$response->getUri());
+                $currentUri = new Uri((string) $response->getUri());
 
                 // only extract urls if the content type is text/html
                 if ('text/html' === $response->getContentType()) {
@@ -73,7 +73,7 @@ class Scanner
                 $violation['contentType'] = $response->getContentType();
                 $violation['url'] = $response->getUri();
 
-                if ($violation["type"] === self::ERROR) {
+                if ($violation['type'] === self::ERROR) {
                     $this->status = 1;
                 }
 
