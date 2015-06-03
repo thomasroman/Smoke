@@ -2,5 +2,15 @@
     "directories": ["src", "vendor"],
     "main": "bin/Smoke.php",
     "output": "bin/Smoke.phar",
-    "stub": true
+    "stub": true,
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": [
+                "Tests",
+                "tests"
+            ],
+            "in": "vendor"
+        }
+    ]
 }
