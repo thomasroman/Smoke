@@ -52,7 +52,7 @@ class Configuration
             }
         }
 
-        if (array_key_exists("listeners", $configArray)) {
+        if (array_key_exists('listeners', $configArray)) {
             $this->addListener($configArray["listeners"]);
         }
 

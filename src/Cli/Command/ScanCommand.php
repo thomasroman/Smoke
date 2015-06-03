@@ -51,8 +51,8 @@ class ScanCommand extends Command
             new Uri($input->getArgument('url')),
             $eventDispatcher);
 
-        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array("config" => $config));
-        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array("output" => $output));
+        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array('config' => $config));
+        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array('output' => $output));
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
         $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");

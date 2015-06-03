@@ -55,7 +55,7 @@ class Scanner
 
     public function scan()
     {
-        $this->eventDispatcher->simpleNotify("Scanner.Scan.Begin");
+        $this->eventDispatcher->simpleNotify('Scanner.Scan.Begin');
 
         do {
             $urls = $this->pageContainer->pop($this->configuration->getParallelRequestCount());
@@ -78,11 +78,11 @@ class Scanner
                     $this->status = 1;
                 }
 
-                $this->eventDispatcher->simpleNotify("Scanner.Scan.Validate", array("result" => $violation));
+                $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $violation));
             }
         } while (count($urls) > 0);
 
-        $this->eventDispatcher->simpleNotify("Scanner.Scan.Finish");
+        $this->eventDispatcher->simpleNotify('Scanner.Scan.Finish');
     }
 
     public function getStatus()

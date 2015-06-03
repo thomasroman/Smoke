@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Cli;
 
-
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 
@@ -33,7 +32,7 @@ class ProgressBar
         $this->config = $config;
     }
 
-    public function init($width = 100, $format = "normal")
+    public function init($width = 100, $format = 'normal')
     {
         $this->width = $width;
         $this->format = $format;
