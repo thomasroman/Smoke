@@ -46,4 +46,4 @@ class ValidRule implements Rule
             }
         }
     }
-} 
+}
