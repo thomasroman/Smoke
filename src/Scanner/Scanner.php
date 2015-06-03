@@ -2,12 +2,12 @@
 
 namespace whm\Smoke\Scanner;
 
-use phmLabs\Base\Www\Html\Document;
-use phmLabs\Base\Www\Uri;
-use Symfony\Component\Console\Helper\ProgressBar;
+use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Console\NullProgressBar;
-use whm\Smoke\Http\MultiCurlClient;
+use whm\Smoke\Http\Document;
+use whm\Smoke\Http\HttpClient;
+use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\ValidationFailedException;
 
 class Scanner
@@ -15,21 +15,23 @@ class Scanner
     const ERROR = 'error';
     const PASSED = 'passed';
 
-    private $progressBar;
     private $configuration;
+    private $eventDispatcher;
 
-    public function __construct(Configuration $config, ProgressBar $progressBar = null)
+    /**
+     * @var HttpClient
+     */
+    private $client;
+
+    private $status = 0;
+
+    public function __construct(Configuration $config, HttpClient $client, Dispatcher $eventDispatcher)
     {
         $this->pageContainer = new PageContainer($config->getContainerSize());
         $this->pageContainer->push($config->getStartUri(), $config->getStartUri());
-
+        $this->client = $client;
         $this->configuration = $config;
-
-        if (is_null($progressBar)) {
-            $this->progressBar = new NullProgressBar();
-        } else {
-            $this->progressBar = $progressBar;
-        }
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     private function processHtmlContent($htmlContent, Uri $currentUri)
@@ -38,45 +40,57 @@ class Scanner
         $referencedUris = $htmlDocument->getReferencedUris();
 
         foreach ($referencedUris as $uri) {
-            $uriToAdd = $currentUri->concatUri($uri->toString());
-
-            if (true || Uri::isValid($uriToAdd->toString())) {
-                if ($this->configuration->isUriAllowed($uriToAdd)) {
-                    $this->pageContainer->push($uriToAdd, $currentUri);
+            if (!$uri->getScheme()) {
+                if ($uri->getHost() === '') {
+                    $uri = $currentUri->withPath($uri->getPath());
+                } else {
+                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
                 }
+            }
+            if ($this->configuration->isUriAllowed($uri)) {
+                $this->pageContainer->push($uri, $currentUri);
             }
         }
     }
 
     public function scan()
     {
-        $violations = [];
+        $this->eventDispatcher->simpleNotify('Scanner.Scan.Begin');
 
         do {
             $urls = $this->pageContainer->pop($this->configuration->getParallelRequestCount());
-            $responses = MultiCurlClient::request($urls);
+            $responses = $this->client->request($urls);
 
-            foreach ($responses as $url => $response) {
-                $currentUri = new Uri($url);
+            foreach ($responses as $response) {
+                $currentUri = new Uri((string)$response->getUri());
 
                 // only extract urls if the content type is text/html
-                if ($response->getContentType() === "text/html") {
+                if ('text/html' === $response->getContentType()) {
                     $this->processHtmlContent($response->getBody(), $currentUri);
                 }
 
                 $violation = $this->checkResponse($response);
                 $violation['parent'] = $this->pageContainer->getParent($currentUri);
                 $violation['contentType'] = $response->getContentType();
-                $violations[$url] = $violation;
+                $violation['url'] = $response->getUri();
 
-                $this->progressBar->advance();
+                if ($violation['type'] === self::ERROR) {
+                    $this->status = 1;
+                }
+
+                $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $violation));
             }
         } while (count($urls) > 0);
 
-        return $violations;
+        $this->eventDispatcher->simpleNotify('Scanner.Scan.Finish');
     }
 
-    private function checkResponse($response)
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    private function checkResponse(Response $response)
     {
         $messages = [];
 
@@ -89,9 +103,9 @@ class Scanner
         }
 
         if ($messages) {
-            $violation = array('messages' => $messages, 'type' => self::ERROR);
+            $violation = ['messages' => $messages, 'type' => self::ERROR];
         } else {
-            $violation = array('messages' => array(), 'type' => self::PASSED);
+            $violation = ['messages' => [], 'type' => self::PASSED];
         }
 
         return $violation;

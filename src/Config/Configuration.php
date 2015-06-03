@@ -2,12 +2,16 @@
 
 namespace whm\Smoke\Config;
 
-use PhmLabs\Base\Www\Uri;
+use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Yaml\Yaml;
+use whm\Smoke\Rules\Rule;
 
 class Configuration
 {
+    const DEFAULT_SETTINGS = 'default.yml';
+
     private $blacklist;
     private $whitelist;
 
@@ -23,12 +27,14 @@ class Configuration
 
     private $reporter;
 
-    const DEFAULT_SETTINGS = "default.yml";
+    private $eventDispatcher;
 
-    public function __construct(Uri $uri, array $configArray, array $defaultSettings = null)
+    public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
+        $this->eventDispatcher = $eventDispatcher;
+
         if ($defaultSettings === null) {
-            $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . "/../settings/" . self::DEFAULT_SETTINGS));
+            $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . '/../settings/' . self::DEFAULT_SETTINGS));
         }
 
         if (count($configArray) === 0) {
@@ -36,14 +42,18 @@ class Configuration
         }
 
         if (array_key_exists('options', $configArray)) {
-            if (array_key_exists('extendDefault', $configArray["options"])) {
-                if ($configArray["options"]["extendDefault"] === true) {
+            if (array_key_exists('extendDefault', $configArray['options'])) {
+                if ($configArray['options']['extendDefault'] === true) {
                     $configArray = array_replace_recursive($defaultSettings, $configArray);
                 }
             }
             if (array_key_exists('scanForeignDomains', $configArray['options'])) {
-                $this->scanForeignDomains = $configArray["options"]["scanForeignDomains"];
+                $this->scanForeignDomains = $configArray['options']['scanForeignDomains'];
             }
+        }
+
+        if (array_key_exists('listeners', $configArray)) {
+            $this->addListener($configArray["listeners"]);
         }
 
         if (array_key_exists('blacklist', $configArray)) {
@@ -64,13 +74,22 @@ class Configuration
 
         $this->startUri = $uri;
 
-        $this->reporter = Init::initialize($configArray["reporter"]);
-        $this->rules = Init::initializeAll($configArray["rules"]);
+        // $this->reporter = Init::initialize($configArray['reporter']);
+        $this->rules = Init::initializeAll($configArray['rules']);
+    }
+
+    private function addListener(array $listenerArray)
+    {
+        $listeners = Init::initializeAll($listenerArray);
+        foreach ($listeners as $listener) {
+            $this->eventDispatcher->connectListener($listener);
+        }
     }
 
     public static function getDefaultConfig(Uri $uri)
     {
-        $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . "/../settings/" . self::DEFAULT_SETTINGS));
+        $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . '/../settings/' . self::DEFAULT_SETTINGS));
+
         return new self($uri, $defaultSettings);
     }
 
@@ -114,6 +133,9 @@ class Configuration
         return $this->whitelist;
     }
 
+    /**
+     * @return Rule[]
+     */
     public function getRules()
     {
         return $this->rules;
@@ -127,15 +149,21 @@ class Configuration
     public function isUriAllowed(Uri $uri)
     {
         if (!$this->scanForeignDomains()) {
-            if (!$this->startUri->isSameTopLevelDomain($uri)) {
+            $tlds = explode('.', $uri->getHost());
+            $currentTld = array_pop($tlds);
+
+            $tlds = explode('.', $this->startUri->getHost());
+            $startTld = array_pop($tlds);
+
+            if ($currentTld !== $startTld) {
                 return false;
             }
         }
 
         foreach ($this->whitelist as $whitelist) {
-            if (preg_match($whitelist, $uri->toString())) {
+            if (preg_match($whitelist, (string) $uri)) {
                 foreach ($this->blacklist as $blacklist) {
-                    if (preg_match($blacklist, $uri->toString())) {
+                    if (preg_match($blacklist, (string) $uri)) {
                         return false;
                     }
                 }
@@ -145,10 +173,5 @@ class Configuration
         }
 
         return false;
-    }
-
-    public function getReporter()
-    {
-        return $this->reporter;
     }
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: langn
- * Date: 26.05.15
- * Time: 21:15
- */
 
 namespace whm\Smoke\Reporter;
 
@@ -15,26 +9,42 @@ class CliReporter
 {
     private $output;
 
+    private $results = array();
+
+    /**
+     * @Event("ScannerCommand.Output.Register")
+     */
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
 
-    public function render($results)
+    /**
+     * @Event("Scanner.Scan.Validate")
+     */
+    public function process($result)
+    {
+        $this->results[] = $result;
+    }
+
+    /**
+     * @Event("Scanner.Scan.Finish")
+     */
+    public function finish()
     {
         $this->output->writeln("\n\n <comment>Passed tests:</comment> \n");
 
-        foreach ($results as $url => $result) {
+        foreach ($this->results as $result) {
             if ($result['type'] === Scanner::PASSED) {
-                $this->output->writeln('   <info> ' . $url . ' </info> all tests passed');
+                $this->output->writeln('   <info> ' . $result['url'] . ' </info> all tests passed');
             }
         }
 
         $this->output->writeln("\n <comment>Failed tests:</comment> \n");
 
-        foreach ($results as $url => $result) {
+        foreach ($this->results as $result) {
             if ($result['type'] === Scanner::ERROR) {
-                $this->output->writeln('   <error> ' . $url . ' </error> coming from ' . $result['parent']);
+                $this->output->writeln('   <error> ' . $result['url'] . ' </error> coming from ' . $result['parent']);
                 foreach ($result['messages'] as $ruleName => $message) {
                     $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
                 }

@@ -2,13 +2,12 @@
 
 namespace whm\Smoke\Scanner;
 
-use phmLabs\Base\Www\Uri;
+use Phly\Http\Uri;
 
 class PageContainer
 {
     private $currentElements = [];
     private $allElements = [];
-    private $parents = [];
 
     private $maxSize;
 
@@ -29,11 +28,11 @@ class PageContainer
 
     public function push(Uri $uri, Uri $parentUri)
     {
-        $uriString = $uri->toString();
+        $uriString = (string) $uri;
 
         if (count($this->allElements) < $this->maxSize) {
             if (!array_key_exists($uriString, $this->allElements)) {
-                $this->allElements[$uriString] = $parentUri->toString();
+                $this->allElements[$uriString] = (string) $parentUri;
                 array_unshift($this->currentElements, $uri);
             }
         }
@@ -55,6 +54,6 @@ class PageContainer
 
     public function getParent(Uri $uri)
     {
-        return isset($this->allElements[$uri->toString()]) ? $this->allElements[$uri->toString()] : null;
+        return isset($this->allElements[(string) $uri]) ? $this->allElements[(string) $uri] : null;
     }
 }

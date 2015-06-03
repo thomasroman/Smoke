@@ -2,22 +2,23 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use phmLabs\Base\Www\Uri;
+use Ivory\HttpAdapter\HttpAdapterFactory;
+use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Config\Configuration;
+use whm\Smoke\Http\HttpClient;
 use whm\Smoke\Scanner\Scanner;
 
 class ScanCommand extends Command
 {
     /**
-     * Defines what arguments and options are available for the user. Can be listed using
-     * Smoke.phar analyse --help.
+     * @inheritdoc
      */
     protected function configure()
     {
@@ -36,59 +37,45 @@ class ScanCommand extends Command
     }
 
     /**
-     * Runs the analysis of the given website with all given parameters.
-     *
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @inheritdoc
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $eventDispatcher = new Dispatcher();
+
         $config = $this->initConfiguration(
             $input->getOption('config_file'),
             $input->getOption('foreign'),
             $input->getOption('num_urls'),
             $input->getOption('parallel_requests'),
-            new Uri($input->getArgument('url')));
+            new Uri($input->getArgument('url')),
+            $eventDispatcher);
+
+        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array('config' => $config));
+        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array('output' => $output));
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
-        $output->writeln(' <info>Scanning ' . $config->getStartUri()->toString() . "</info>\n");
+        $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
 
         if ($input->getOption('bootstrap')) {
             include $input->getOption('bootstrap');
         }
 
-        $progressBar = new ProgressBar($output, $input->getOption('num_urls'));
+        $scanner = new Scanner($config, new HttpClient(HttpAdapterFactory::guess()), $eventDispatcher);
 
-        $progressBar->setBarWidth(100);
-        $progressBar->setFormat('normal');
+        $scanner->scan();
 
-        $progressBar->start();
-
-        $scanner = new Scanner($config, $progressBar);
-        $scanResults = $scanner->scan();
-        $progressBar->finish();
-
-        $this->renderResults($scanResults, $output, $config);
-
-        return $this->getStatus($scanResults);
-    }
-
-    private function renderResults($results, $output, Configuration $config)
-    {
-        $reporter = $config->getReporter();
-        if (method_exists($reporter, "setOutput")) {
-            $reporter->setOutput($output);
-        }
-        $reporter->render($results);
+        return $scanner->getStatus();
     }
 
     private function getStatus($scanResults)
     {
         foreach ($scanResults as $result) {
-            if ($result["type"] === Scanner::ERROR) {
+            if ($result['type'] === Scanner::ERROR) {
                 return 1;
             }
         }
+
         return 0;
     }
 
@@ -101,9 +88,9 @@ class ScanCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($configFile, $loadForeign, $num_urls, $parallel_requests, Uri $uri)
+    private function initConfiguration($configFile, $loadForeign, $num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
-        $defaultConfigFile = __DIR__ . "/../../settings/default.yml";
+        $defaultConfigFile = __DIR__ . '/../../settings/default.yml';
         if ($configFile) {
             if (file_exists($configFile)) {
                 $configArray = Yaml::parse(file_get_contents($configFile));
@@ -111,10 +98,10 @@ class ScanCommand extends Command
                 throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
             }
         } else {
-            $configArray = array();
+            $configArray = [];
         }
 
-        $config = new Configuration($uri, $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
+        $config = new Configuration($uri, $dispatcher, $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
 
         if ($loadForeign) {
             $config->enableForeignDomainScan();

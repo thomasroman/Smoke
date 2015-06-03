@@ -2,17 +2,14 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use phmLabs\Base\Www\Uri;
+use Phly\Http\Uri;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Scanner\Scanner;
 
 class ExplainCommand extends Command
 {
@@ -35,7 +32,7 @@ class ExplainCommand extends Command
     /**
      * Runs the analysis of the given website with all given parameters.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,19 +50,19 @@ class ExplainCommand extends Command
 
         foreach ($rules as $name => $rule) {
             $info = Init::getInitInformationByClass(get_class($rule));
-            $output->writeln("  " . $name . ":");
-            $output->writeln("    class: " . get_class($rule));
-            $output->writeln("    description: " . str_replace("\n", "\n                 ", $info["documentation"]));
+            $output->writeln('  ' . $name . ':');
+            $output->writeln('    class: ' . get_class($rule));
+            $output->writeln('    description: ' . str_replace("\n", "\n                 ", $info['documentation']));
 
-            if (count($info["parameters"]) > 0) {
-                $output->writeln("    parameter:");
+            if (count($info['parameters']) > 0) {
+                $output->writeln('    parameter:');
 
-                foreach ($info["parameters"] as $parameter) {
-                    $output->writeln("      " . $parameter["name"] . ': ' . $parameter["description"] . " (default: " . $parameter["default"] . ")");
+                foreach ($info['parameters'] as $parameter) {
+                    $output->writeln('      ' . $parameter['name'] . ': ' . $parameter['description'] . ' (default: ' . $parameter['default'] . ')');
                 }
             }
 
-            $output->writeln("");
+            $output->writeln('');
         }
     }
 
@@ -80,7 +77,7 @@ class ExplainCommand extends Command
      */
     private function initConfiguration($configFile)
     {
-        $defaultConfigFile = __DIR__ . "/../../settings/default.yml";
+        $defaultConfigFile = __DIR__ . '/../../settings/default.yml';
         if ($configFile) {
             if (file_exists($configFile)) {
                 $configArray = Yaml::parse(file_get_contents($configFile));
@@ -88,10 +85,10 @@ class ExplainCommand extends Command
                 throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
             }
         } else {
-            $configArray = array();
+            $configArray = [];
         }
 
-        $config = new Configuration(new Uri(""), $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
+        $config = new Configuration(new Uri(''), $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
 
         return $config;
     }

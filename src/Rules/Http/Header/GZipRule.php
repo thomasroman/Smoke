@@ -14,7 +14,7 @@ class GZipRule implements Rule
     public function validate(Response $response)
     {
         if (strpos($response->getContentType(), 'image') === false) {
-            if (strpos($response->getHeader(true), 'content-encoding:gzip') === false) {
+            if (!$response->hasHeader('Content-Encoding') || $response->getHeader('Content-Encoding')[0] !== 'gzip') {
                 throw new ValidationFailedException('gzip compression not active');
             }
         }

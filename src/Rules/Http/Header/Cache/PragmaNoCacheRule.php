@@ -13,13 +13,11 @@ class PragmaNoCacheRule implements Rule
 {
     public function validate(Response $response)
     {
-        $header = $response->getHeader(true);
-
-        if (strpos($header, 'pragma:no-cache') !== false) {
+        if ($response->hasHeader('Pragma') && 'no-cache' === $response->getHeader('Pragma')[0]) {
             throw new ValidationFailedException('pragma:no-cache was found');
         }
 
-        if (strpos($header, 'cache-control:no-cache') !== false) {
+        if ($response->hasHeader('Cache-Control') && false !== strpos($response->getHeader('Cache-Control')[0], 'no-cache')) {
             throw new ValidationFailedException('cache-control:no-cache was found');
         }
     }
