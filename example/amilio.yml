@@ -4,6 +4,12 @@ options:
 whitelist:
   - ^amilio.de^
 
+listeners:
+ XUnitReporter:
+   class: whm\Smoke\Reporter\XUnitReporter
+   parameters:
+     filename: /tmp/xunit.xml
+
 rules:
   _HtmlSize:
     class: whm\Smoke\Rules\Html\SizeRule

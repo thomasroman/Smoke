@@ -15,6 +15,7 @@ listeners:
   _Reporter:
       class: whm\Smoke\Reporter\CliReporter
 
+
 rules:
   _HtmlSize:
    class: whm\Smoke\Rules\Html\SizeRule

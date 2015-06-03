@@ -7,16 +7,13 @@ use whm\Smoke\Scanner\Scanner;
 
 class XUnitReporter implements Reporter
 {
-    private $output;
+    private $filename;
 
     private $results = array();
 
-    /**
-     * @Event("ScannerCommand.Output.Register")
-     */
-    public function setOutput(OutputInterface $output)
+    public function init($filename)
     {
-        $this->output = $output;
+        $this->filename = $filename;
     }
 
     /**
@@ -32,26 +29,6 @@ class XUnitReporter implements Reporter
      */
     public function finish()
     {
-        $this->output->writeln("\n\n <comment>Passed tests:</comment> \n");
-
-        foreach ($this->results as $result) {
-            if ($result['type'] === Scanner::PASSED) {
-                $this->output->writeln('   <info> ' . $result['url'] . ' </info> all tests passed');
-            }
-        }
-
-        $this->output->writeln("\n <comment>Failed tests:</comment> \n");
-
-        foreach ($this->results as $result) {
-            if ($result['type'] === Scanner::ERROR) {
-                $this->output->writeln('   <error> ' . $result['url'] . ' </error> coming from ' . $result['parent']);
-                foreach ($result['messages'] as $ruleName => $message) {
-                    $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
-                }
-                $this->output->writeln('');
-            }
-        }
-
-        $this->output->writeln('');
+        echo "writing xunit file to " . $this->filename;
     }
 }
