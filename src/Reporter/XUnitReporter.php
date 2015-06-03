@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Reporter;
 
-
 class XUnitReporter
 {
     private $filename;
@@ -27,9 +26,9 @@ class XUnitReporter
      */
     public function finish()
     {
-        echo "writing XUnit file to " . $this->filename . PHP_EOL;
+        echo 'writing XUnit file to ' . $this->filename . PHP_EOL;
 
-        /**
+        /*
          * <testsuite name="nosetests" tests="1" errors="1" failures="0" skip="0">
                 <testcase classname="path_to_test_suite.TestSomething"
                 name="test_it" time="0">
@@ -42,7 +41,7 @@ class XUnitReporter
             </testsuite>
          */
 
-        /**
+        /*
          *
            foreach ($this->results as $result) {
                 if ($result['type'] === Scanner::PASSED) {
@@ -70,8 +69,7 @@ class XUnitReporter
         $xmlRoot = $domtree->createElement('testsuite');
         $xmlRoot = $domtree->appendChild($xmlRoot);
 
-        foreach($this->results as $result)
-        {
+        foreach ($this->results as $result) {
             $testCase = $domTree->createElement('testcase');
             $testType = $domTree->createAttribute('classname');
             $testType->value = $result['type'];
@@ -82,6 +80,5 @@ class XUnitReporter
 
         /* get the xml printed */
         echo $domtree->saveXML();
-
     }
 }

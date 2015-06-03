@@ -62,7 +62,7 @@ class Scanner
             $responses = $this->client->request($urls);
 
             foreach ($responses as $response) {
-                $currentUri = new Uri((string)$response->getUri());
+                $currentUri = new Uri((string) $response->getUri());
 
                 // only extract urls if the content type is text/html
                 if ('text/html' === $response->getContentType()) {

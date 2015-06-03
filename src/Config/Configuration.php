@@ -53,7 +53,7 @@ class Configuration
         }
 
         if (array_key_exists('listeners', $configArray)) {
-            $this->addListener($configArray["listeners"]);
+            $this->addListener($configArray['listeners']);
         }
 
         if (array_key_exists('blacklist', $configArray)) {
