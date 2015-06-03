@@ -29,6 +29,6 @@ class XUnitReporter
      */
     public function finish()
     {
-        echo "writing xunit file to " . $this->filename;
+        echo 'writing xunit file to ' . $this->filename;
     }
 }
