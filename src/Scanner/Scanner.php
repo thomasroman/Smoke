@@ -3,9 +3,8 @@
 namespace whm\Smoke\Scanner;
 
 use Phly\Http\Uri;
-use Symfony\Component\Console\Helper\ProgressBar;
+use phmLabs\Components\Annovent\Dispatcher;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Console\NullProgressBar;
 use whm\Smoke\Http\Document;
 use whm\Smoke\Http\HttpClient;
 use whm\Smoke\Http\Response;
@@ -16,8 +15,8 @@ class Scanner
     const ERROR = 'error';
     const PASSED = 'passed';
 
-    private $progressBar;
     private $configuration;
+    private $eventDispatcher;
 
     /**
      * @var HttpClient
@@ -26,13 +25,13 @@ class Scanner
 
     private $status = 0;
 
-    public function __construct(Configuration $config, HttpClient $client, ProgressBar $progressBar = null)
+    public function __construct(Configuration $config, HttpClient $client, Dispatcher $eventDispatcher)
     {
         $this->pageContainer = new PageContainer($config->getContainerSize());
         $this->pageContainer->push($config->getStartUri(), $config->getStartUri());
         $this->client = $client;
         $this->configuration = $config;
-        $this->progressBar = $progressBar ?: new NullProgressBar();
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     private function processHtmlContent($htmlContent, Uri $currentUri)
@@ -42,9 +41,9 @@ class Scanner
 
         foreach ($referencedUris as $uri) {
             if (!$uri->getScheme()) {
-                if($uri->getHost() === "" ) {
+                if ($uri->getHost() === "") {
                     $uri = $currentUri->withPath($uri->getPath());
-                }else{
+                } else {
                     $uri = new Uri($currentUri->getScheme() . "://" . $uri->getHost() . ($uri->getPath()));
                 }
             }
@@ -56,6 +55,8 @@ class Scanner
 
     public function scan()
     {
+        $this->eventDispatcher->simpleNotify("Scanner.Scan.Begin");
+
         do {
             $urls = $this->pageContainer->pop($this->configuration->getParallelRequestCount());
             $responses = $this->client->request($urls);
@@ -77,10 +78,11 @@ class Scanner
                     $this->status = 1;
                 }
 
-                $this->configuration->getReporter()->process($violation);
-                $this->progressBar->advance();
+                $this->eventDispatcher->simpleNotify("Scanner.Scan.Validate", array("result" => $violation));
             }
         } while (count($urls) > 0);
+
+        $this->eventDispatcher->simpleNotify("Scanner.Scan.Finish");
     }
 
     public function getStatus()

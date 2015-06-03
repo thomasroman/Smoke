@@ -3,12 +3,15 @@
 namespace whm\Smoke\Config;
 
 use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Rules\Rule;
 
 class Configuration
 {
+    const DEFAULT_SETTINGS = 'default.yml';
+
     private $blacklist;
     private $whitelist;
 
@@ -24,10 +27,12 @@ class Configuration
 
     private $reporter;
 
-    const DEFAULT_SETTINGS = 'default.yml';
+    private $eventDispatcher;
 
-    public function __construct(Uri $uri, array $configArray, array $defaultSettings = null)
+    public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
+        $this->eventDispatcher = $eventDispatcher;
+
         if ($defaultSettings === null) {
             $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . '/../settings/' . self::DEFAULT_SETTINGS));
         }
@@ -45,6 +50,10 @@ class Configuration
             if (array_key_exists('scanForeignDomains', $configArray['options'])) {
                 $this->scanForeignDomains = $configArray['options']['scanForeignDomains'];
             }
+        }
+
+        if (array_key_exists("listeners", $configArray)) {
+            $this->addListener($configArray["listeners"]);
         }
 
         if (array_key_exists('blacklist', $configArray)) {
@@ -65,8 +74,16 @@ class Configuration
 
         $this->startUri = $uri;
 
-        $this->reporter = Init::initialize($configArray['reporter']);
+        // $this->reporter = Init::initialize($configArray['reporter']);
         $this->rules = Init::initializeAll($configArray['rules']);
+    }
+
+    private function addListener(array $listenerArray)
+    {
+        $listeners = Init::initializeAll($listenerArray);
+        foreach ($listeners as $listener) {
+            $this->eventDispatcher->connectListener($listener);
+        }
     }
 
     public static function getDefaultConfig(Uri $uri)
@@ -156,10 +173,5 @@ class Configuration
         }
 
         return false;
-    }
-
-    public function getReporter()
-    {
-        return $this->reporter;
     }
 }

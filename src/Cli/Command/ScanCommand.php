@@ -4,8 +4,8 @@ namespace whm\Smoke\Cli\Command;
 
 use Ivory\HttpAdapter\HttpAdapterFactory;
 use Phly\Http\Uri;
+use phmLabs\Components\Annovent\Dispatcher;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -41,14 +41,18 @@ class ScanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $eventDispatcher = new Dispatcher();
+
         $config = $this->initConfiguration(
             $input->getOption('config_file'),
             $input->getOption('foreign'),
             $input->getOption('num_urls'),
             $input->getOption('parallel_requests'),
-            new Uri($input->getArgument('url')));
+            new Uri($input->getArgument('url')),
+            $eventDispatcher);
 
-        $this->initReporter($output, $config);
+        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array("config" => $config));
+        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array("output" => $output));
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
         $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
@@ -57,29 +61,11 @@ class ScanCommand extends Command
             include $input->getOption('bootstrap');
         }
 
-        $progressBar = new ProgressBar($output, $input->getOption('num_urls'));
-
-        $progressBar->setBarWidth(100);
-        $progressBar->setFormat('normal');
-
-        $progressBar->start();
-
-        $scanner = new Scanner($config, new HttpClient(HttpAdapterFactory::guess()), $progressBar);
+        $scanner = new Scanner($config, new HttpClient(HttpAdapterFactory::guess()), $eventDispatcher);
 
         $scanner->scan();
 
-        $progressBar->finish();
-        $config->getReporter()->finish();
-
         return $scanner->getStatus();
-    }
-
-    private function initReporter($output, Configuration $config)
-    {
-        $reporter = $config->getReporter();
-        if (method_exists($reporter, 'setOutput')) {
-            $reporter->setOutput($output);
-        }
     }
 
     private function getStatus($scanResults)
@@ -102,7 +88,7 @@ class ScanCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($configFile, $loadForeign, $num_urls, $parallel_requests, Uri $uri)
+    private function initConfiguration($configFile, $loadForeign, $num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
         $defaultConfigFile = __DIR__ . '/../../settings/default.yml';
         if ($configFile) {
@@ -115,7 +101,7 @@ class ScanCommand extends Command
             $configArray = [];
         }
 
-        $config = new Configuration($uri, $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
+        $config = new Configuration($uri, $dispatcher, $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
 
         if ($loadForeign) {
             $config->enableForeignDomainScan();

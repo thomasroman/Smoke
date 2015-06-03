@@ -10,7 +10,8 @@
     "symfony/console": "~2.2",
     "symfony/dom-crawler": "~2.2",
     "phmlabs/init": "dev-master",
-    "egeloen/http-adapter": "dev-timings"
+    "egeloen/http-adapter": "dev-timings",
+    "phmlabs/annovent": "dev-master"
   },
   "require-dev": {
     "fabpot/php-cs-fixer": "dev-master"
