@@ -34,13 +34,14 @@ class Document
         $this->findUrls($crawler, $urls, '//script', 'src');
 
         usort($urls, function (Uri $a, Uri $b) {
-            if (!(string)$a || !(string)$b) {
+            if (!(string) $a || !(string) $b) {
                 return 0;
             }
-            if (strpos($this->content, (string)$a) === strpos($this->content, (string)$b)) {
+            if (strpos($this->content, (string) $a) === strpos($this->content, (string) $b)) {
                 return 0;
             }
-            return (strpos($this->content, (string)$a) < strpos($this->content, (string)$b)) ? -1 : 1;
+
+            return (strpos($this->content, (string) $a) < strpos($this->content, (string) $b)) ? -1 : 1;
         });
 
         return $urls;

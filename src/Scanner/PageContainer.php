@@ -28,11 +28,11 @@ class PageContainer
 
     public function push(Uri $uri, Uri $parentUri)
     {
-        $uriString = (string)$uri;
+        $uriString = (string) $uri;
 
         if (count($this->allElements) < $this->maxSize) {
             if (!array_key_exists($uriString, $this->allElements)) {
-                $this->allElements[$uriString] = (string)$parentUri;
+                $this->allElements[$uriString] = (string) $parentUri;
                 array_unshift($this->currentElements, $uri);
             }
         }
@@ -54,6 +54,6 @@ class PageContainer
 
     public function getParent(Uri $uri)
     {
-        return isset($this->allElements[(string)$uri]) ? $this->allElements[(string)$uri] : null;
+        return isset($this->allElements[(string) $uri]) ? $this->allElements[(string) $uri] : null;
     }
 }

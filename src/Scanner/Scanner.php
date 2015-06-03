@@ -41,10 +41,10 @@ class Scanner
 
         foreach ($referencedUris as $uri) {
             if (!$uri->getScheme()) {
-                if ($uri->getHost() === "") {
+                if ($uri->getHost() === '') {
                     $uri = $currentUri->withPath($uri->getPath());
                 } else {
-                    $uri = new Uri($currentUri->getScheme() . "://" . $uri->getHost() . ($uri->getPath()));
+                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
                 }
             }
             if ($this->configuration->isUriAllowed($uri)) {
@@ -74,7 +74,7 @@ class Scanner
                 $violation['contentType'] = $response->getContentType();
                 $violation['url'] = $response->getUri();
 
-                if ($violation["type"] === self::ERROR) {
+                if ($violation['type'] === self::ERROR) {
                     $this->status = 1;
                 }
 

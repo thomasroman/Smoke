@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: langn
- * Date: 26.05.15
- * Time: 15:36.
- */
 namespace whm\Smoke\Rules\Xml\Rss;
 
 use whm\Smoke\Http\Response;
