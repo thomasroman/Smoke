@@ -2,9 +2,6 @@
 
 namespace whm\Smoke\Reporter;
 
-use Symfony\Component\Console\Output\OutputInterface;
-use whm\Smoke\Scanner\Scanner;
-
 class XUnitReporter
 {
     private $filename;

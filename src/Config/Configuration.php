@@ -53,7 +53,7 @@ class Configuration
         }
 
         if (array_key_exists('listeners', $configArray)) {
-            $this->addListener($configArray["listeners"]);
+            $this->addListener($configArray['listeners']);
         }
 
         if (array_key_exists('blacklist', $configArray)) {
@@ -73,8 +73,6 @@ class Configuration
         }
 
         $this->startUri = $uri;
-
-        // $this->reporter = Init::initialize($configArray['reporter']);
         $this->rules = Init::initializeAll($configArray['rules']);
     }
 
