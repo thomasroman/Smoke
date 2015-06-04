@@ -12,7 +12,6 @@ class XUnitReporter
 
     private $output = null;
 
-
     public function init($filename)
     {
         $this->filename = $filename;
