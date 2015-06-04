@@ -2,15 +2,28 @@
 
 namespace whm\Smoke\Reporter;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 class XUnitReporter
 {
-    private $filename;
+    private $filename = null;
 
     private $results = array();
+
+    private $output = null;
+
 
     public function init($filename)
     {
         $this->filename = $filename;
+    }
+
+    /**
+     * @Event("ScannerCommand.Output.Register")
+     */
+    public function setOutput(OutputInterface $output)
+    {
+        $this->output = $output;
     }
 
     /**
@@ -46,7 +59,7 @@ class XUnitReporter
             $testCase->setAttribute('class', '');
             //$testCase->setAttribute('feature', $result['messages']);
             $testCase->setAttribute('assertions', '1');
-            $testCase->setAttribute('time', '0');
+            $testCase->setAttribute('time', '0.00');
 
             switch ($result['type']) {
                 case 'passed':
@@ -80,10 +93,10 @@ class XUnitReporter
         $testSuite->setAttribute('assertions', count($this->results));
         $testSuite->setAttribute('failures', $failures);
         $testSuite->setAttribute('errors', '0');
-        $testSuite->setAttribute('time', '0.5');
+        $testSuite->setAttribute('time', '0.00');
 
         $xml->save($this->filename);
 
-        echo 'Writing XUnit Output to file: ' . $this->filename;
+        $this->output->writeln('<info>Writing XUnit Output to file:</info> ' . $this->filename);
     }
 }
