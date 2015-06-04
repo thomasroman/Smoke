@@ -73,8 +73,6 @@ class Configuration
         }
 
         $this->startUri = $uri;
-
-        // $this->reporter = Init::initialize($configArray['reporter']);
         $this->rules = Init::initializeAll($configArray['rules']);
     }
 
