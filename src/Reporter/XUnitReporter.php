@@ -26,59 +26,64 @@ class XUnitReporter
      */
     public function finish()
     {
-        echo 'writing XUnit file to ' . $this->filename . PHP_EOL;
+        $failures = 0;
 
-        /*
-         * <testsuite name="nosetests" tests="1" errors="1" failures="0" skip="0">
-                <testcase classname="path_to_test_suite.TestSomething"
-                name="test_it" time="0">
-                <error type="exceptions.TypeError" message="oops, wrong type">
-                Traceback (most recent call last):
-                ...
-                TypeError: oops, wrong type
-                </error>
-                </testcase>
-            </testsuite>
-         */
+        $xml = new \DOMDocument('1.0', 'UTF-8');
+        $xml->formatOutput = true;
 
-        /*
-         *
-           foreach ($this->results as $result) {
-                if ($result['type'] === Scanner::PASSED) {
-                    $this->output->writeln('   <info> ' . $result['url'] . ' </info> all tests passed');
-                }
-            }
+        $xmlRoot = $xml->createElement('testsuites');
+        $xml->appendChild($xmlRoot);
 
-            $this->output->writeln("\n <comment>Failed tests:</comment> \n");
-
-            foreach ($this->results as $result) {
-                if ($result['type'] === Scanner::ERROR) {
-                    $this->output->writeln('   <error> ' . $result['url'] . ' </error> coming from ' . $result['parent']);
-                    foreach ($result['messages'] as $ruleName => $message) {
-                        $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
-                    }
-                    $this->output->writeln('');
-                }
-            }
-         */
-
-        /* create a dom document with encoding utf8 */
-        $domTree = new \DOMDocument('1.0', 'UTF-8');
-
-        /* create the root element of the xml tree */
-        $xmlRoot = $domtree->createElement('testsuite');
-        $xmlRoot = $domtree->appendChild($xmlRoot);
+        $testSuite = $xml->createElement('testsuite');
+        $xmlRoot->appendChild($testSuite);
 
         foreach ($this->results as $result) {
-            $testCase = $domTree->createElement('testcase');
-            $testType = $domTree->createAttribute('classname');
-            $testType->value = $result['type'];
+            $testCase = $xml->createElement('testcase');
 
-            $testCase->appendChild($testType);
-            $xmlRoot->appendChild($testCase);
+            $testCase->setAttribute('classname', $result['type']);
+            $testCase->setAttribute('file', $result['url']);
+            $testCase->setAttribute('name', '');
+            $testCase->setAttribute('class', '');
+            //$testCase->setAttribute('feature', $result['messages']);
+            $testCase->setAttribute('assertions', '1');
+            $testCase->setAttribute('time', '0');
+
+            switch ($result['type']) {
+                case 'passed':
+
+                    break;
+
+                case 'error':
+                    $failures++;
+                    $testFailure = $xml->createElement('failure');
+                    $testCase->appendChild($testFailure);
+
+                    $testFailure->setAttribute('type', implode('; ', array_keys($result['messages'])));
+                    $text = $xml->createTextNode(implode('; ', $result['messages']));
+                    $testFailure->appendChild($text);
+
+                    break;
+
+                default:
+                    throw new \Exception($result['type'] . 'result type not known');
+            }
+
+            $testSuite->appendChild($testCase);
         }
 
-        /* get the xml printed */
-        echo $domtree->saveXML();
+        // @TODO: calculate amount of assertions (global and for every test)
+        // @TODO: differentiate between errors and failures
+        // @TODO: calculate testing time (global and for every test)
+
+        $testSuite->setAttribute('name', reset($this->results)['parent']);
+        $testSuite->setAttribute('tests', count($this->results));
+        $testSuite->setAttribute('assertions', count($this->results));
+        $testSuite->setAttribute('failures', $failures);
+        $testSuite->setAttribute('errors', '0');
+        $testSuite->setAttribute('time', '0.5');
+
+        $xml->save($this->filename);
+
+        echo 'Writing XUnit Output to file: ' . $this->filename;
     }
 }
