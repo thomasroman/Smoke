@@ -95,17 +95,22 @@ class Scanner
         $messages = [];
 
         foreach ($this->configuration->getRules() as $name => $rule) {
+            $startTime = microtime(true);
             try {
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
                 $messages[$name] = $e->getMessage();
             }
+            $endTime = microtime(true);
         }
 
+        // calculate time in seconds
+        $time = round(($endTime - $startTime) * 1000, 5);
+
         if ($messages) {
-            $violation = ['messages' => $messages, 'type' => self::ERROR];
+            $violation = ['messages' => $messages, 'time' => $time, 'type' => self::ERROR];
         } else {
-            $violation = ['messages' => [], 'type' => self::PASSED];
+            $violation = ['messages' => [], 'time' => $time, 'type' => self::PASSED];
         }
 
         return $violation;
