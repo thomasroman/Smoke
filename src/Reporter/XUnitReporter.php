@@ -38,8 +38,6 @@ class XUnitReporter
      */
     public function finish()
     {
-        var_dump($this->results);
-
         $failures = 0;
         $absoluteTime = 0;
 
