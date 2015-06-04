@@ -38,7 +38,10 @@ class XUnitReporter
      */
     public function finish()
     {
+        var_dump($this->results);
+
         $failures = 0;
+        $absoluteTime = 0;
 
         $xml = new \DOMDocument('1.0', 'UTF-8');
         $xml->formatOutput = true;
@@ -50,6 +53,8 @@ class XUnitReporter
         $xmlRoot->appendChild($testSuite);
 
         foreach ($this->results as $result) {
+            $absoluteTime += $result['time'];
+
             $testCase = $xml->createElement('testcase');
 
             $testCase->setAttribute('classname', $result['type']);
@@ -58,11 +63,10 @@ class XUnitReporter
             $testCase->setAttribute('class', '');
             //$testCase->setAttribute('feature', $result['messages']);
             $testCase->setAttribute('assertions', '1');
-            $testCase->setAttribute('time', '0.00');
+            $testCase->setAttribute('time', $result['time']);
 
             switch ($result['type']) {
                 case 'passed':
-
                     break;
 
                 case 'error':
@@ -85,14 +89,13 @@ class XUnitReporter
 
         // @TODO: calculate amount of assertions (global and for every test)
         // @TODO: differentiate between errors and failures
-        // @TODO: calculate testing time (global and for every test)
 
         $testSuite->setAttribute('name', reset($this->results)['parent']);
         $testSuite->setAttribute('tests', count($this->results));
         $testSuite->setAttribute('assertions', count($this->results));
         $testSuite->setAttribute('failures', $failures);
         $testSuite->setAttribute('errors', '0');
-        $testSuite->setAttribute('time', '0.00');
+        $testSuite->setAttribute('time', $absoluteTime);
 
         $xml->save($this->filename);
 
