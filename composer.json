@@ -9,9 +9,9 @@
     "symfony/yaml": "~2.2",
     "symfony/console": "~2.2",
     "symfony/dom-crawler": "~2.2",
-    "phmlabs/init": "dev-master",
+    "phmlabs/init": "1.0.0",
     "egeloen/http-adapter": "dev-timings",
-    "phmlabs/annovent": "dev-master"
+    "phmlabs/annovent": "1.0.0"
   },
   "require-dev": {
     "fabpot/php-cs-fixer": "@stable"
