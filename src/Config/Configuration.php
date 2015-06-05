@@ -52,8 +52,8 @@ class Configuration
             }
         }
 
-        if (array_key_exists('plugins', $configArray)) {
-            $this->addListener($configArray['plugins']);
+        if (array_key_exists('extensions', $configArray)) {
+            $this->addListener($configArray['extensions']);
         }
 
         if (array_key_exists('blacklist', $configArray)) {

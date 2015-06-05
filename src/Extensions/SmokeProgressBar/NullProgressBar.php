@@ -1,6 +1,6 @@
 <?php
 
-namespace whm\Smoke\Pulgin\Console\ProgressBar;
+namespace whm\Smoke\Extensions\SmokeProgressBar;
 
 class NullProgressBar
 {
