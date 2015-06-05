@@ -25,7 +25,7 @@ class Configuration
 
     private $rules = [];
 
-    private $reporter;
+    private $configArray;
 
     private $eventDispatcher;
 
@@ -71,6 +71,8 @@ class Configuration
         if (!array_key_exists('rules', $configArray)) {
             $configArray['rules'] = [];
         }
+
+        $this->configArray = $configArray;
 
         $this->startUri = $uri;
         $this->rules = Init::initializeAll($configArray['rules']);
@@ -159,9 +161,9 @@ class Configuration
         }
 
         foreach ($this->whitelist as $whitelist) {
-            if (preg_match($whitelist, (string) $uri)) {
+            if (preg_match($whitelist, (string)$uri)) {
                 foreach ($this->blacklist as $blacklist) {
-                    if (preg_match($blacklist, (string) $uri)) {
+                    if (preg_match($blacklist, (string)$uri)) {
                         return false;
                     }
                 }
@@ -171,5 +173,15 @@ class Configuration
         }
 
         return false;
+    }
+
+    public function hasSection($section)
+    {
+        return (array_key_exists($section, $this->configArray));
+    }
+
+    public function getSection($section)
+    {
+        return $this->configArray[$section];
     }
 }

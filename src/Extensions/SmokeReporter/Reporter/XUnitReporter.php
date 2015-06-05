@@ -1,6 +1,6 @@
 <?php
 
-namespace whm\Smoke\Extensions\SmokeReporter;
+namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 

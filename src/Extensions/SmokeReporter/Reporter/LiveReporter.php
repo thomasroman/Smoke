@@ -1,42 +1,22 @@
 <?php
 
-namespace whm\Smoke\Extensions\SmokeReporter;
+namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Scanner\Scanner;
 
-class LiveReporter
+class LiveReporter implements Reporter
 {
     private $output;
-    private $totalCount;
-    private $currentCount = 0;
 
-    /**
-     * @Event("ScannerCommand.Output.Register")
-     */
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
 
-    /**
-     * @Event("ScannerCommand.Config.Register")
-     */
-    public function setCponfig(Configuration $config)
+    public function processResult($result)
     {
-        $this->totalCount = $config->getContainerSize();
-    }
-
-    /**
-     * @Event("Scanner.Scan.Validate")
-     */
-    public function process($result)
-    {
-        $this->currentCount++;
-
-        $position = $this->currentCount . "/" . $this->totalCount . " ";
-
         if ($result['type'] === Scanner::PASSED) {
             $this->output->writeln('   <info> ' . $result['url'] . '</info> all tests passed. ');
         } else {
@@ -47,5 +27,9 @@ class LiveReporter
 
         }
         $this->output->writeln('');
+    }
+
+    public function finish()
+    {
     }
 }
