@@ -13,7 +13,11 @@ extensions:
       format: normal
 
   _Reporter:
-    class: whm\Smoke\Extensions\SmokeReporter\CliReporter
+    class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
+
+reporter:
+    _CliReporter:
+        class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
 
 rules:
   _HtmlSize:

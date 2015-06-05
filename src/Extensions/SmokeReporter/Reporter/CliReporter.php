@@ -1,35 +1,25 @@
 <?php
 
-namespace whm\Smoke\Extensions\SmokeReporter;
+namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Scanner;
 
-class CliReporter
+class CliReporter implements Reporter
 {
     private $output;
-
     private $results = array();
 
-    /**
-     * @Event("ScannerCommand.Output.Register")
-     */
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
 
-    /**
-     * @Event("Scanner.Scan.Validate")
-     */
-    public function process($result)
+    public function processResult($result)
     {
         $this->results[] = $result;
     }
 
-    /**
-     * @Event("Scanner.Scan.Finish")
-     */
     public function finish()
     {
         $this->output->writeln("\n\n <comment>Passed tests:</comment> \n");

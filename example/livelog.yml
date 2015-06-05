@@ -1,8 +1,14 @@
 options:
   extendDefault: true
 
-listeners:
- _Reporter:
-   class: whm\Smoke\Reporter\LiveReporter
+extensions:
+
  _ProgressBar:
-   class: whm\Smoke\Console\NullProgressBar
+   class: whm\Smoke\Extensions\SmokeProgressBar\NullProgressBar
+
+reporter:
+   LiveReporter:
+     class: whm\Smoke\Extensions\SmokeReporter\Reporter\LiveReporter
+
+   _CliReporter:
+     class: whm\Smoke\Extensions\SmokeReporter\Reporter\NullReporter
