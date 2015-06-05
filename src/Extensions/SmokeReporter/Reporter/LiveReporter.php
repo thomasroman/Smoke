@@ -23,7 +23,6 @@ class LiveReporter implements Reporter
             foreach ($result['messages'] as $ruleName => $message) {
                 $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
             }
-
         }
         $this->output->writeln('');
     }
