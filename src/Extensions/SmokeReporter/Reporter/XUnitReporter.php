@@ -2,8 +2,9 @@
 
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
-use Extensions\SmokeReporter\Reporter\OutputAwareReporter;
+use whm\Smoke\Extensions\SmokeReporter\Reporter\OutputAwareReporter;
 use Symfony\Component\Console\Output\OutputInterface;
+use whm\Smoke\Scanner\Scanner;
 
 class XUnitReporter implements Reporter, OutputAwareReporter
 {
@@ -56,10 +57,10 @@ class XUnitReporter implements Reporter, OutputAwareReporter
             $testCase->setAttribute('time', $result['time']);
 
             switch ($result['type']) {
-                case 'passed':
+                case Scanner::PASSED:
                     break;
 
-                case 'error':
+                case Scanner::ERROR:
                     $failures++;
                     $testFailure = $xml->createElement('failure');
                     $testCase->appendChild($testFailure);
