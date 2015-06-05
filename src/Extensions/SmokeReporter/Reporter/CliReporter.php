@@ -5,7 +5,7 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Scanner;
 
-class CliReporter implements Reporter
+class CliReporter implements Reporter, OutputAwareReporter
 {
     private $output;
     private $results = array();

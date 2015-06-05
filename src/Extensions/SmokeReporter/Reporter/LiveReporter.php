@@ -5,7 +5,7 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Scanner;
 
-class LiveReporter implements Reporter
+class LiveReporter implements Reporter, OutputAwareReporter
 {
     private $output;
 

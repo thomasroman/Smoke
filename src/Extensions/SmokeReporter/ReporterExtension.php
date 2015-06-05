@@ -5,7 +5,7 @@ namespace whm\Smoke\Extensions\SmokeReporter;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Scanner\Scanner;
+use whm\Smoke\Extensions\SmokeReporter\Reporter\OutputAwareReporter;
 
 class ReporterExtension
 {
@@ -17,7 +17,7 @@ class ReporterExtension
     public function setOutput(OutputInterface $output)
     {
         foreach ($this->reporters as $reporter) {
-            if (method_exists($reporter, 'setOutput')) {
+            if ($reporter instanceof OutputAwareReporter) {
                 $reporter->setOutput($output);
             }
         }

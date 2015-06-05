@@ -2,9 +2,10 @@
 
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
+use Extensions\SmokeReporter\Reporter\OutputAwareReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class XUnitReporter implements Reporter
+class XUnitReporter implements Reporter, OutputAwareReporter
 {
     private $filename = null;
 
