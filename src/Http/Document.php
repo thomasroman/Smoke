@@ -22,7 +22,7 @@ class Document
     /**
      * @return Uri[]
      */
-    public function getReferencedUris()
+    public function getReferencedUris(Uri $currentUri)
     {
         $crawler = new Crawler($this->content);
 
@@ -43,6 +43,16 @@ class Document
 
             return (strpos($this->content, (string) $a) < strpos($this->content, (string) $b)) ? -1 : 1;
         });
+
+        foreach ($urls as &$uri) {
+            if (!$uri->getScheme()) {
+                if ($uri->getHost() === '') {
+                    $uri = $uri->withPath($uri->getPath());
+                } else {
+                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
+                }
+            }
+        }
 
         return $urls;
     }

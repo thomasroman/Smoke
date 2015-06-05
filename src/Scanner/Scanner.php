@@ -37,16 +37,9 @@ class Scanner
     private function processHtmlContent($htmlContent, Uri $currentUri)
     {
         $htmlDocument = new Document($htmlContent);
-        $referencedUris = $htmlDocument->getReferencedUris();
+        $referencedUris = $htmlDocument->getReferencedUris($currentUri);
 
         foreach ($referencedUris as $uri) {
-            if (!$uri->getScheme()) {
-                if ($uri->getHost() === '') {
-                    $uri = $currentUri->withPath($uri->getPath());
-                } else {
-                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
-                }
-            }
             if ($this->configuration->isUriAllowed($uri)) {
                 $this->pageContainer->push($uri, $currentUri);
             }
