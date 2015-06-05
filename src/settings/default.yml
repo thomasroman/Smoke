@@ -4,17 +4,16 @@ whitelist:
 options:
   scanForeignDomains: false
 
-listeners:
+extensions:
 
   _ProgressBar:
-    class: whm\Smoke\Cli\ProgressBar
+    class: whm\Smoke\Extensions\SmokeProgressBar\ProgressBar
     parameters:
       width: 100
       format: normal
 
   _Reporter:
-      class: whm\Smoke\Reporter\CliReporter
-
+    class: whm\Smoke\Extensions\SmokeReporter\CliReporter
 
 rules:
   _HtmlSize:
