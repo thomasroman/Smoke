@@ -1,0 +1,8 @@
+options:
+  extendDefault: true
+
+listeners:
+ _Reporter:
+   class: whm\Smoke\Reporter\LiveReporter
+ _ProgressBar:
+   class: whm\Smoke\Console\NullProgressBar
