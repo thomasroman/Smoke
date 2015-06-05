@@ -5,7 +5,7 @@ namespace whm\Smoke\Extensions\SmokeProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 
-class ProgressBar 
+class ProgressBar
 {
     private $progressBar;
     private $config;
