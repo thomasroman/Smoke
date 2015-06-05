@@ -4,7 +4,7 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
-class XUnitReporter
+class XUnitReporter implements Reporter
 {
     private $filename = null;
 
@@ -17,25 +17,16 @@ class XUnitReporter
         $this->filename = $filename;
     }
 
-    /**
-     * @Event("ScannerCommand.Output.Register")
-     */
     public function setOutput(OutputInterface $output)
     {
         $this->output = $output;
     }
 
-    /**
-     * @Event("Scanner.Scan.Validate")
-     */
-    public function process($result)
+    public function processResult($result)
     {
         $this->results[] = $result;
     }
 
-    /**
-     * @Event("Scanner.Scan.Finish")
-     */
     public function finish()
     {
         $failures = 0;

@@ -17,7 +17,7 @@ class ReporterExtension
     public function setOutput(OutputInterface $output)
     {
         foreach ($this->reporters as $reporter) {
-            if (method_exists($reporter, "setOutput")) {
+            if (method_exists($reporter, 'setOutput')) {
                 $reporter->setOutput($output);
             }
         }
@@ -28,10 +28,9 @@ class ReporterExtension
      */
     public function setReporter(Configuration $config)
     {
-        if ($config->hasSection("reporter")) {
-            $this->reporters = Init::initializeAll($config->getSection("reporter"));
+        if ($config->hasSection('reporter')) {
+            $this->reporters = Init::initializeAll($config->getSection('reporter'));
         }
-
     }
 
     /**

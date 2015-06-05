@@ -161,9 +161,9 @@ class Configuration
         }
 
         foreach ($this->whitelist as $whitelist) {
-            if (preg_match($whitelist, (string)$uri)) {
+            if (preg_match($whitelist, (string) $uri)) {
                 foreach ($this->blacklist as $blacklist) {
-                    if (preg_match($blacklist, (string)$uri)) {
+                    if (preg_match($blacklist, (string) $uri)) {
                         return false;
                     }
                 }
