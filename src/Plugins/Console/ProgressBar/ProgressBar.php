@@ -1,6 +1,6 @@
 <?php
 
-namespace whm\Smoke\Plugin\Console\ProgressBar;
+namespace whm\Smoke\Plugins\Console\ProgressBar;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;

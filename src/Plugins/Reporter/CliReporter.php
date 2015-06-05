@@ -1,6 +1,6 @@
 <?php
 
-namespace whm\Smoke\Plugin\Reporter;
+namespace whm\Smoke\Plugins\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Scanner;
