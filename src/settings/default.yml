@@ -71,3 +71,6 @@ rules:
 
   _RssValid:
     class: whm\Smoke\Rules\Xml\Rss\ValidRule
+
+  _XmlDuplicateId:
+    class: whm\Smoke\Rules\Xml\DuplicateIdRule
