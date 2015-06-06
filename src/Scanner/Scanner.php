@@ -62,16 +62,20 @@ class Scanner
                     $this->processHtmlContent($response->getBody(), $currentUri);
                 }
 
-                $violation = $this->checkResponse($response);
-                $violation['parent'] = $this->pageContainer->getParent($currentUri);
-                $violation['contentType'] = $response->getContentType();
-                $violation['url'] = $response->getUri();
+                $resultArray = $this->checkResponse($response);
 
-                if ($violation['type'] === self::ERROR) {
+                $result = new Result($response->getUri(),
+                    $resultArray['type'],
+                    $response,
+                    $this->pageContainer->getParent($currentUri),
+                    $resultArray['time']);
+
+                if ($result->isFailure()) {
+                    $result->setMessages($resultArray['messages']);
                     $this->status = 1;
                 }
 
-                $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $violation));
+                $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $result));
             }
         } while (count($urls) > 0);
 
@@ -101,11 +105,11 @@ class Scanner
         $time = round(($endTime - $startTime) * 1000, 5);
 
         if ($messages) {
-            $violation = ['messages' => $messages, 'time' => $time, 'type' => self::ERROR];
+            $resultArray = ['messages' => $messages, 'time' => $time, 'type' => self::ERROR];
         } else {
-            $violation = ['messages' => [], 'time' => $time, 'type' => self::PASSED];
+            $resultArray = ['messages' => [], 'time' => $time, 'type' => self::PASSED];
         }
 
-        return $violation;
+        return $resultArray;
     }
 }
