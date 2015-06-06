@@ -6,6 +6,7 @@ use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Extensions\SmokeReporter\Reporter\OutputAwareReporter;
+use whm\Smoke\Scanner\Result;
 
 class ReporterExtension
 {
@@ -36,7 +37,7 @@ class ReporterExtension
     /**
      * @Event("Scanner.Scan.Validate")
      */
-    public function process($result)
+    public function process(Result $result)
     {
         foreach ($this->reporters as $reporter) {
             $reporter->processResult($result);

@@ -3,12 +3,15 @@
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use whm\Smoke\Scanner\Scanner;
+use whm\Smoke\Scanner\Result;
 
 class XUnitReporter implements Reporter, OutputAwareReporter
 {
     private $filename = null;
 
+    /**
+     * @var Result[]
+     */
     private $results = array();
 
     private $output = null;
@@ -23,7 +26,7 @@ class XUnitReporter implements Reporter, OutputAwareReporter
         $this->output = $output;
     }
 
-    public function processResult($result)
+    public function processResult(Result $result)
     {
         $this->results[] = $result;
     }
@@ -43,35 +46,26 @@ class XUnitReporter implements Reporter, OutputAwareReporter
         $xmlRoot->appendChild($testSuite);
 
         foreach ($this->results as $result) {
-            $absoluteTime += $result['time'];
+            $absoluteTime += $result->getDuration();
 
             $testCase = $xml->createElement('testcase');
 
-            $testCase->setAttribute('classname', $result['type']);
-            $testCase->setAttribute('file', $result['url']);
+            $testCase->setAttribute('classname', '');
+            $testCase->setAttribute('file', $result->getUrl());
             $testCase->setAttribute('name', '');
             $testCase->setAttribute('class', '');
             //$testCase->setAttribute('feature', $result['messages']);
             $testCase->setAttribute('assertions', '1');
-            $testCase->setAttribute('time', $result['time']);
+            $testCase->setAttribute('time', $result->getDuration());
 
-            switch ($result['type']) {
-                case Scanner::PASSED:
-                    break;
+            if ($result->isFailure()) {
+                $failures++;
+                $testFailure = $xml->createElement('failure');
+                $testCase->appendChild($testFailure);
 
-                case Scanner::ERROR:
-                    $failures++;
-                    $testFailure = $xml->createElement('failure');
-                    $testCase->appendChild($testFailure);
-
-                    $testFailure->setAttribute('type', implode('; ', array_keys($result['messages'])));
-                    $text = $xml->createTextNode(implode('; ', $result['messages']));
-                    $testFailure->appendChild($text);
-
-                    break;
-
-                default:
-                    throw new \Exception($result['type'] . 'result type not known');
+                $testFailure->setAttribute('type', implode('; ', array_keys($result->getMessages())));
+                $text = $xml->createTextNode(implode('; ', $result->getMessages()));
+                $testFailure->appendChild($text);
             }
 
             $testSuite->appendChild($testCase);
@@ -80,7 +74,7 @@ class XUnitReporter implements Reporter, OutputAwareReporter
         // @TODO: calculate amount of assertions (global and for every test)
         // @TODO: differentiate between errors and failures
 
-        $testSuite->setAttribute('name', reset($this->results)['parent']);
+        $testSuite->setAttribute('name', '');
         $testSuite->setAttribute('tests', count($this->results));
         $testSuite->setAttribute('assertions', count($this->results));
         $testSuite->setAttribute('failures', $failures);
