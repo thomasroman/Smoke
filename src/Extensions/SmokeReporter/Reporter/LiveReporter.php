@@ -3,7 +3,7 @@
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use whm\Smoke\Scanner\Scanner;
+use whm\Smoke\Scanner\Result;
 
 class LiveReporter implements Reporter, OutputAwareReporter
 {
@@ -14,13 +14,13 @@ class LiveReporter implements Reporter, OutputAwareReporter
         $this->output = $output;
     }
 
-    public function processResult($result)
+    public function processResult(Result $result)
     {
-        if ($result['type'] === Scanner::PASSED) {
-            $this->output->writeln('   <info> ' . $result['url'] . '</info> all tests passed. ');
+        if ($result->isSuccess()) {
+            $this->output->writeln('   <info> ' . $result->getUrl() . '</info> all tests passed. ');
         } else {
-            $this->output->writeln('   <error> ' . $result['url'] . ' </error> coming from ' . $result['parent']);
-            foreach ($result['messages'] as $ruleName => $message) {
+            $this->output->writeln('   <error> ' . $result->getUrl() . ' </error> coming from ' . $result->getParent());
+            foreach ($result->getMessages() as $ruleName => $message) {
                 $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
             }
         }
