@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
-use whm\Smoke\Extensions\SmokeReporter\Reporter\OutputAwareReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Scanner;
 
