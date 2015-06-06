@@ -46,10 +46,10 @@ class Document
 
         foreach ($urls as &$uri) {
             if (!$uri->getScheme()) {
-                if ($uri->getHost() === '') {
-                    $uri = $uri->withPath($uri->getPath());
+                if (strpos($uri->getPath(), '/') === 1) {
+                    $uri = new Uri($currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath());
                 } else {
-                    $uri = new Uri($currentUri->getScheme() . '://' . $uri->getHost() . ($uri->getPath()));
+                    $uri = new Uri($currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath());
                 }
             }
         }

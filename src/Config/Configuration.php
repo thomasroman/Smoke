@@ -148,12 +148,13 @@ class Configuration
 
     public function isUriAllowed(Uri $uri)
     {
-        if (!$this->scanForeignDomains()) {
+        if (!$this->scanForeignDomains() && $uri->getHost() !== '') {
             $tlds = explode('.', $uri->getHost());
-            $currentTld = array_pop($tlds);
+
+            $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
 
             $tlds = explode('.', $this->startUri->getHost());
-            $startTld = array_pop($tlds);
+            $startTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
 
             if ($currentTld !== $startTld) {
                 return false;
