@@ -38,12 +38,16 @@ class Scanner
 
     private function processHtmlContent($htmlContent, Uri $currentUri)
     {
-        $htmlDocument = new Document($htmlContent);
-        $referencedUris = $htmlDocument->getReferencedUris($currentUri);
+        $htmlDocument = new Document($htmlContent, $currentUri);
+        $referencedUris = $htmlDocument->getReferencedUris();
 
         foreach ($referencedUris as $uri) {
-            if ($this->configuration->isUriAllowed($uri)) {
-                $this->pageContainer->push($uri, $currentUri);
+            if (filter_var((string) $uri, FILTER_VALIDATE_URL)) {
+                if ($this->configuration->isUriAllowed($uri)) {
+                    $this->pageContainer->push($uri, $currentUri);
+                }
+            } else {
+                $this->eventDispatcher->simpleNotify('Scanner.ProcessHtml.InValidUrl', array('uri' => $uri));
             }
         }
     }

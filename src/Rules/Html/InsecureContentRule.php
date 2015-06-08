@@ -27,7 +27,7 @@ class InsecureContentRule implements Rule
             return;
         }
 
-        $htmlDocument = new Document($response->getBody());
+        $htmlDocument = new Document($response->getBody(), $response->getUri());
         $resources = $htmlDocument->getExternalDependencies();
 
         foreach ($resources as $resource) {

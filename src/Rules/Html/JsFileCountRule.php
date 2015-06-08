@@ -32,7 +32,7 @@ class JsFileCountRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody());
+        $document = new Document($response->getBody(), $response->getUri());
         $jsFiles = $document->getExternalDependencies(['js']);
 
         if (count($jsFiles) > $this->maxCount) {

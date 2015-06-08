@@ -13,16 +13,18 @@ use Symfony\Component\DomCrawler\Crawler;
 class Document
 {
     private $content;
+    private $uri;
 
-    public function __construct($htmlContent)
+    public function __construct($htmlContent, Uri $uri)
     {
         $this->content = $htmlContent;
+        $this->uri = $uri;
     }
 
     /**
      * @return Uri[]
      */
-    public function getReferencedUris(Uri $currentUri)
+    public function getReferencedUris()
     {
         $crawler = new Crawler($this->content);
 
@@ -46,17 +48,29 @@ class Document
 
         foreach ($urls as &$uri) {
             try {
-                if (!$uri->getScheme()) {
-                    if (strpos($uri->getPath(), '/') === 1) {
-                        $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
-                    } else {
-                        $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
-                    }
-                    $uri = new Uri($uriString);
+                if ($uri->getQuery() !== '') {
+                    $query = '?' . $uri->getQuery();
+                } else {
+                    $query = '';
                 }
 
-                if ($uri->getHost() === 'null') {
-                    $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
+                if ($uri->getScheme() === '') {
+                    if ($uri->getHost() !== '') {
+                        $uriString = $this->uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . $query;
+                    } else {
+                        if (strpos($uri->getPath(), '/') === 0) {
+                            // absolute path
+                            $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $uri->getPath() . $query;
+                        } else {
+                            // relative path
+                            if (strpos(strrev($this->uri->getPath()), '/') !== 0) {
+                                $separator = '/';
+                            } else {
+                                $separator = '';
+                            }
+                            $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $this->uri->getPath() . $separator . $uri->getPath() . $query;
+                        }
+                    }
                     $uri = new Uri($uriString);
                 }
             } catch (\InvalidArgumentException $e) {
@@ -106,7 +120,7 @@ class Document
 
     /**
      * @param $crawler
-     * @param $urls
+     * @param Uri[] $urls
      */
     private function findUrls(Crawler $crawler, &$urls, $xpath, $attribute)
     {

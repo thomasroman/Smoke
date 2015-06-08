@@ -148,7 +148,7 @@ class Configuration
 
     public function isUriAllowed(Uri $uri)
     {
-        if (!$this->scanForeignDomains() && $uri->getHost() !== '') {
+        if (!$this->scanForeignDomains()) {
             $tlds = explode('.', $uri->getHost());
 
             $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];

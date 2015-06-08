@@ -32,7 +32,7 @@ class CssFileCountRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody());
+        $document = new Document($response->getBody(), $response->getUri());
         $cssFiles = $document->getExternalDependencies(['css']);
 
         if (count($cssFiles) > $this->maxCount) {
