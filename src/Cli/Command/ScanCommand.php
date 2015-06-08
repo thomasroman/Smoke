@@ -68,17 +68,6 @@ class ScanCommand extends Command
         return $scanner->getStatus();
     }
 
-    private function getStatus($scanResults)
-    {
-        foreach ($scanResults as $result) {
-            if ($result['type'] === Scanner::ERROR) {
-                return 1;
-            }
-        }
-
-        return 0;
-    }
-
     /**
      * Initializes the configuration.
      *
