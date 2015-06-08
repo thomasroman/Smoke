@@ -15,6 +15,8 @@ class Document
     private $content;
     private $uri;
 
+    private $referencedUrls;
+
     public function __construct($htmlContent, Uri $uri)
     {
         $this->content = $htmlContent;
@@ -26,6 +28,10 @@ class Document
      */
     public function getReferencedUris()
     {
+        if (!is_null($this->referencedUrls)) {
+            return $this->referencedUrls;
+        }
+
         $crawler = new Crawler($this->content);
 
         $urls = [];
@@ -77,6 +83,8 @@ class Document
                 throw new \InvalidArgumentException($e->getMessage() . ". ($uriString)");
             }
         }
+
+        $this->referencedUrls = $urls;
 
         return $urls;
     }

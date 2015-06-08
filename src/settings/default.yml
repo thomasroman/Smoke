@@ -38,6 +38,9 @@ rules:
   _HtmlClosingTag:
     class: whm\Smoke\Rules\Html\ClosingHtmlTagRule
 
+  _HtmlInvalidUrlsTag:
+    class: whm\Smoke\Rules\Html\InvalidUrlsRule
+
   _HtmlUnsecureContent:
     class: whm\Smoke\Rules\Html\InsecureContentRule
 
