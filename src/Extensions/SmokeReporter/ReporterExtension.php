@@ -10,27 +10,30 @@ use whm\Smoke\Scanner\Result;
 
 class ReporterExtension
 {
-    private $reporters;
+    private $reporters = array();
+    private $output;
 
     /**
      * @Event("ScannerCommand.Output.Register")
      */
     public function setOutput(OutputInterface $output)
     {
-        foreach ($this->reporters as $reporter) {
-            if ($reporter instanceof OutputAwareReporter) {
-                $reporter->setOutput($output);
-            }
-        }
+        $this->output = $output;
     }
 
     /**
-     * @Event("ScannerCommand.Config.Register")
+     * @Event("Scanner.Init")
      */
-    public function setReporter(Configuration $config)
+    public function setReporter(Configuration $configuration)
     {
-        if ($config->hasSection('reporter')) {
-            $this->reporters = Init::initializeAll($config->getSection('reporter'));
+        if ($configuration->hasSection('reporter')) {
+            $this->reporters = Init::initializeAll($configuration->getSection('reporter'));
+        }
+
+        foreach ($this->reporters as $reporter) {
+            if ($reporter instanceof OutputAwareReporter) {
+                $reporter->setOutput($this->output);
+            }
         }
     }
 
