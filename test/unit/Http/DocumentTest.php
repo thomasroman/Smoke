@@ -26,6 +26,9 @@ class DocumentTest extends \PHPUnit_Framework_TestCase
             'http://www.example.com/absolute_path.php',
             'http://www.notexample.com/foreign_domain.html', );
 
-        $this->assertEquals($expectedUrls, $currentUrls);
+        sort($expectedUrls);
+        sort($currentUrls);
+
+        $this->assertEquals($currentUrls, $expectedUrls);
     }
 }
