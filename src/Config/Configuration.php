@@ -151,12 +151,11 @@ class Configuration
         if (!$this->scanForeignDomains()) {
             $tlds = explode('.', $uri->getHost());
 
-            if(count($tlds) < 2) {
+            if (count($tlds) < 2) {
                 return false;
             }
 
             $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
-
 
             $tlds = explode('.', $this->startUri->getHost());
             $startTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
