@@ -45,12 +45,22 @@ class Document
         });
 
         foreach ($urls as &$uri) {
-            if (!$uri->getScheme()) {
-                if (strpos($uri->getPath(), '/') === 1) {
-                    $uri = new Uri($currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath());
-                } else {
-                    $uri = new Uri($currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath());
+            try {
+                if (!$uri->getScheme()) {
+                    if (strpos($uri->getPath(), '/') === 1) {
+                        $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
+                    } else {
+                        $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
+                    }
+                    $uri = new Uri($uriString);
                 }
+
+                if ($uri->getHost() === 'null') {
+                    $uriString = $currentUri->getScheme() . '://' . $currentUri->getHost() . $uri->getPath() . '?' . $uri->getQuery();
+                    $uri = new Uri($uriString);
+                }
+            } catch (\InvalidArgumentException $e) {
+                throw new \InvalidArgumentException($e->getMessage() . ". ($uriString)");
             }
         }
 
@@ -79,6 +89,10 @@ class Document
 
     private function followableUrl($url)
     {
+        // check if data url
+        if (strpos($url, 'data:') !== false) {
+            return false;
+        }
         if ($urlParts = parse_url($url)) {
             if (isset($urlParts['scheme']) && !in_array($urlParts['scheme'], ['http', 'https'], true)) {
                 return false;
