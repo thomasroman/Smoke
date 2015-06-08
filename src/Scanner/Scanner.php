@@ -27,7 +27,7 @@ class Scanner
 
     public function __construct(Configuration $config, HttpClient $client, Dispatcher $eventDispatcher)
     {
-        $eventDispatcher->simpleNotify("Scanner.Init", array("configuration" => $config, "httpClient" => $config));
+        $eventDispatcher->simpleNotify('Scanner.Init', array('configuration' => $config, 'httpClient' => $config));
 
         $this->pageContainer = new PageContainer($config->getContainerSize());
         $this->pageContainer->push($config->getStartUri(), $config->getStartUri());
