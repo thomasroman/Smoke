@@ -146,12 +146,17 @@ class Configuration
         return $this->scanForeignDomains;
     }
 
-    public function isUriAllowed(Uri $uri)
+    public function isUriAllowed(Uri $uri, $currentUri)
     {
         if (!$this->scanForeignDomains()) {
             $tlds = explode('.', $uri->getHost());
 
+            if(count($tlds) < 2) {
+                return false;
+            }
+
             $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
+
 
             $tlds = explode('.', $this->startUri->getHost());
             $startTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];

@@ -39,11 +39,11 @@ class Scanner
     private function processHtmlContent($htmlContent, Uri $currentUri)
     {
         $htmlDocument = new Document($htmlContent, $currentUri);
-        $referencedUris = $htmlDocument->getReferencedUris();
+        $referencedUris = $htmlDocument->getReferencedUris($currentUri);
 
         foreach ($referencedUris as $uri) {
             if (filter_var((string) $uri, FILTER_VALIDATE_URL)) {
-                if ($this->configuration->isUriAllowed($uri)) {
+                if ($this->configuration->isUriAllowed($uri, $currentUri)) {
                     $this->pageContainer->push($uri, $currentUri);
                 }
             } else {
