@@ -32,6 +32,9 @@ class ReporterExtension
 
         foreach ($this->reporters as $reporter) {
             if ($reporter instanceof OutputAwareReporter) {
+		if (is_null($this->output)) {
+			throw new \RuntimeException('You tried to initialize an OutputAwareReporter ("' . get_class($reporter) . '") but did not set the OutputInterface');
+		}
                 $reporter->setOutput($this->output);
             }
         }
