@@ -1,0 +1,8 @@
+options:
+  extendDefault: true
+
+whitelist:
+  - ^www.example.com^
+
+blacklist:
+  - ^example.com/do_not_analyze^
