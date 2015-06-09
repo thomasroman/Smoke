@@ -12,11 +12,6 @@ class Configuration
 {
     const DEFAULT_SETTINGS = 'default.yml';
 
-    private $blacklist;
-    private $whitelist;
-
-    private $scanForeignDomains = false;
-
     private $startUri;
 
     private $containerSize;
@@ -28,6 +23,8 @@ class Configuration
     private $configArray;
 
     private $eventDispatcher;
+
+    private $extensions = array();
 
     public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
@@ -47,25 +44,10 @@ class Configuration
                     $configArray = array_replace_recursive($defaultSettings, $configArray);
                 }
             }
-            if (array_key_exists('scanForeignDomains', $configArray['options'])) {
-                $this->scanForeignDomains = $configArray['options']['scanForeignDomains'];
-            }
         }
 
         if (array_key_exists('extensions', $configArray)) {
             $this->addListener($configArray['extensions']);
-        }
-
-        if (array_key_exists('blacklist', $configArray)) {
-            $this->blacklist = $configArray['blacklist'];
-        } else {
-            $this->blacklist = [];
-        }
-
-        if (array_key_exists('whitelist', $configArray)) {
-            $this->whitelist = $configArray['whitelist'];
-        } else {
-            $this->whitelist = ['^^'];
         }
 
         if (!array_key_exists('rules', $configArray)) {
@@ -80,9 +62,10 @@ class Configuration
 
     private function addListener(array $listenerArray)
     {
-        $listeners = Init::initializeAll($listenerArray);
-        foreach ($listeners as $listener) {
-            $this->eventDispatcher->connectListener($listener);
+        foreach ($listenerArray as $key => $listenerConfig) {
+            $extension = Init::initialize($listenerConfig);
+            $this->extensions[$key] = $extension;
+            $this->eventDispatcher->connectListener($extension);
         }
     }
 
@@ -93,14 +76,12 @@ class Configuration
         return new self($uri, $defaultSettings);
     }
 
+    /**
+     * @return Uri
+     */
     public function getStartUri()
     {
         return $this->startUri;
-    }
-
-    public function enableForeignDomainScan()
-    {
-        $this->scanForeignDomains = true;
     }
 
     public function setContainerSize($size)
@@ -123,27 +104,12 @@ class Configuration
         return $this->parallelRequestCount;
     }
 
-    public function getBlacklist()
-    {
-        return $this->blacklist;
-    }
-
-    public function getWhitelist()
-    {
-        return $this->whitelist;
-    }
-
     /**
      * @return Rule[]
      */
     public function getRules()
     {
         return $this->rules;
-    }
-
-    public function scanForeignDomains()
-    {
-        return $this->scanForeignDomains;
     }
 
     public function isUriAllowed(Uri $uri, $currentUri)
@@ -165,18 +131,6 @@ class Configuration
             }
         }
 
-        foreach ($this->whitelist as $whitelist) {
-            if (preg_match($whitelist, (string) $uri)) {
-                foreach ($this->blacklist as $blacklist) {
-                    if (preg_match($blacklist, (string) $uri)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-        }
-
         return false;
     }
 
@@ -188,5 +142,16 @@ class Configuration
     public function getSection($section)
     {
         return $this->configArray[$section];
+    }
+
+    public function getExtension($name)
+    {
+        return $this->extensions[$name];
+    }
+
+    public function addExtension($name, $extension)
+    {
+        $this->extensions[$name] = $extension;
+        $this->eventDispatcher->connectListener($extension);
     }
 }
