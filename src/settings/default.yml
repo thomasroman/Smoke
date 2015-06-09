@@ -90,3 +90,6 @@ rules:
 
   _XmlDuplicateId:
     class: whm\Smoke\Rules\Xml\DuplicateIdRule
+
+  _SecurityPasswordSecureTranfer:
+    class: whm\Smoke\Rules\Security\PasswordSecureTransferRule
