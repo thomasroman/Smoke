@@ -4,6 +4,8 @@ namespace whm\Smoke\Scanner;
 
 use Phly\Http\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
+use phmLabs\Components\Annovent\Event\Event;
+use PhmLabs\Components\Init\Init;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Http\Document;
 use whm\Smoke\Http\HttpClient;
@@ -42,12 +44,10 @@ class Scanner
         $referencedUris = $htmlDocument->getReferencedUris($currentUri);
 
         foreach ($referencedUris as $uri) {
-            if (filter_var((string) $uri, FILTER_VALIDATE_URL)) {
-                if ($this->configuration->isUriAllowed($uri, $currentUri)) {
-                    $this->pageContainer->push($uri, $currentUri);
-                }
-            } else {
-                $this->eventDispatcher->simpleNotify('Scanner.ProcessHtml.InValidUrl', array('uri' => $uri));
+            $isFiltered = $this->eventDispatcher->notifyUntil(new Event('Scanner.ProcessHtml.isFiltered', array('uri' => $uri)));
+
+            if (!$isFiltered) {
+                $this->pageContainer->push($uri, $currentUri);
             }
         }
     }

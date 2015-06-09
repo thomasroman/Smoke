@@ -29,7 +29,6 @@ class ScanCommand extends Command
                 new InputOption('num_urls', 'u', InputOption::VALUE_OPTIONAL, 'number of urls to be checled', 20),
                 new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
                 new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
-                new InputOption('foreign', 'f', InputOption::VALUE_NONE, 'include foreign domains'),
             ])
             ->setDescription('analyses a website')
             ->setHelp('The <info>analyse</info> command runs a cache test.')
@@ -45,7 +44,6 @@ class ScanCommand extends Command
 
         $config = $this->initConfiguration(
             $input->getOption('config_file'),
-            $input->getOption('foreign'),
             $input->getOption('num_urls'),
             $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
@@ -77,7 +75,7 @@ class ScanCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($configFile, $loadForeign, $num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($configFile, $num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
         $defaultConfigFile = __DIR__ . '/../../settings/default.yml';
         if ($configFile) {
@@ -91,10 +89,6 @@ class ScanCommand extends Command
         }
 
         $config = new Configuration($uri, $dispatcher, $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
-
-        if ($loadForeign) {
-            $config->enableForeignDomainScan();
-        }
 
         if ($num_urls) {
             $config->setContainerSize($num_urls);

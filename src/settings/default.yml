@@ -15,9 +15,22 @@ extensions:
   _Reporter:
     class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
 
+  _Filter:
+    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+
 reporter:
-    _CliReporter:
-        class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
+  _CliReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
+
+filters:
+  _BlackWhiteListFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\BlackWhiteListFilter
+
+  _ValidUrlFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\ValidUrlFilter
+
+  _ForeignDomainFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\ForeignDomainFilter
 
 rules:
   _HtmlSize:
