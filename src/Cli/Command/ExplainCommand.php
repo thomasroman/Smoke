@@ -78,7 +78,6 @@ class ExplainCommand extends Command
      */
     private function initConfiguration($configFile)
     {
-        $defaultConfigFile = __DIR__ . '/../../settings/default.yml';
         if ($configFile) {
             if (file_exists($configFile)) {
                 $configArray = Yaml::parse(file_get_contents($configFile));
@@ -89,7 +88,7 @@ class ExplainCommand extends Command
             $configArray = [];
         }
 
-        $config = new Configuration(new Uri(''), new Dispatcher(), $configArray, Yaml::parse(file_get_contents($defaultConfigFile)));
+        $config = new Configuration(new Uri(''), new Dispatcher(), $configArray);
 
         return $config;
     }
