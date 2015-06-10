@@ -13,7 +13,11 @@ class PageContainer
 
     public function __construct($maxSize = 100)
     {
-        $this->maxSize = $maxSize;
+        if ($maxSize === 0) {
+            $this->maxSize = 100000;
+        } else {
+            $this->maxSize = $maxSize;
+        }
     }
 
     public function getMaxSize()

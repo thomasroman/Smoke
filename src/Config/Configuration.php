@@ -10,7 +10,7 @@ use whm\Smoke\Rules\Rule;
 
 class Configuration
 {
-    const DEFAULT_SETTINGS = 'default.yml';
+    const DEFAULT_SETTINGS = 'analyze.yml';
 
     private $startUri;
 

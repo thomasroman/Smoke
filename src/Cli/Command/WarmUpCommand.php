@@ -15,7 +15,7 @@ use whm\Smoke\Config\Configuration;
 use whm\Smoke\Http\HttpClient;
 use whm\Smoke\Scanner\Scanner;
 
-class ScanCommand extends Command
+class WarmUpCommand extends Command
 {
     /**
      * @inheritdoc
@@ -25,14 +25,14 @@ class ScanCommand extends Command
         $this
             ->setDefinition([
                 new InputArgument('url', InputArgument::REQUIRED, 'the url to start with'),
-                new InputOption('parallel_requests', 'p', InputOption::VALUE_OPTIONAL, 'number of parallel requests.', 10),
-                new InputOption('num_urls', 'u', InputOption::VALUE_OPTIONAL, 'number of urls to be checled', 20),
+                new InputOption('duration', 'd', InputOption::VALUE_OPTIONAL, 'duration in seconds', 60),
                 new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
+                new InputOption('parallel_requests', 'p', InputOption::VALUE_OPTIONAL, 'number of parallel requests.', 10),
                 new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
             ])
             ->setDescription('analyses a website')
-            ->setHelp('The <info>analyse</info> command runs a cache test.')
-            ->setName('analyse');
+            ->setHelp('The <info>warmup</info> command warms a website up.')
+            ->setName('warmup');
     }
 
     /**
@@ -44,7 +44,6 @@ class ScanCommand extends Command
 
         $config = $this->initConfiguration(
             $input->getOption('config_file'),
-            $input->getOption('num_urls'),
             $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
             $eventDispatcher);
@@ -61,6 +60,9 @@ class ScanCommand extends Command
 
         $scanner = new Scanner($config, new HttpClient(HttpAdapterFactory::guess()), $eventDispatcher);
 
+        $timeStrategy = $config->getExtension('_SmokeStop')->getStrategy('_TimeStop');
+        $timeStrategy->init($input->getOption('duration'));
+
         $scanner->scan();
 
         return $scanner->getStatus();
@@ -75,7 +77,7 @@ class ScanCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($configFile, $num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($configFile, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
         if ($configFile) {
             if (file_exists($configFile)) {
@@ -87,11 +89,11 @@ class ScanCommand extends Command
             $configArray = [];
         }
 
-        $config = new Configuration($uri, $dispatcher, $configArray);
+        $defaultConfig = Yaml::parse(file_get_contents(__DIR__ . '/../../settings/warmup.yml'));
 
-        if ($num_urls) {
-            $config->setContainerSize($num_urls);
-        }
+        $config = new Configuration($uri, $dispatcher, $configArray, $defaultConfig);
+
+        $config->setContainerSize(0);
 
         if ($parallel_requests) {
             $config->setParallelRequestCount($parallel_requests);
