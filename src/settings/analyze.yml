@@ -6,6 +6,9 @@ options:
 
 extensions:
 
+  _SmokeStop:
+    class: whm\Smoke\Extensions\SmokeStop\StopExtension
+
   _ProgressBar:
     class: whm\Smoke\Extensions\SmokeProgressBar\ProgressBar
     parameters:

@@ -29,7 +29,7 @@ class Scanner
 
     public function __construct(Configuration $config, HttpClient $client, Dispatcher $eventDispatcher)
     {
-        $eventDispatcher->simpleNotify('Scanner.Init', array('configuration' => $config, 'httpClient' => $config));
+        $eventDispatcher->simpleNotify('Scanner.Init', array('configuration' => $config, 'httpClient' => $config, 'dispatcher' => $eventDispatcher));
 
         $this->pageContainer = new PageContainer($config->getContainerSize());
         $this->pageContainer->push($config->getStartUri(), $config->getStartUri());
@@ -83,7 +83,7 @@ class Scanner
 
                 $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $result));
             }
-        } while (count($urls) > 0);
+        } while (!$this->eventDispatcher->notifyUntil(new Event('Scanner.Scan.isStopped')) && count($urls) > 0);
 
         $this->eventDispatcher->simpleNotify('Scanner.Scan.Finish');
     }
@@ -97,15 +97,15 @@ class Scanner
     {
         $messages = [];
 
+        $startTime = microtime(true);
         foreach ($this->configuration->getRules() as $name => $rule) {
-            $startTime = microtime(true);
             try {
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
                 $messages[$name] = $e->getMessage();
             }
-            $endTime = microtime(true);
         }
+        $endTime = microtime(true);
 
         // calculate time in seconds
         $time = round(($endTime - $startTime) * 1000, 5);

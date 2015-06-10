@@ -1,0 +1,42 @@
+whitelist:
+ - ^^
+
+options:
+  scanForeignDomains: false
+
+extensions:
+
+  _SmokeStop:
+    class: whm\Smoke\Extensions\SmokeStop\StopExtension
+
+  _ProgressBar:
+    class: whm\Smoke\Extensions\SmokeProgressBar\NullProgressBar
+    parameters:
+      width: 100
+      format: normal
+
+  _Reporter:
+    class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
+
+  _Filter:
+    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+
+stop:
+  _TimeStop:
+    class: whm\Smoke\Extensions\SmokeStop\Strategy\TimeStrategy
+    parameters:
+      duration: 10
+
+reporter:
+  _LiveWarmUpReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\WarmUpLiveReporter
+
+filters:
+  _BlackWhiteListFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\BlackWhiteListFilter
+
+  _ValidUrlFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\ValidUrlFilter
+
+  _ForeignDomainFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\Filter\ForeignDomainFilter
