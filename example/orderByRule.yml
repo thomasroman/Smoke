@@ -7,3 +7,4 @@ reporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
     parameters:
       orderBy: rule
+      maxResults: 10

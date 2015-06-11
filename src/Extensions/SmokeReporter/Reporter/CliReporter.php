@@ -20,10 +20,16 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
     private $results = array();
     private $orderBy;
     private $rules = array();
+    private $maxResults;
 
-    public function init($orderBy = 'url')
+    public function init($orderBy = 'url', $maxResults = 0)
     {
         $this->orderBy = $orderBy;
+        if ($maxResults === 0) {
+            $this->maxResults = 10000000;
+        } else {
+            $this->maxResults = $maxResults;
+        }
     }
 
     public function setConfig(Configuration $config)
@@ -63,16 +69,21 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
 
             $failedUrls = array();
 
+            $count = 0;
             foreach ($this->results as $result) {
                 if ($result->isFailure()) {
-                    $messages = $result->getMessages();
-                    foreach ($messages as $key => $message) {
-                        if ($key === $ruleKey) {
-                            $failedUrls[] = (string) $result->getUrl();
-                        }
+                    if (array_key_exists($ruleKey, $result->getMessages())) {
+                        $failedUrls[] = (string) $result->getUrl();
+                        $count++;
+                    }
+                    if ($count > $this->maxResults) {
+                        $failedUrls[] = '... only the first ' . $this->maxResults . ' elements are shown.';
+                        break;
                     }
                 }
             }
+
+            // var_dump($failedUrls);
 
             if (count($failedUrls) > 0) {
                 $this->output->writeln('  <error> ' . get_class($rule) . ' </error>');
