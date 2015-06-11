@@ -1,0 +1,9 @@
+options:
+  extendDefault: true
+
+reporter:
+
+  _CliReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
+    parameters:
+      orderBy: rule
