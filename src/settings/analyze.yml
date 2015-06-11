@@ -85,6 +85,9 @@ rules:
     parameters:
       maxSize: 100
 
+  _ImageFavIcon:
+    class: whm\Smoke\Rules\Image\FavIconRule
+
   _JsonValid:
     class: whm\Smoke\Rules\Json\ValidRule
 
