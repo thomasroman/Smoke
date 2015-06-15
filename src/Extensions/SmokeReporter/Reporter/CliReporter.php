@@ -73,7 +73,8 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
             foreach ($this->results as $result) {
                 if ($result->isFailure()) {
                     if (array_key_exists($ruleKey, $result->getMessages())) {
-                        $failedUrls[] = (string) $result->getUrl();
+                        $messages = $result->getMessages();
+                        $failedUrls[] = (string) $result->getUrl() . ' - ' . $messages[$ruleKey];
                         $count++;
                     }
                     if ($count > $this->maxResults) {
