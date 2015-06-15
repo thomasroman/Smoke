@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeFilter\Filter;
 
 use Phly\Http\Uri;
 use whm\Smoke\Config\Configuration;
+use whm\Smoke\Http\UriHelper;
 
 class ForeignDomainFilter implements Filter, ConfigAwareFilter
 {
@@ -11,18 +12,7 @@ class ForeignDomainFilter implements Filter, ConfigAwareFilter
 
     public function isFiltered(Uri $uri)
     {
-        $tlds = explode('.', $uri->getHost());
-
-        if (count($tlds) < 2) {
-            return true;
-        }
-
-        $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
-
-        $tlds = explode('.', $this->startUri->getHost());
-        $startTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
-
-        return ($currentTld !== $startTld);
+        return !UriHelper::isSameDomain($uri, $this->startUri, 2);
     }
 
     public function setConfiguration(Configuration $config)

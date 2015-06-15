@@ -3,6 +3,7 @@
 namespace whm\Smoke\Http;
 
 use Phly\Http\Uri;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -21,6 +22,55 @@ class Document
     {
         $this->content = $htmlContent;
         $this->uri = $uri;
+    }
+
+    public function getImages()
+    {
+        $urls = array();
+        $this->findUrls(new Crawler($this->content), $urls, '//img', 'src');
+
+        foreach ($urls as &$uri) {
+            $uri = $this->getAbsoluteUrl($uri);
+        }
+
+        return $urls;
+    }
+
+    private function getAbsoluteUrl(UriInterface $uri)
+    {
+        $uriString = '';
+
+        try {
+            if ($uri->getQuery() !== '') {
+                $query = '?' . $uri->getQuery();
+            } else {
+                $query = '';
+            }
+
+            if ($uri->getScheme() === '') {
+                if ($uri->getHost() !== '') {
+                    $uriString = $this->uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . $query;
+                } else {
+                    if (strpos($uri->getPath(), '/') === 0) {
+                        // absolute path
+                        $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $uri->getPath() . $query;
+                    } else {
+                        // relative path
+                        if (strpos(strrev($this->uri->getPath()), '/') !== 0) {
+                            $separator = '/';
+                        } else {
+                            $separator = '';
+                        }
+                        $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $this->uri->getPath() . $separator . $uri->getPath() . $query;
+                    }
+                }
+                $uri = new Uri($uriString);
+            }
+        } catch (\InvalidArgumentException $e) {
+            throw new \InvalidArgumentException($e->getMessage() . ". ($uriString)");
+        }
+
+        return $uri;
     }
 
     /**
@@ -53,35 +103,7 @@ class Document
         });
 
         foreach ($urls as &$uri) {
-            try {
-                if ($uri->getQuery() !== '') {
-                    $query = '?' . $uri->getQuery();
-                } else {
-                    $query = '';
-                }
-
-                if ($uri->getScheme() === '') {
-                    if ($uri->getHost() !== '') {
-                        $uriString = $this->uri->getScheme() . '://' . $uri->getHost() . $uri->getPath() . $query;
-                    } else {
-                        if (strpos($uri->getPath(), '/') === 0) {
-                            // absolute path
-                            $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $uri->getPath() . $query;
-                        } else {
-                            // relative path
-                            if (strpos(strrev($this->uri->getPath()), '/') !== 0) {
-                                $separator = '/';
-                            } else {
-                                $separator = '';
-                            }
-                            $uriString = $this->uri->getScheme() . '://' . $this->uri->getHost() . $this->uri->getPath() . $separator . $uri->getPath() . $query;
-                        }
-                    }
-                    $uri = new Uri($uriString);
-                }
-            } catch (\InvalidArgumentException $e) {
-                throw new \InvalidArgumentException($e->getMessage() . ". ($uriString)");
-            }
+            $uri = $this->getAbsoluteUrl($uri);
         }
 
         $this->referencedUrls = $urls;

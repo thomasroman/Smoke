@@ -60,6 +60,9 @@ rules:
   _HtmlInvalidUrlsTag:
     class: whm\Smoke\Rules\Html\InvalidUrlsRule
 
+  _HtmlForeignDomainImageTag:
+    class: whm\Smoke\Rules\Html\ForeignDomainImageRule
+
   _HtmlUnsecureContent:
     class: whm\Smoke\Rules\Html\InsecureContentRule
 
