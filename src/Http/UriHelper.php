@@ -14,11 +14,11 @@ class UriHelper
         $domainOne = '';
         $domainTwo = '';
 
-        for ($i = count($domainOneElements) - 1; $i > count($domainOneElements) - $depth - 1; $i--) {
+        for ($i = count($domainOneElements) - 1; $i > count($domainOneElements) - $depth - 1; --$i) {
             $domainOne .= $domainOneElements[$i] . '.';
         }
 
-        for ($i = count($domainTwoElements) - 1; $i > count($domainTwoElements) - $depth - 1; $i--) {
+        for ($i = count($domainTwoElements) - 1; $i > count($domainTwoElements) - $depth - 1; --$i) {
             $domainTwo .= $domainTwoElements[$i] . '.';
         }
 
