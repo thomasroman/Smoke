@@ -75,7 +75,7 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
                     if (array_key_exists($ruleKey, $result->getMessages())) {
                         $messages = $result->getMessages();
                         $failedUrls[] = (string) $result->getUrl() . ' - ' . $messages[$ruleKey];
-                        $count++;
+                        ++$count;
                     }
                     if ($count > $this->maxResults) {
                         $failedUrls[] = '... only the first ' . $this->maxResults . ' elements are shown.';
