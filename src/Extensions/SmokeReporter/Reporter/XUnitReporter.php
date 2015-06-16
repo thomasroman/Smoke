@@ -8,6 +8,7 @@ use whm\Smoke\Scanner\Result;
 class XUnitReporter implements Reporter, OutputAwareReporter
 {
     private $filename = null;
+    private $dirname = null;
 
     /**
      * @var Result[]
@@ -81,8 +82,11 @@ class XUnitReporter implements Reporter, OutputAwareReporter
         $testSuite->setAttribute('errors', '0');
         $testSuite->setAttribute('time', $absoluteTime);
 
+        if( !is_dir(dirname($this->filename)) ) {
+            mkdir(dirname( $this->filename));
+        }
+        
         $xml->save($this->filename);
-
         $this->output->writeln('<info>Writing XUnit Output to file:</info> ' . $this->filename);
     }
 }
