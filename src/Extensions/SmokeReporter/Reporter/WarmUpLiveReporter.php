@@ -17,7 +17,7 @@ class WarmUpLiveReporter implements Reporter, OutputAwareReporter
 
     public function processResult(Result $result)
     {
-        $this->urlCount++;
+        ++$this->urlCount;
         $this->output->writeln('   ' . $result->getUrl());
         $this->output->writeln('');
     }

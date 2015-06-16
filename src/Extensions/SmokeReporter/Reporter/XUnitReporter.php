@@ -59,7 +59,7 @@ class XUnitReporter implements Reporter, OutputAwareReporter
             $testCase->setAttribute('time', $result->getDuration());
 
             if ($result->isFailure()) {
-                $failures++;
+                ++$failures;
                 $testFailure = $xml->createElement('failure');
                 $testCase->appendChild($testFailure);
 
