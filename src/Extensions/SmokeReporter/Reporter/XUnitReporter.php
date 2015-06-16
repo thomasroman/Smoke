@@ -94,7 +94,11 @@ class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporte
         $testSuite->setAttribute('errors', '0');
         $testSuite->setAttribute('time', $absoluteTime);
 
-        $xml->save($this->filename);
-        $this->output->writeln('<info>Writing XUnit Output to file:</info> ' . $this->filename);
+        $saveResult = $xml->save($this->filename);
+
+        if ($saveResult === false) {
+            $this->output->writeln('<error>An error occured: ' . libxml_get_last_error() . '</error>');
+        }
+        $this->output->writeln('    <info>Writing XUnit Output to file:</info> ' . $this->filename);
     }
 }
