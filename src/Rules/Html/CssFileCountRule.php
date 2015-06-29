@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Document;
+use whm\Html\Document;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -32,8 +32,8 @@ class CssFileCountRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody(), $response->getUri());
-        $cssFiles = $document->getExternalDependencies(['css']);
+        $document = new Document($response->getBody());
+        $cssFiles = $document->getCssFiles($response->getUri());
 
         if (count($cssFiles) > $this->maxCount) {
             throw new ValidationFailedException('Too many (' . count($cssFiles) . ') css files were found.');

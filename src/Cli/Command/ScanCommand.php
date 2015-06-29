@@ -3,7 +3,7 @@
 namespace whm\Smoke\Cli\Command;
 
 use Ivory\HttpAdapter\HttpAdapterFactory;
-use Phly\Http\Uri;
+use whm\Html\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

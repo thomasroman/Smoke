@@ -9,7 +9,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Document;
+use whm\Html\Document;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -27,8 +27,8 @@ class InsecureContentRule implements Rule
             return;
         }
 
-        $htmlDocument = new Document($response->getBody(), $response->getUri());
-        $resources = $htmlDocument->getExternalDependencies();
+        $htmlDocument = new Document($response->getBody());
+        $resources = $htmlDocument->getDependencies($response->getUri());
 
         foreach ($resources as $resource) {
             if ($resource->getScheme() && 'https' !== $resource->getScheme()) {

@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Extensions\SmokeFilter\Filter;
 
-use Phly\Http\Uri;
+use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Http\UriHelper;
 

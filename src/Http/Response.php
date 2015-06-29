@@ -18,6 +18,7 @@ class Response extends \Ivory\HttpAdapter\Message\Response
         return array_shift($exploded);
     }
 
+
     public function getUri()
     {
         return $this->getParameter('request')->getUri();

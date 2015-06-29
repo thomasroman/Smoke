@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Document;
+use whm\Html\Document;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Http\UriHelper;
 use whm\Smoke\Rules\Rule;
@@ -29,13 +29,13 @@ class ForeignDomainImageRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody(), $response->getUri());
-        $images = $document->getImages();
+        $document = new Document($response->getBody());
+        $images = $document->getImages($response->getUri());
 
         $foreignImages = array();
 
         foreach ($images as $image) {
-            if (!UriHelper::isSameDomain($response->getUri(), $image, $this->depth)) {
+            if($response->getUri()->getHost($this->depth) !== $image->getHost($this->depth)) {
                 $foreignImages[] = (string) $image;
             }
         }

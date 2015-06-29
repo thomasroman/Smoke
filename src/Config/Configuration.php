@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Config;
 
-use Phly\Http\Uri;
+use whm\Html\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Yaml\Yaml;

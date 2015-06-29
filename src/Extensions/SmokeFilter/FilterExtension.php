@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Extensions\SmokeFilter;
 
-use Phly\Http\Uri;
+use whm\Html\Uri;
 use phmLabs\Components\Annovent\Event\Event;
 use PhmLabs\Components\Init\Init;
 use whm\Smoke\Config\Configuration;
