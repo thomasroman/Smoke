@@ -6,7 +6,6 @@ use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,7 +24,6 @@ class CustomCommand extends Command
     {
         $this
             ->setDefinition([
-                new InputArgument('url', InputArgument::REQUIRED, 'the url to start with'),
                 new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
                 new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
             ])
@@ -46,7 +44,6 @@ class CustomCommand extends Command
 
         $config = $this->initConfiguration(
             $input->getOption('config_file'),
-            new Uri($input->getArgument('url')),
             $eventDispatcher);
 
         $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array('config' => $config));
@@ -78,7 +75,7 @@ class CustomCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($configFile, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($configFile, Dispatcher $dispatcher)
     {
         if ($configFile) {
             if (file_exists($configFile)) {
@@ -90,6 +87,6 @@ class CustomCommand extends Command
             throw new \RuntimeException('Config file was not defined.');
         }
 
-        return new Configuration($uri, $dispatcher, $configArray);
+        return new Configuration(new Uri('http://example.com'), $dispatcher, $configArray);
     }
 }
