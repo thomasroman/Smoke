@@ -14,16 +14,17 @@ class BlackWhiteListFilter implements Filter
     public function isFiltered(UriInterface $uri, UriInterface $startPage)
     {
         foreach ($this->whitelist as $whitelist) {
-
             if (preg_match($whitelist, (string) $uri)) {
                 foreach ($this->blacklist as $blacklist) {
                     if (preg_match($blacklist, (string) $uri)) {
                         return true;
                     }
                 }
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -36,7 +37,7 @@ class BlackWhiteListFilter implements Filter
         if ($_configuration->hasSection('whitelist')) {
             $this->whitelist = $_configuration->getSection('whitelist');
         } else {
-            $this->whitelist = "/(.*)/";
+            $this->whitelist = '/(.*)/';
         }
     }
 }

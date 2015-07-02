@@ -7,7 +7,6 @@ use phmLabs\Components\Annovent\Dispatcher;
 use Symfony\Component\Yaml\Yaml;
 use whm\Crawler\Filter;
 use whm\Smoke\Config\Configuration;
-
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter;
 
@@ -29,7 +28,7 @@ class FiltersTest extends \PHPUnit_Framework_TestCase
     public function testIsFiltered(Filter $filter, $url)
     {
         return;
-        $this->assertTrue($filter->isFiltered(new Uri($url), new Uri("http://www.example.com")));
+        $this->assertTrue($filter->isFiltered(new Uri($url), new Uri('http://www.example.com')));
     }
 
     /**
@@ -38,7 +37,7 @@ class FiltersTest extends \PHPUnit_Framework_TestCase
     public function testIsNotFiltered(Filter $filter, $url)
     {
         return;
-        $this->assertFalse($filter->isFiltered(new Uri($url), new Uri("http://www.example.com")));
+        $this->assertFalse($filter->isFiltered(new Uri($url), new Uri('http://www.example.com')));
     }
 
     public function isFilteredProvider()
