@@ -11,20 +11,16 @@ class StopExtension
 {
     private $stopStrategies = array();
     private $dispatcher;
+    private $config;
 
-    /**
-     * @Event("Scanner.Init")
-     */
-    public function setReporter(Configuration $configuration, Dispatcher $dispatcher)
+    public function init(Configuration $_configuration, Dispatcher $_eventDispatcher)
     {
-        $this->dispatcher = $dispatcher;
-
-        if ($configuration->hasSection('stop')) {
-            $strategies = $configuration->getSection('stop');
+        if ($_configuration->hasSection('stop')) {
+            $strategies = $_configuration->getSection('stop');
 
             foreach ($strategies as $name => $strategy) {
                 $this->stopStrategies[$name] = Init::initialize($strategy);
-                $this->dispatcher->connectListener($this->stopStrategies[$name]);
+                $_eventDispatcher->connectListener($this->stopStrategies[$name]);
             }
         }
     }
@@ -47,6 +43,10 @@ class StopExtension
 
     public function getStrategy($name)
     {
-        return $this->stopStrategies[$name];
+        if (array_key_exists($name, $this->stopStrategies)) {
+            return $this->stopStrategies[$name];
+        } else {
+            throw new \RuntimeException("Strategy ('" . $name . "') not found. Available strategies are " . implode(', ', array_keys($this->stopStrategies)));
+        }
     }
 }

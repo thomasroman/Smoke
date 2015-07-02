@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use whm\Html\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
@@ -10,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
 class ExplainCommand extends Command
@@ -38,6 +38,10 @@ class ExplainCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $eventDispatcher = new Dispatcher();
+        Init::registerGlobalParameter('_eventDispatcher', $eventDispatcher);
+        Init::registerGlobalParameter('_output', $output);
+
         $config = $this->initConfiguration($input->getOption('config_file'));
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");

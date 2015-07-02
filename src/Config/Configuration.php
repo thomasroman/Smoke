@@ -2,10 +2,10 @@
 
 namespace whm\Smoke\Config;
 
-use whm\Html\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Yaml\Yaml;
+use whm\Html\Uri;
 use whm\Smoke\Rules\Rule;
 
 class Configuration
@@ -13,8 +13,6 @@ class Configuration
     const DEFAULT_SETTINGS = 'analyze.yml';
 
     private $startUri;
-
-    private $containerSize;
 
     private $parallelRequestCount;
 
@@ -29,7 +27,24 @@ class Configuration
     public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
         $this->eventDispatcher = $eventDispatcher;
+        Init::registerGlobalParameter('_configuration', $this);
 
+        $this->initConfigArray($configArray, $defaultSettings);
+
+        if (array_key_exists('extensions', $this->configArray)) {
+            $this->addListener($this->configArray['extensions']);
+        }
+
+        if (!array_key_exists('rules', $this->configArray)) {
+            $this->configArray['rules'] = [];
+        }
+
+        $this->startUri = $uri;
+        $this->rules = Init::initializeAll($this->configArray['rules']);
+    }
+
+    private function initConfigArray(array $configArray, array $defaultSettings = null)
+    {
         if ($defaultSettings === null) {
             $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . '/../settings/' . self::DEFAULT_SETTINGS));
         }
@@ -46,18 +61,7 @@ class Configuration
             }
         }
 
-        if (array_key_exists('extensions', $configArray)) {
-            $this->addListener($configArray['extensions']);
-        }
-
-        if (!array_key_exists('rules', $configArray)) {
-            $configArray['rules'] = [];
-        }
-
         $this->configArray = $configArray;
-
-        $this->startUri = $uri;
-        $this->rules = Init::initializeAll($configArray['rules']);
     }
 
     private function addListener(array $listenerArray)
@@ -69,29 +73,12 @@ class Configuration
         }
     }
 
-    public static function getDefaultConfig(Uri $uri)
-    {
-        $defaultSettings = Yaml::parse(file_get_contents(__DIR__ . '/../settings/' . self::DEFAULT_SETTINGS));
-
-        return new self($uri, $defaultSettings);
-    }
-
     /**
      * @return Uri
      */
     public function getStartUri()
     {
         return $this->startUri;
-    }
-
-    public function setContainerSize($size)
-    {
-        $this->containerSize = $size;
-    }
-
-    public function getContainerSize()
-    {
-        return $this->containerSize;
     }
 
     public function setParallelRequestCount($count)
@@ -141,12 +128,20 @@ class Configuration
 
     public function getSection($section)
     {
-        return $this->configArray[$section];
+        if ($this->hasSection($section)) {
+            return $this->configArray[$section];
+        } else {
+            throw new \RuntimeException('The section (' . $section . ') you are trying to access does not exist.');
+        }
     }
 
     public function getExtension($name)
     {
-        return $this->extensions[$name];
+        if (array_key_exists($name, $this->extensions)) {
+            return $this->extensions[$name];
+        } else {
+            throw new \RuntimeException('The extension ("' . $name . '") you are trying to access does not exist. Registered extensions are: ' . implode(' ,', array_keys($this->extensions)) . '.');
+        }
     }
 
     public function addExtension($name, $extension)
