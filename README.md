@@ -30,7 +30,7 @@ Installation complete.
 ### Command Line Parameters for Analysis
 
 - **--num_urls** defines how many urls should be checked. Standard is 20.  
-  Example: `Smoke.phar analyse --num-urls="20" test.com` 
+  Example: `Smoke.phar analyse --num_urls="20" test.com` 
 
 - **--parallel_requests** defines how many requests are done in parallel. Standard is 10.  
   Example: `Smoke.phar analyse --parallel_requests="10" test.com` 
