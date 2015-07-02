@@ -9,6 +9,5 @@ class NullExtension
      */
     public function nullFunction()
     {
-
     }
 }
