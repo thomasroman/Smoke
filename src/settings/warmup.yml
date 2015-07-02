@@ -10,16 +10,26 @@ extensions:
     class: whm\Smoke\Extensions\SmokeStop\StopExtension
 
   _ProgressBar:
-    class: whm\Smoke\Extensions\SmokeProgressBar\NullProgressBar
-    parameters:
-      width: 100
-      format: normal
+    class: whm\Smoke\Extensions\SmokeNull\NullExtension
 
   _Reporter:
     class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
 
-  _Filter:
-    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+  _ResponseRetriever:
+    class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
+
+responseRetriever:
+ class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
+ parameters:
+   filters:
+    _BlackWhiteListFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
+
+    _ValidUrlFilter:
+      class: whm\Crawler\Filter\ValidUrlFilter
+
+    _ForeignDomainFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter
 
 stop:
   _TimeStop:
@@ -30,13 +40,3 @@ stop:
 reporter:
   _LiveWarmUpReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\WarmUpLiveReporter
-
-filters:
-  _BlackWhiteListFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\BlackWhiteListFilter
-
-  _ValidUrlFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\ValidUrlFilter
-
-  _ForeignDomainFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\ForeignDomainFilter

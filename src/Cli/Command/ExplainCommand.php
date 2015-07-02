@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use whm\Html\Uri;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
@@ -10,6 +9,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
+use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
 class ExplainCommand extends Command

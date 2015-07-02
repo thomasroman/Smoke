@@ -84,8 +84,6 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
                 }
             }
 
-            // var_dump($failedUrls);
-
             if (count($failedUrls) > 0) {
                 $this->output->writeln('  <error> ' . get_class($rule) . ' </error>');
             } else {

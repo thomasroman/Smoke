@@ -18,22 +18,31 @@ extensions:
   _Reporter:
     class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
 
-  _Filter:
-    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+  _ResponseRetriever:
+    class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
 
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
 
-filters:
-  _BlackWhiteListFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\BlackWhiteListFilter
+responseRetriever:
+ class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
+ parameters:
+   filters:
+    _BlackWhiteListFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
 
-  _ValidUrlFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\ValidUrlFilter
+    _ValidUrlFilter:
+      class: whm\Crawler\Filter\ValidUrlFilter
 
-  _ForeignDomainFilter:
-    class: whm\Smoke\Extensions\SmokeFilter\Filter\ForeignDomainFilter
+    _ForeignDomainFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter
+
+stop:
+  _CountStop:
+    class: whm\Smoke\Extensions\SmokeStop\Strategy\CountStrategy
+    parameters:
+      maxCount: 20
 
 rules:
   _HtmlSize:
