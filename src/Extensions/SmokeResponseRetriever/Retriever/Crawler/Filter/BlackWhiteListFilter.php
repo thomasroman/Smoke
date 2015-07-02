@@ -36,6 +36,8 @@ class BlackWhiteListFilter implements Filter
 
         if ($_configuration->hasSection('whitelist')) {
             $this->whitelist = $_configuration->getSection('whitelist');
+        } else {
+            $this->whitelist = '/(.*)/';
         }
     }
 }
