@@ -28,6 +28,7 @@ class SizeRule implements Rule
         }
 
         $size = strlen($response->getBody()) / 1000;
+
         if ($size > $this->maxSize) {
             throw new ValidationFailedException('the size of the file is too big (' . $size . ' KB)');
         }

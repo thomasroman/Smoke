@@ -24,5 +24,5 @@ script:
    - php bin/Smoke.php --num_urls=1 analyse http://www.amilio.de/thumb/61/3a/613aee53e10d7348f44ae6f47bff760b_180px.jpg -v
    - php bin/Smoke.php explain -v
    - php bin/Smoke.php warmup http://www.example.com/ -d1 -v
-   - php bin/Smoke.php custom http://www.example.com/ -v
+   - php bin/Smoke.php custom -cexample/custom.yml -v
    - phpunit --bootstrap vendor/autoload.php test/
