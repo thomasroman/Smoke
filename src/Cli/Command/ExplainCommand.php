@@ -38,6 +38,10 @@ class ExplainCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $eventDispatcher = new Dispatcher();
+        Init::registerGlobalParameter('_eventDispatcher', $eventDispatcher);
+        Init::registerGlobalParameter('_output', $output);
+
         $config = $this->initConfiguration($input->getOption('config_file'));
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
