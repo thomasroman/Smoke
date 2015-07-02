@@ -16,7 +16,7 @@ use whm\Smoke\Config\Configuration;
 use whm\Smoke\Http\MessageFactory;
 use whm\Smoke\Scanner\Scanner;
 
-class ScanCommand extends Command
+class CustomCommand extends Command
 {
     /**
      * @inheritdoc
@@ -26,12 +26,12 @@ class ScanCommand extends Command
         $this
             ->setDefinition([
                 new InputArgument('url', InputArgument::REQUIRED, 'the url to start with'),
-                new InputOption('parallel_requests', 'p', InputOption::VALUE_OPTIONAL, 'number of parallel requests.', 10),
-                new InputOption('num_urls', 'u', InputOption::VALUE_OPTIONAL, 'number of urls to be checked', 20),
+                new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
+                new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
             ])
-            ->setDescription('analyses a website')
-            ->setHelp('The <info>analyse</info> command runs a cache test.')
-            ->setName('analyse');
+            ->setDescription('analyses a website given a config file')
+            ->setHelp('The <info>custom</info> command runs a custom website analysis.')
+            ->setName('custom');
     }
 
     /**
@@ -40,12 +40,12 @@ class ScanCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $eventDispatcher = new Dispatcher();
+
         Init::registerGlobalParameter('_eventDispatcher', $eventDispatcher);
         Init::registerGlobalParameter('_output', $output);
 
         $config = $this->initConfiguration(
-            $input->getOption('num_urls'),
-            $input->getOption('parallel_requests'),
+            $input->getOption('config_file'),
             new Uri($input->getArgument('url')),
             $eventDispatcher);
 
@@ -54,6 +54,10 @@ class ScanCommand extends Command
 
         $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
         $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
+
+        if ($input->getOption('bootstrap')) {
+            include $input->getOption('bootstrap');
+        }
 
         $httpAdapter = HttpAdapterFactory::guess();
         $httpAdapter->getConfiguration()->setMessageFactory(new MessageFactory());
@@ -74,24 +78,18 @@ class ScanCommand extends Command
      *
      * @return Configuration
      */
-    private function initConfiguration($num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($configFile, Uri $uri, Dispatcher $dispatcher)
     {
-        $configArray = Yaml::parse(file_get_contents(__DIR__ . '/../../settings/analyze.yml'));
-
-        $config = new Configuration($uri, $dispatcher, $configArray);
-
-        $crawler = $config->getExtension('_ResponseRetriever')->getRetriever();
-        $crawler->setStartPage($uri);
-
-        if ($num_urls) {
-            $config->getExtension('_SmokeStop')->getStrategy('_CountStop')->init($num_urls);
-            $config->getExtension('_ProgressBar')->setMax($num_urls);
+        if ($configFile) {
+            if (file_exists($configFile)) {
+                $configArray = Yaml::parse(file_get_contents($configFile));
+            } else {
+                throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
+            }
+        } else {
+            throw new \RuntimeException('Config file was not defined.');
         }
 
-        if ($parallel_requests) {
-            $config->setParallelRequestCount($parallel_requests);
-        }
-
-        return $config;
+        return new Configuration($uri, $dispatcher, $configArray);
     }
 }

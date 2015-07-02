@@ -43,7 +43,7 @@ class MessageFactory extends \Ivory\HttpAdapter\Message\MessageFactory
         $body = null,
         array $parameters = array()
     ) {
-        return (new Request(
+        return (new \Ivory\HttpAdapter\Message\Request(
             $this->createUri($uri),
             $method,
             $this->createStream($body),
