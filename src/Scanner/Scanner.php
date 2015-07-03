@@ -5,7 +5,6 @@ namespace whm\Smoke\Scanner;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use phmLabs\Components\Annovent\Dispatcher;
 use phmLabs\Components\Annovent\Event\Event;
-use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -49,7 +48,6 @@ class Scanner
                 $resultArray['type'],
                 $response,
                 '',
-                // $this->pageContainer->getParent($response->getUri()),
                 $resultArray['time']);
 
             if ($result->isFailure()) {

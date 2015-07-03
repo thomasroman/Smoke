@@ -67,6 +67,12 @@ class SmokeCommand extends Command
         return $scanner->getStatus();
     }
 
+    /**
+     * Returns an array representing the configuration
+     *
+     * @param $configFile
+     * @return array
+     */
     protected function getConfigArray($configFile)
     {
         if ($configFile) {
