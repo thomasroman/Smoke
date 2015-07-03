@@ -44,8 +44,8 @@ class SmokeCommand extends Command
      * This function return a http client.
      *
      * @throws \Ivory\HttpAdapter\HttpAdapterException
-     * @return \Ivory\HttpAdapter\HttpAdapterInterface
      *
+     * @return \Ivory\HttpAdapter\HttpAdapterInterface
      */
     protected function getHttpClient()
     {

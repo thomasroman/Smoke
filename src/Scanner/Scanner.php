@@ -85,7 +85,7 @@ class Scanner
         // calculate time in seconds
         $time = round(($endTime - $startTime) * 1000, 5);
 
-        if ($messages) {
+        if (count($messages) > 0) {
             $resultArray = ['messages' => $messages, 'time' => $time, 'type' => self::ERROR];
         } else {
             $resultArray = ['messages' => [], 'time' => $time, 'type' => self::PASSED];
