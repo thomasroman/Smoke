@@ -64,10 +64,6 @@ class WarmUpCommand extends SmokeCommand
         $crawler = $config->getExtension('_ResponseRetriever')->getRetriever();
         $crawler->setStartPage($uri);
 
-        if ($parallel_requests) {
-            $config->setParallelRequestCount($parallel_requests);
-        }
-
         $this->config = $config;
     }
 }
