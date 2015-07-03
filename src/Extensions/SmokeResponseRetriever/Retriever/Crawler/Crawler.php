@@ -13,6 +13,7 @@ class Crawler implements Retriever
 {
     private $startPage;
     private $httpClient;
+    private $parallelRequests;
 
     private $started = false;
     private $filters;
@@ -22,12 +23,14 @@ class Crawler implements Retriever
      */
     private $crawler;
 
-    public function init(array $filters, $startPage = null)
+    public function init(array $filters, $startPage = null, $parallelRequests = 5)
     {
         $this->filters = Init::initializeAll($filters);
         if (!is_null($startPage)) {
             $this->startPage = new Uri($startPage);
         }
+
+        $this->parallelRequests = $parallelRequests;
     }
 
     public function setStartPage(Uri $startPage)
@@ -52,7 +55,7 @@ class Crawler implements Retriever
                 throw new \RuntimeException('The crawler you are using needs a start page to work, but it is not defined. ');
             }
 
-            $this->crawler = new whmCrawler($this->httpClient, $this->startPage);
+            $this->crawler = new whmCrawler($this->httpClient, $this->startPage, $this->parallelRequests);
 
             foreach ($this->filters as $filter) {
                 $this->crawler->addFilter($filter);

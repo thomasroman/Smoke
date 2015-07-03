@@ -28,6 +28,7 @@ reporter:
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
  parameters:
+   parallelRequests: 5
    filters:
     _BlackWhiteListFilter:
       class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter

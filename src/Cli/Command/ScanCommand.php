@@ -12,6 +12,8 @@ use whm\Smoke\Config\Configuration;
 
 class ScanCommand extends SmokeCommand
 {
+    const CONFIG_FILE = 'analyze.yml';
+
     /**
      * @inheritdoc
      */
@@ -20,7 +22,6 @@ class ScanCommand extends SmokeCommand
         $this
             ->setDefinition([
                 new InputArgument('url', InputArgument::REQUIRED, 'the url to start with'),
-                new InputOption('parallel_requests', 'p', InputOption::VALUE_OPTIONAL, 'number of parallel requests.', 10),
                 new InputOption('num_urls', 'u', InputOption::VALUE_OPTIONAL, 'number of urls to be checked', 20),
             ])
             ->setDescription('analyses a website')
@@ -39,7 +40,6 @@ class ScanCommand extends SmokeCommand
 
         $this->initConfiguration(
             $input->getOption('num_urls'),
-            $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
             $this->eventDispatcher);
 
@@ -51,9 +51,9 @@ class ScanCommand extends SmokeCommand
      *
      * @return Configuration
      */
-    private function initConfiguration($num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($num_urls, Uri $uri, Dispatcher $dispatcher)
     {
-        $configArray = $this->getConfigArray(__DIR__ . '/../../settings/analyze.yml');
+        $configArray = $this->getConfigArray(__DIR__ . '/../../settings/' . self::CONFIG_FILE);
 
         $config = new Configuration($uri, $dispatcher, $configArray);
 
@@ -63,10 +63,6 @@ class ScanCommand extends SmokeCommand
         if ($num_urls) {
             $config->getExtension('_SmokeStop')->getStrategy('_CountStop')->init($num_urls);
             $config->getExtension('_ProgressBar')->setMax($num_urls);
-        }
-
-        if ($parallel_requests) {
-            $config->setParallelRequestCount($parallel_requests);
         }
 
         $this->config = $config;

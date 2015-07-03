@@ -14,8 +14,6 @@ class Configuration
 
     private $startUri;
 
-    private $parallelRequestCount;
-
     private $rules = [];
 
     private $configArray;
@@ -79,16 +77,6 @@ class Configuration
     public function getStartUri()
     {
         return $this->startUri;
-    }
-
-    public function setParallelRequestCount($count)
-    {
-        $this->parallelRequestCount = $count;
-    }
-
-    public function getParallelRequestCount()
-    {
-        return $this->parallelRequestCount;
     }
 
     /**
