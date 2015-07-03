@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
@@ -36,12 +35,12 @@ class WarmUpCommand extends SmokeCommand
     {
         $this->init($output);
 
-        $config = $this->initConfiguration(
+        $this->initConfiguration(
             $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
             $this->eventDispatcher);
 
-        $timeStrategy = $config->getExtension('_SmokeStop')->getStrategy('_TimeStop');
+        $timeStrategy = $this->config->getExtension('_SmokeStop')->getStrategy('_TimeStop');
         $timeStrategy->init($input->getOption('duration'));
 
         return $this->scan();
@@ -58,7 +57,7 @@ class WarmUpCommand extends SmokeCommand
      */
     private function initConfiguration($parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
-        $configArray = Yaml::parse(file_get_contents(__DIR__ . '/../../settings/warmup.yml'));
+        $configArray = $this->getConfigArray(__DIR__ . '/../../settings/warmup.yml');
 
         $config = new Configuration($uri, $dispatcher, $configArray);
 

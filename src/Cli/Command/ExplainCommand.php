@@ -6,7 +6,6 @@ use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
@@ -75,16 +74,7 @@ class ExplainCommand extends SmokeCommand
      */
     private function initConfiguration($configFile)
     {
-        if ($configFile) {
-            if (file_exists($configFile)) {
-                $configArray = Yaml::parse(file_get_contents($configFile));
-            } else {
-                throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
-            }
-        } else {
-            $configArray = [];
-        }
-
+        $configArray = $this->getConfigArray($configFile);
         $config = new Configuration(new Uri(''), $this->eventDispatcher, $configArray);
 
         return $config;

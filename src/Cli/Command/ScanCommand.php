@@ -7,7 +7,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
@@ -54,7 +53,7 @@ class ScanCommand extends SmokeCommand
      */
     private function initConfiguration($num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)
     {
-        $configArray = Yaml::parse(file_get_contents(__DIR__ . '/../../settings/analyze.yml'));
+        $configArray = $this->getConfigArray(__DIR__ . '/../../settings/analyze.yml');
 
         $config = new Configuration($uri, $dispatcher, $configArray);
 

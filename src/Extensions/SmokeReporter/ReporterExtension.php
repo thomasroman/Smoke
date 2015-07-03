@@ -17,7 +17,6 @@ class ReporterExtension
     public function init(OutputInterface $_output, Configuration $_configuration)
     {
         $this->output = $_output;
-        $this->config = $_configuration;
 
         if ($_configuration->hasSection('reporter')) {
             $this->reporters = Init::initializeAll($_configuration->getSection('reporter'));
