@@ -99,33 +99,16 @@ class Configuration
         return $this->rules;
     }
 
-    public function isUriAllowed(Uri $uri, $currentUri)
-    {
-        if (!$this->scanForeignDomains()) {
-            $tlds = explode('.', $uri->getHost());
-
-            if (count($tlds) < 2) {
-                return false;
-            }
-
-            $currentTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
-
-            $tlds = explode('.', $this->startUri->getHost());
-            $startTld = $tlds[count($tlds) - 2] . '.' . $tlds[count($tlds) - 1];
-
-            if ($currentTld !== $startTld) {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
     public function hasSection($section)
     {
         return (array_key_exists($section, $this->configArray));
     }
 
+    /**
+     * @param $section
+     *
+     * @return array
+     */
     public function getSection($section)
     {
         if ($this->hasSection($section)) {

@@ -75,8 +75,6 @@ class ExplainCommand extends Command
      * Initializes the configuration.
      *
      * @param $configFile
-     * @param $loadForeign
-     * @param Uri $uri
      *
      * @return Configuration
      */

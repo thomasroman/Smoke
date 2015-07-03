@@ -68,10 +68,6 @@ class ScanCommand extends Command
     /**
      * Initializes the configuration.
      *
-     * @param $configFile
-     * @param $loadForeign
-     * @param Uri $uri
-     *
      * @return Configuration
      */
     private function initConfiguration($num_urls, $parallel_requests, Uri $uri, Dispatcher $dispatcher)

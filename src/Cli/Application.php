@@ -25,8 +25,9 @@ class Application extends \Symfony\Component\Console\Application
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
         if (null === $output) {
+            $styles = array();
             $styles['failure'] = new OutputFormatterStyle('red');
-            $formatter = new OutputFormatter(null, $styles);
+            $formatter = new OutputFormatter(false, $styles);
             $output = new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, null, $formatter);
         }
 

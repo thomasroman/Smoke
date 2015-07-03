@@ -54,7 +54,6 @@ class XUnitReporter implements Reporter, OutputAwareReporter
             $testCase->setAttribute('file', $result->getUrl());
             $testCase->setAttribute('name', '');
             $testCase->setAttribute('class', '');
-            //$testCase->setAttribute('feature', $result['messages']);
             $testCase->setAttribute('assertions', '1');
             $testCase->setAttribute('time', $result->getDuration());
 

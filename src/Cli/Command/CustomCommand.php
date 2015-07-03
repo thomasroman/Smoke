@@ -69,10 +69,6 @@ class CustomCommand extends Command
     /**
      * Initializes the configuration.
      *
-     * @param $configFile
-     * @param $loadForeign
-     * @param Uri $uri
-     *
      * @return Configuration
      */
     private function initConfiguration($configFile, Dispatcher $dispatcher)

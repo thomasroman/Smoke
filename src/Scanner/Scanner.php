@@ -21,11 +21,6 @@ class Scanner
 
     private $responseRetriever;
 
-    /**
-     * @var HttpClient
-     */
-    private $client;
-
     private $status = 0;
 
     public function __construct(Configuration $config, HttpAdapterInterface $client, Dispatcher $eventDispatcher, Retriever $responseRetriever)

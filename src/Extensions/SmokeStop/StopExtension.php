@@ -10,8 +10,6 @@ use whm\Smoke\Config\Configuration;
 class StopExtension
 {
     private $stopStrategies = array();
-    private $dispatcher;
-    private $config;
 
     public function init(Configuration $_configuration, Dispatcher $_eventDispatcher)
     {
