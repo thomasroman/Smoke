@@ -5,8 +5,9 @@ class BlackWhiteListFilterTest extends PHPUnit_Framework_TestCase
     private function getConfig()
     {
         $dispatcher = new \phmLabs\Components\Annovent\Dispatcher();
+
         \PhmLabs\Components\Init\Init::registerGlobalParameter('_eventDispatcher', $dispatcher);
-        \PhmLabs\Components\Init\Init::registerGlobalParameter('_output', null);
+        \PhmLabs\Components\Init\Init::registerGlobalParameter('_output', new \Symfony\Component\Console\Output\NullOutput());
 
         return new \whm\Smoke\Config\Configuration(new \whm\Html\Uri('http://www.example.com'),
             $dispatcher,

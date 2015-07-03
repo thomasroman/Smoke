@@ -32,8 +32,7 @@ class ForeignDomainFilterTest extends PHPUnit_Framework_TestCase
 
     public function testNotFiltered()
     {
-        $filter = new \whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter();
-        $filter->init($this->getConfig());
+        $filter = new \whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter();
 
         $this->assertNotFiltered($filter, 'http://www.example.com');
     }

@@ -15,7 +15,7 @@ use whm\Smoke\Config\Configuration;
 use whm\Smoke\Http\MessageFactory;
 use whm\Smoke\Scanner\Scanner;
 
-class CustomCommand extends Command
+class CustomCommand extends SmokeCommand
 {
     /**
      * @inheritdoc
@@ -37,33 +37,19 @@ class CustomCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $eventDispatcher = new Dispatcher();
+        $this->init($output);
 
-        Init::registerGlobalParameter('_eventDispatcher', $eventDispatcher);
-        Init::registerGlobalParameter('_output', $output);
+        $this->writeSmokeCredentials();
 
-        $config = $this->initConfiguration(
+        $this->initConfiguration(
             $input->getOption('config_file'),
-            $eventDispatcher);
-
-        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array('config' => $config));
-        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array('output' => $output));
-
-        $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
-        $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
+            $this->eventDispatcher);
 
         if ($input->getOption('bootstrap')) {
             include $input->getOption('bootstrap');
         }
 
-        $httpAdapter = HttpAdapterFactory::guess();
-        $httpAdapter->getConfiguration()->setMessageFactory(new MessageFactory());
-
-        $scanner = new Scanner($config, $httpAdapter, $eventDispatcher, $config->getExtension('_ResponseRetriever')->getRetriever());
-
-        $scanner->scan();
-
-        return $scanner->getStatus();
+        return $this->scan();
     }
 
     /**
@@ -83,6 +69,6 @@ class CustomCommand extends Command
             throw new \RuntimeException('Config file was not defined.');
         }
 
-        return new Configuration(new Uri('http://example.com'), $dispatcher, $configArray);
+        $this->config = new Configuration(new Uri('http://example.com'), $dispatcher, $configArray);
     }
 }

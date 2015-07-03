@@ -2,10 +2,7 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
-use PhmLabs\Components\Init\Init;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,10 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Http\MessageFactory;
-use whm\Smoke\Scanner\Scanner;
 
-class ScanCommand extends Command
+class ScanCommand extends SmokeCommand
 {
     /**
      * @inheritdoc
@@ -39,30 +34,17 @@ class ScanCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $eventDispatcher = new Dispatcher();
-        Init::registerGlobalParameter('_eventDispatcher', $eventDispatcher);
-        Init::registerGlobalParameter('_output', $output);
+        $this->init($output);
 
-        $config = $this->initConfiguration(
+        $this->writeSmokeCredentials($input->getArgument('url'));
+
+        $this->initConfiguration(
             $input->getOption('num_urls'),
             $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
-            $eventDispatcher);
+            $this->eventDispatcher);
 
-        $eventDispatcher->simpleNotify('ScannerCommand.Config.Register', array('config' => $config));
-        $eventDispatcher->simpleNotify('ScannerCommand.Output.Register', array('output' => $output));
-
-        $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
-        $output->writeln(' <info>Scanning ' . $config->getStartUri() . "</info>\n");
-
-        $httpAdapter = HttpAdapterFactory::guess();
-        $httpAdapter->getConfiguration()->setMessageFactory(new MessageFactory());
-
-        $scanner = new Scanner($config, $httpAdapter, $eventDispatcher, $config->getExtension('_ResponseRetriever')->getRetriever());
-
-        $scanner->scan();
-
-        return $scanner->getStatus();
+        return $this->scan();
     }
 
     /**
@@ -88,6 +70,6 @@ class ScanCommand extends Command
             $config->setParallelRequestCount($parallel_requests);
         }
 
-        return $config;
+        $this->config = $config;
     }
 }

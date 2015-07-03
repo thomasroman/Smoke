@@ -6,7 +6,6 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 use phmLabs\Components\Annovent\Dispatcher;
 use phmLabs\Components\Annovent\Event\Event;
 use whm\Html\Uri;
-use whm\Smoke\Config\Configuration;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -16,18 +15,18 @@ class Scanner
     const ERROR = 'error';
     const PASSED = 'passed';
 
-    private $configuration;
+    private $rules;
     private $eventDispatcher;
 
     private $responseRetriever;
 
     private $status = 0;
 
-    public function __construct(Configuration $config, HttpAdapterInterface $client, Dispatcher $eventDispatcher, Retriever $responseRetriever)
+    public function __construct(array $rules, HttpAdapterInterface $client, Dispatcher $eventDispatcher, Retriever $responseRetriever)
     {
-        $eventDispatcher->simpleNotify('Scanner.Init', array('configuration' => $config, 'httpClient' => $client, 'dispatcher' => $eventDispatcher));
+        $eventDispatcher->simpleNotify('Scanner.Init', array('rules' => $rules, 'httpClient' => $client, 'dispatcher' => $eventDispatcher));
 
-        $this->configuration = $config;
+        $this->rules = $rules;
         $this->eventDispatcher = $eventDispatcher;
 
         $this->responseRetriever = $responseRetriever;
@@ -74,7 +73,7 @@ class Scanner
         $messages = [];
 
         $startTime = microtime(true);
-        foreach ($this->configuration->getRules() as $name => $rule) {
+        foreach ($this->rules as $name => $rule) {
             try {
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
