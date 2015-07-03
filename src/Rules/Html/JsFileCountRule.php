@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Document;
+use whm\Html\Document;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -32,8 +32,8 @@ class JsFileCountRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody(), $response->getUri());
-        $jsFiles = $document->getExternalDependencies(['js']);
+        $document = new Document($response->getBody());
+        $jsFiles = $document->getJsFiles($response->getUri());
 
         if (count($jsFiles) > $this->maxCount) {
             throw new ValidationFailedException('Too many (' . count($jsFiles) . ') javascript files were found.');

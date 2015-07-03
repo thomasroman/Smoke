@@ -2,8 +2,6 @@
 
 namespace whm\Smoke\Extensions\SmokeStop\Strategy;
 
-use phmLabs\Components\Annovent\Event\Event;
-
 class TimeStrategy
 {
     private $duration;

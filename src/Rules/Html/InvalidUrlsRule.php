@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Document;
+use whm\Html\Document;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -22,9 +22,9 @@ class InvalidUrlsRule implements Rule
             return;
         }
 
-        $document = new Document($response->getBody(), $response->getUri());
+        $document = new Document($response->getBody());
 
-        $urls = $document->getReferencedUris();
+        $urls = $document->getDependencies($response->getUri());
 
         $invalidUrls = array();
 

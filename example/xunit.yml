@@ -1,0 +1,37 @@
+options:
+  extendDefault: true
+
+whitelist:
+  - ^amilio.de^
+
+listeners:
+ XUnitReporter:
+   class: whm\Smoke\Reporter\XUnitReporter
+   parameters:
+     filename: /tmp/xunit.xml
+
+rules:
+  _ImageSize:
+      class: whm\Smoke\Rules\Image\SizeRule
+      parameters:
+        maxSize: 100
+
+stop:
+  _CountStop:
+    class: whm\Smoke\Extensions\SmokeStop\Strategy\CountStrategy
+    parameters:
+      maxCount: 1
+
+responseRetriever:
+ class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
+ parameters:
+   startPage: "http://www.amilio.de/thumb/61/3a/613aee53e10d7348f44ae6f47bff760b_180px.jpg"
+   filters:
+    _BlackWhiteListFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
+
+    _ValidUrlFilter:
+      class: whm\Crawler\Filter\ValidUrlFilter
+
+    _ForeignDomainFilter:
+      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter

@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Scanner;
 
-use Phly\Http\Uri;
+use whm\Html\Uri;
 
 class PageContainer
 {

@@ -7,6 +7,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use whm\Smoke\Cli\Command\CustomCommand;
 use whm\Smoke\Cli\Command\ExplainCommand;
 use whm\Smoke\Cli\Command\ScanCommand;
 use whm\Smoke\Cli\Command\WarmUpCommand;
@@ -24,8 +25,9 @@ class Application extends \Symfony\Component\Console\Application
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
         if (null === $output) {
+            $styles = array();
             $styles['failure'] = new OutputFormatterStyle('red');
-            $formatter = new OutputFormatter(null, $styles);
+            $formatter = new OutputFormatter(false, $styles);
             $output = new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, null, $formatter);
         }
 
@@ -50,5 +52,6 @@ class Application extends \Symfony\Component\Console\Application
         $this->add(new ScanCommand());
         $this->add(new ExplainCommand());
         $this->add(new WarmUpCommand());
+        $this->add(new CustomCommand());
     }
 }

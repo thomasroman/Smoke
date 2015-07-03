@@ -14,21 +14,12 @@ class ReporterExtension
     private $reporters = array();
     private $output;
 
-    /**
-     * @Event("ScannerCommand.Output.Register")
-     */
-    public function setOutput(OutputInterface $output)
+    public function init(OutputInterface $_output, Configuration $_configuration)
     {
-        $this->output = $output;
-    }
+        $this->output = $_output;
 
-    /**
-     * @Event("Scanner.Init")
-     */
-    public function setReporter(Configuration $configuration)
-    {
-        if ($configuration->hasSection('reporter')) {
-            $this->reporters = Init::initializeAll($configuration->getSection('reporter'));
+        if ($_configuration->hasSection('reporter')) {
+            $this->reporters = Init::initializeAll($_configuration->getSection('reporter'));
         }
 
         foreach ($this->reporters as $reporter) {
@@ -40,7 +31,7 @@ class ReporterExtension
             }
 
             if ($reporter instanceof ConfigAwareReporter) {
-                $reporter->setConfig($configuration);
+                $reporter->setConfig($_configuration);
             }
         }
     }

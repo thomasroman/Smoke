@@ -2,6 +2,8 @@
 
 namespace whm\Smoke\Http;
 
+use whm\Html\Uri;
+
 class Response extends \Ivory\HttpAdapter\Message\Response
 {
     private $contents;
@@ -18,6 +20,9 @@ class Response extends \Ivory\HttpAdapter\Message\Response
         return array_shift($exploded);
     }
 
+    /**
+     * @return Uri
+     */
     public function getUri()
     {
         return $this->getParameter('request')->getUri();

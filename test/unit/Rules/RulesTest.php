@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Test\Rules;
 
-use whm\Smoke\Http\Request;
+use Ivory\HttpAdapter\Message\Request;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules;
 

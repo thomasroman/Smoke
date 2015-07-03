@@ -2,6 +2,7 @@
 
 - License: MIT
 - Build: [![Build Status](https://secure.travis-ci.org/phmLabs/Smoke.png)](http://travis-ci.org/phmLabs/Smoke)
+- Code Quality: [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phmLabs/Smoke/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phmLabs/Smoke/?branch=master)
 - Smoke Online: [http://smoke.phmlabs.com/](http://smoke.phmlabs.com/)
 - Homepage: [http://www.thewebhatesme.com/](http://www.thewebhatesme.com/)
 
@@ -30,7 +31,7 @@ Installation complete.
 ### Command Line Parameters for Analysis
 
 - **--num_urls** defines how many urls should be checked. Standard is 20.  
-  Example: `Smoke.phar analyse --num-urls="20" test.com` 
+  Example: `Smoke.phar analyse --num_urls="20" test.com` 
 
 - **--parallel_requests** defines how many requests are done in parallel. Standard is 10.  
   Example: `Smoke.phar analyse --parallel_requests="10" test.com` 

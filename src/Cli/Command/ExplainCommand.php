@@ -2,17 +2,14 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use Phly\Http\Uri;
-use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
+use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
-class ExplainCommand extends Command
+class ExplainCommand extends SmokeCommand
 {
     /**
      * Defines what arguments and options are available for the user. Can be listed using
@@ -38,10 +35,11 @@ class ExplainCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = $this->initConfiguration($input->getOption('config_file'));
+        $this->init($output);
 
-        $output->writeln("\n Smoke " . SMOKE_VERSION . " by Nils Langner\n");
-        $output->writeln(" <info>Explaining</info>\n");
+        $this->writeSmokeCredentials();
+
+        $config = $this->initConfiguration($input->getOption('config_file'));
 
         if ($input->getOption('bootstrap')) {
             include $input->getOption('bootstrap');
@@ -71,24 +69,13 @@ class ExplainCommand extends Command
      * Initializes the configuration.
      *
      * @param $configFile
-     * @param $loadForeign
-     * @param Uri $uri
      *
      * @return Configuration
      */
     private function initConfiguration($configFile)
     {
-        if ($configFile) {
-            if (file_exists($configFile)) {
-                $configArray = Yaml::parse(file_get_contents($configFile));
-            } else {
-                throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
-            }
-        } else {
-            $configArray = [];
-        }
-
-        $config = new Configuration(new Uri(''), new Dispatcher(), $configArray);
+        $configArray = $this->getConfigArray($configFile);
+        $config = new Configuration(new Uri(''), $this->eventDispatcher, $configArray);
 
         return $config;
     }

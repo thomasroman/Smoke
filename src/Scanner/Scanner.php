@@ -2,13 +2,10 @@
 
 namespace whm\Smoke\Scanner;
 
-use Phly\Http\Uri;
+use Ivory\HttpAdapter\HttpAdapterInterface;
 use phmLabs\Components\Annovent\Dispatcher;
 use phmLabs\Components\Annovent\Event\Event;
-use PhmLabs\Components\Init\Init;
-use whm\Smoke\Config\Configuration;
-use whm\Smoke\Http\Document;
-use whm\Smoke\Http\HttpClient;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -17,73 +14,49 @@ class Scanner
     const ERROR = 'error';
     const PASSED = 'passed';
 
-    private $configuration;
+    private $rules;
     private $eventDispatcher;
 
-    /**
-     * @var HttpClient
-     */
-    private $client;
+    private $responseRetriever;
 
     private $status = 0;
 
-    public function __construct(Configuration $config, HttpClient $client, Dispatcher $eventDispatcher)
+    public function __construct(array $rules, HttpAdapterInterface $client, Dispatcher $eventDispatcher, Retriever $responseRetriever)
     {
-        $eventDispatcher->simpleNotify('Scanner.Init', array('configuration' => $config, 'httpClient' => $config, 'dispatcher' => $eventDispatcher));
+        $eventDispatcher->simpleNotify('Scanner.Init', array('rules' => $rules, 'httpClient' => $client, 'dispatcher' => $eventDispatcher));
 
-        $this->pageContainer = new PageContainer($config->getContainerSize());
-        $this->pageContainer->push($config->getStartUri(), $config->getStartUri());
-        $this->client = $client;
-        $this->configuration = $config;
+        $this->rules = $rules;
         $this->eventDispatcher = $eventDispatcher;
-    }
 
-    private function processHtmlContent($htmlContent, Uri $currentUri)
-    {
-        $htmlDocument = new Document($htmlContent, $currentUri);
-        $referencedUris = $htmlDocument->getReferencedUris($currentUri);
-
-        foreach ($referencedUris as $uri) {
-            $isFiltered = $this->eventDispatcher->notifyUntil(new Event('Scanner.ProcessHtml.isFiltered', array('uri' => $uri)));
-
-            if (!$isFiltered) {
-                $this->pageContainer->push($uri, $currentUri);
-            }
-        }
+        $this->responseRetriever = $responseRetriever;
     }
 
     public function scan()
     {
         $this->eventDispatcher->simpleNotify('Scanner.Scan.Begin');
 
-        do {
-            $urls = $this->pageContainer->pop($this->configuration->getParallelRequestCount());
-            $responses = $this->client->request($urls);
+        while (($response = $this->responseRetriever->next()) && !$this->eventDispatcher->notifyUntil(new Event('Scanner.Scan.isStopped'))) {
 
-            foreach ($responses as $response) {
-                $currentUri = new Uri((string) $response->getUri());
-
-                // only extract urls if the content type is text/html
-                if ('text/html' === $response->getContentType()) {
-                    $this->processHtmlContent($response->getBody(), $currentUri);
-                }
-
-                $resultArray = $this->checkResponse($response);
-
-                $result = new Result($response->getUri(),
-                    $resultArray['type'],
-                    $response,
-                    $this->pageContainer->getParent($currentUri),
-                    $resultArray['time']);
-
-                if ($result->isFailure()) {
-                    $result->setMessages($resultArray['messages']);
-                    $this->status = 1;
-                }
-
-                $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $result));
+            // this is the url filter
+            if ($this->eventDispatcher->notifyUntil(new Event('Scanner.ProcessHtml.isFiltered', array('uri' => $response->getUri())))) {
+                continue;
             }
-        } while (!$this->eventDispatcher->notifyUntil(new Event('Scanner.Scan.isStopped')) && count($urls) > 0);
+
+            $resultArray = $this->checkResponse($response);
+
+            $result = new Result($response->getUri(),
+                $resultArray['type'],
+                $response,
+                '',
+                $resultArray['time']);
+
+            if ($result->isFailure()) {
+                $result->setMessages($resultArray['messages']);
+                $this->status = 1;
+            }
+
+            $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('result' => $result));
+        }
 
         $this->eventDispatcher->simpleNotify('Scanner.Scan.Finish');
     }
@@ -98,7 +71,7 @@ class Scanner
         $messages = [];
 
         $startTime = microtime(true);
-        foreach ($this->configuration->getRules() as $name => $rule) {
+        foreach ($this->rules as $name => $rule) {
             try {
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
@@ -110,7 +83,7 @@ class Scanner
         // calculate time in seconds
         $time = round(($endTime - $startTime) * 1000, 5);
 
-        if ($messages) {
+        if (count($messages) > 0) {
             $resultArray = ['messages' => $messages, 'time' => $time, 'type' => self::ERROR];
         } else {
             $resultArray = ['messages' => [], 'time' => $time, 'type' => self::PASSED];
