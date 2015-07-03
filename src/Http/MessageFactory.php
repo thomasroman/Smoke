@@ -33,26 +33,6 @@ class MessageFactory extends \Ivory\HttpAdapter\Message\MessageFactory
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function createRequest(
-        $uri,
-        $method = RequestInterface::METHOD_GET,
-        $protocolVersion = RequestInterface::PROTOCOL_VERSION_1_1,
-        array $headers = array(),
-        $body = null,
-        array $parameters = array()
-    ) {
-        return (new \Ivory\HttpAdapter\Message\Request(
-            $uri,
-            $method,
-            $this->doCreateStream($body),
-            HeadersNormalizer::normalize($headers),
-            $parameters
-        ))->withProtocolVersion($protocolVersion);
-    }
-
-    /**
      * Creates a stream.
      *
      * @param null|resource|string|\Psr\Http\Message\StreamInterface|null $body The body.

@@ -68,9 +68,10 @@ class SmokeCommand extends Command
     }
 
     /**
-     * Returns an array representing the configuration
+     * Returns an array representing the configuration.
      *
      * @param $configFile
+     *
      * @return array
      */
     protected function getConfigArray($configFile)
