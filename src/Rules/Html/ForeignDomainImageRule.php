@@ -3,6 +3,7 @@
 namespace whm\Smoke\Rules\Html;
 
 use whm\Html\Document;
+use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -33,8 +34,12 @@ class ForeignDomainImageRule implements Rule
 
         $foreignImages = array();
 
+        /* @var $currentUri Uri */
+        $currentUri = $response->getUri();
+
         foreach ($images as $image) {
-            if ($response->getUri()->getHost($this->depth) !== $image->getHost($this->depth)) {
+            /* @var $image Uri */
+            if ($currentUri->getHost($this->depth) !== $image->getHost($this->depth)) {
                 $foreignImages[] = (string) $image;
             }
         }

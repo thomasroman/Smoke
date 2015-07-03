@@ -10,7 +10,7 @@ class ForeignDomainFilter implements Filter
 {
     public function isFiltered(UriInterface $currentUri, UriInterface $startUri)
     {
-        /* @var $currentUri */
+        /* @var $currentUri Uri */
         /* @var $startUri Uri */
 
         return $currentUri->getHost(2) !== $startUri->getHost(2);
