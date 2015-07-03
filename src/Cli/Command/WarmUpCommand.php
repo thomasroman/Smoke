@@ -36,7 +36,6 @@ class WarmUpCommand extends SmokeCommand
         $this->init($output);
 
         $this->initConfiguration(
-            $input->getOption('parallel_requests'),
             new Uri($input->getArgument('url')),
             $this->eventDispatcher);
 
@@ -55,7 +54,7 @@ class WarmUpCommand extends SmokeCommand
      *
      * @return Configuration
      */
-    private function initConfiguration($parallel_requests, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration(Uri $uri, Dispatcher $dispatcher)
     {
         $configArray = $this->getConfigArray(__DIR__ . '/../../settings/warmup.yml');
 
