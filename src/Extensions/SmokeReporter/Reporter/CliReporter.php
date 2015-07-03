@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Scanner\Result;
 
-class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
+class CliReporter implements Reporter
 {
     /**
      * @var OutputInterface
@@ -22,24 +22,17 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
     private $rules = array();
     private $maxResults;
 
-    public function init($orderBy = 'url', $maxResults = 0)
+    public function init(OutputInterface $_output, Configuration $_configuration, $orderBy = 'url', $maxResults = 0)
     {
         $this->orderBy = $orderBy;
+        $this->output = $_output;
+        $this->rules = $_configuration->getRules();
+
         if ($maxResults === 0) {
             $this->maxResults = 10000000;
         } else {
             $this->maxResults = $maxResults;
         }
-    }
-
-    public function setConfig(Configuration $config)
-    {
-        $this->rules = $config->getRules();
-    }
-
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
     }
 
     public function processResult(Result $result)
