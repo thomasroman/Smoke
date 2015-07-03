@@ -74,8 +74,10 @@ class SmokeCommand extends Command
      *
      * @return array
      */
-    protected function getConfigArray($configFile)
+    protected function getConfigArray($configFile, $mandatory = false)
     {
+        $configArray = array();
+
         if ($configFile) {
             if (file_exists($configFile)) {
                 $configArray = Yaml::parse(file_get_contents($configFile));
@@ -83,7 +85,9 @@ class SmokeCommand extends Command
                 throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
             }
         } else {
-            throw new \RuntimeException('Config file was not defined.');
+            if ($mandatory) {
+                throw new \RuntimeException('Config file was not defined.');
+            }
         }
 
         return $configArray;

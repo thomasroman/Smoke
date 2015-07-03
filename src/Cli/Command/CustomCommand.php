@@ -18,7 +18,7 @@ class CustomCommand extends SmokeCommand
     {
         $this
             ->setDefinition([
-                new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
+                new InputOption('config_file', 'c', InputOption::VALUE_REQUIRED, 'config file'),
                 new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
             ])
             ->setDescription('analyses a website given a config file')
@@ -53,7 +53,7 @@ class CustomCommand extends SmokeCommand
      */
     private function initConfiguration($configFile, Dispatcher $dispatcher)
     {
-        $configArray = $this->getConfigArray($configFile);
+        $configArray = $this->getConfigArray($configFile, true);
         $this->config = new Configuration(new Uri('http://example.com'), $dispatcher, $configArray);
     }
 }
