@@ -16,7 +16,7 @@ class Application extends \Symfony\Component\Console\Application
 {
     public function __construct()
     {
-        parent::__construct('Smoke', '1.0');
+        parent::__construct('Smoke', SMOKE_VERSION);
     }
 
     /**
