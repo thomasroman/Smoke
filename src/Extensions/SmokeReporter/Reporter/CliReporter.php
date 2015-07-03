@@ -57,9 +57,6 @@ class CliReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
         $this->output->writeln('');
     }
 
-    /**
-     *
-     */
     private function renderRuleOutput()
     {
         $this->output->writeln("\n\n <comment>Rules and Violations:</comment> \n");
