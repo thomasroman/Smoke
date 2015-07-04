@@ -37,7 +37,7 @@ Installation complete.
   Example: `Smoke.phar analyse --parallel_requests="10" test.com` 
 
 - **--config_file** sets the configuration file to use for subsequently testing  
-  Example: `Smoke.phar analyse --config_file="path/to/my.yml" test.com` 
+  Example: `Smoke.phar custom --config_file="path/to/my.yml"`
 
 
 ###Configuration File
@@ -55,6 +55,20 @@ Currently, it is not possible to *blacklist* a certain URL pattern and *whitelis
 ####Configuration example and usage
  
 ```yaml
+responseRetriever:
+  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
+  parameters:
+    startPage: "http://www.amilio.de"
+    filters:
+      _BlackWhiteListFilter:
+        class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
+
+      _ValidUrlFilter:
+        class: whm\Crawler\Filter\ValidUrlFilter
+
+      _ForeignDomainFilter:
+        class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter
+
 whitelist:
  - ^www.amilio.de^
  
@@ -71,13 +85,19 @@ rules:
       class: whm\Smoke\Rules\Image\SizeRule
       parameters:
         maxSize: 1
+
+reporter:
+  XUnitReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\XUnitReporter
+    parameters:
+      filename: /tmp/xunit.xml
 ```
 
 For more examples, see the *examples* directory. 
 To call Smoke with your config file, just issue on command line:
 
 ```bash
-Smoke.phar analyse --config_file="test.yml" test.com
+Smoke.phar custom --config_file="test.yml"
 ```
 
 ##How to write custom rules

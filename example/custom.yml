@@ -4,11 +4,11 @@ options:
 whitelist:
   - ^amilio.de^
 
-listeners:
- XUnitReporter:
-   class: whm\Smoke\Reporter\XUnitReporter
-   parameters:
-     filename: /tmp/xunit.xml
+reporter:
+  XUnitReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\XUnitReporter
+    parameters:
+      filename: /tmp/xunit.xml
 
 rules:
   _ImageSize:
@@ -23,15 +23,15 @@ stop:
       maxCount: 1
 
 responseRetriever:
- class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
- parameters:
-   startPage: "http://www.amilio.de/thumb/61/3a/613aee53e10d7348f44ae6f47bff760b_180px.jpg"
-   filters:
-    _BlackWhiteListFilter:
-      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
+  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
+  parameters:
+    startPage: "http://www.amilio.de/thumb/61/3a/613aee53e10d7348f44ae6f47bff760b_180px.jpg"
+    filters:
+      _BlackWhiteListFilter:
+        class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
 
-    _ValidUrlFilter:
-      class: whm\Crawler\Filter\ValidUrlFilter
+      _ValidUrlFilter:
+        class: whm\Crawler\Filter\ValidUrlFilter
 
-    _ForeignDomainFilter:
-      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter
+      _ForeignDomainFilter:
+        class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter

@@ -3,9 +3,13 @@
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use whm\Smoke\Config\Configuration;
 use whm\Smoke\Scanner\Result;
 
-class XUnitReporter implements Reporter, OutputAwareReporter
+/**
+ * Class XUnitReporter.
+ */
+class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
 {
     private $filename = null;
 
@@ -16,9 +20,20 @@ class XUnitReporter implements Reporter, OutputAwareReporter
 
     private $output = null;
 
+    private $startUri;
+
     public function init($filename)
     {
         $this->filename = $filename;
+
+        if (!is_dir(dirname($this->filename))) {
+            mkdir(dirname($this->filename));
+        }
+    }
+
+    public function setConfig(Configuration $config)
+    {
+        $this->startUri = $config->getStartUri();
     }
 
     public function setOutput(OutputInterface $output)
@@ -50,38 +65,40 @@ class XUnitReporter implements Reporter, OutputAwareReporter
 
             $testCase = $xml->createElement('testcase');
 
-            $testCase->setAttribute('classname', '');
-            $testCase->setAttribute('file', $result->getUrl());
+            $testCase->setAttribute('classname', $result->getUrl());
             $testCase->setAttribute('name', '');
-            $testCase->setAttribute('class', '');
             $testCase->setAttribute('assertions', '1');
             $testCase->setAttribute('time', $result->getDuration());
 
             if ($result->isFailure()) {
                 ++$failures;
-                $testFailure = $xml->createElement('failure');
-                $testCase->appendChild($testFailure);
 
-                $testFailure->setAttribute('type', implode('; ', array_keys($result->getMessages())));
-                $text = $xml->createTextNode(implode('; ', $result->getMessages()));
-                $testFailure->appendChild($text);
+                foreach ($result->getMessages() as $type => $message) {
+                    $testFailure = $xml->createElement('failure');
+                    $testCase->appendChild($testFailure);
+
+                    $testFailure->setAttribute('type', $type);
+                    $text = $xml->createTextNode($message);
+                    $testFailure->appendChild($text);
+                }
             }
 
             $testSuite->appendChild($testCase);
         }
 
-        // @TODO: calculate amount of assertions (global and for every test)
         // @TODO: differentiate between errors and failures
 
-        $testSuite->setAttribute('name', '');
+        $testSuite->setAttribute('name', (string) $this->startUri);
         $testSuite->setAttribute('tests', count($this->results));
-        $testSuite->setAttribute('assertions', count($this->results));
         $testSuite->setAttribute('failures', $failures);
         $testSuite->setAttribute('errors', '0');
         $testSuite->setAttribute('time', $absoluteTime);
 
-        $xml->save($this->filename);
+        $saveResult = $xml->save($this->filename);
 
-        $this->output->writeln('<info>Writing XUnit Output to file:</info> ' . $this->filename);
+        if ($saveResult === false) {
+            $this->output->writeln('<error>An error occured: ' . libxml_get_last_error() . '</error>');
+        }
+        $this->output->writeln('    <info>Writing XUnit Output to file:</info> ' . $this->filename);
     }
 }

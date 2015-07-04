@@ -77,6 +77,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
             [new Rules\Json\ValidRule(), [], 'lolcat', 200, ['Content-Type' => ['application/json']]],
             //XML
             [new Rules\Xml\Rss\ValidRule(), [], '<rss>lolcat</rss', 200, ['Content-Type' => ['text/xml']]],
+            [new Rules\Xml\DuplicateIdRule(), [], '<html><input id="x"/><button id="x"/></html>', 200, ['Content-Type' => ['text/html']]],
         ];
     }
 
@@ -87,6 +88,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
      * @param int        $statusCode
      * @param array      $header
      * @param array      $parameters
+     * @param bool       $https
      */
     private function runRuleTest(Rules\Rule $rule, array $initArgs, $body, $statusCode, array $header, array $parameters, $https = false)
     {
