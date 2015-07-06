@@ -2,12 +2,7 @@
 
 namespace whm\Smoke\Cli\Command;
 
-use phmLabs\Components\Annovent\Dispatcher;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use whm\Html\Uri;
-use whm\Smoke\Config\Configuration;
 
 abstract class ConfigurableCommand extends SmokeCommand
 {
