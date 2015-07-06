@@ -46,29 +46,35 @@ class StandardCliReporter extends CliReporter
         $this->output->writeln('');
     }
 
+    private function getFailedUrls($ruleKey)
+    {
+        $failedUrls = array();
+
+        $count = 0;
+        foreach ($this->results as $result) {
+            if ($result->isFailure()) {
+                if (array_key_exists($ruleKey, $result->getMessages())) {
+                    $messages = $result->getMessages();
+                    $failedUrls[] = (string) $result->getUrl() . ' - ' . $messages[$ruleKey];
+                    ++$count;
+                }
+                if ($count > $this->maxResults) {
+                    $failedUrls[] = '... only the first ' . $this->maxResults . ' elements are shown.';
+                    break;
+                }
+            }
+        }
+
+        return $failedUrls;
+    }
+
     private function renderRuleOutput()
     {
         $this->output->writeln("\n\n <comment>Rules and Violations:</comment> \n");
 
         foreach ($this->rules as $ruleKey => $rule) {
             $info = Init::getInitInformationByClass($rule);
-
-            $failedUrls = array();
-
-            $count = 0;
-            foreach ($this->results as $result) {
-                if ($result->isFailure()) {
-                    if (array_key_exists($ruleKey, $result->getMessages())) {
-                        $messages = $result->getMessages();
-                        $failedUrls[] = (string) $result->getUrl() . ' - ' . $messages[$ruleKey];
-                        ++$count;
-                    }
-                    if ($count > $this->maxResults) {
-                        $failedUrls[] = '... only the first ' . $this->maxResults . ' elements are shown.';
-                        break;
-                    }
-                }
-            }
+            $failedUrls = $this->getFailedUrls($ruleKey);
 
             if (count($failedUrls) > 0) {
                 $this->output->writeln('  <error> ' . get_class($rule) . ' </error>');
@@ -76,9 +82,7 @@ class StandardCliReporter extends CliReporter
                 $this->output->writeln('  <info> ' . get_class($rule) . ' </info>');
             }
 
-            $this->output->writeln('   ' . str_replace("\n", "\n   ", $info['documentation']));
-
-            $this->output->writeln('');
+            $this->output->writeln('   ' . str_replace("\n", "\n   ", $info['documentation']) . "\n");
 
             foreach ($failedUrls as $failedUrl) {
                 $this->output->writeln('   - ' . $failedUrl);
