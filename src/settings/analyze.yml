@@ -23,7 +23,7 @@ extensions:
 
 reporter:
   _CliReporter:
-    class: whm\Smoke\Extensions\SmokeReporter\Reporter\CliReporter
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
 
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
