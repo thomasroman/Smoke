@@ -3,15 +3,16 @@
 namespace whm\Smoke\Rules\Html;
 
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
+use whm\Smoke\Rules\StandardRule;
 
 /**
  * This rule will analyze any html document and checks if a given string is contained.
  */
-class StringExistsRule implements Rule
+class StringExistsRule extends StandardRule
 {
     private $string;
+
+    protected $contentTypes = array('text/html');
 
     /**
      * @param int $string The string that the document must contain
@@ -21,14 +22,9 @@ class StringExistsRule implements Rule
         $this->string = $string;
     }
 
-    public function validate(Response $response)
+    protected function doValidation(Response $response)
     {
-        if ('text/html' !== $response->getContentType()) {
-            return;
-        }
-
-        if (strpos($response->getBody(), $this->string) === false) {
-            throw new ValidationFailedException('The given string (' . $this->string . ') was not found in this document.');
-        }
+        $this->assert(strpos($response->getBody(), $this->string) !== false,
+            'The given string (' . $this->string . ') was not found in this document.');
     }
 }

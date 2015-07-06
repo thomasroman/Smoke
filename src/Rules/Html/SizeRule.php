@@ -3,16 +3,17 @@
 namespace whm\Smoke\Rules\Html;
 
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
+use whm\Smoke\Rules\StandardRule;
 
 /**
  * This rule calculates the size of a html document. If the document is bigger than a given value
  * the test will fail.
  */
-class SizeRule implements Rule
+class SizeRule extends StandardRule
 {
     private $maxSize;
+
+    protected $contentTypes = array('text/html');
 
     /**
      * @param int $maxSize The maximum size of a html file in kilobytes.
@@ -22,15 +23,9 @@ class SizeRule implements Rule
         $this->maxSize = $maxSize;
     }
 
-    public function validate(Response $response)
+    protected function doValidation(Response $response)
     {
-        if ('text/html' !== $response->getContentType()) {
-            return;
-        }
-
         $size = strlen($response->getBody()) / 1000;
-        if ($size > $this->maxSize) {
-            throw new ValidationFailedException('The size of this html file is too big (' . $size . ' KB)');
-        }
+        $this->assert($size <= $this->maxSize, 'The size of this html file is too big (' . $size . ' KB)');
     }
 }

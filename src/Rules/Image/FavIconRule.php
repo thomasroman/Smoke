@@ -3,30 +3,25 @@
 namespace whm\Smoke\Rules\Image;
 
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
+use whm\Smoke\Rules\StandardRule;
 
 /**
  * This rule checks if the favicon that is used is the framework default.
  */
-class FavIconRule implements Rule
+class FavIconRule extends StandardRule
 {
+    protected $contentTypes = array('image');
+
     private $favicons = array('231567a8cc45c2cf966c4e8d99a5b7fd' => 'symfony2');
 
-    public function validate(Response $response)
+    protected function doValidation(Response $response)
     {
-        if (strpos($response->getContentType(), 'image') === false) {
-            return;
-        }
-
         if (strpos((string) $response->getUri(), 'favicon.ico') === false) {
             return;
         }
 
-        $hash = md5($response->getBody());
+        $imageHash = md5($response->getBody());
 
-        if (array_key_exists($hash, $this->favicons)) {
-            throw new ValidationFailedException('Seems like you use the standard favicon of your framework (' . $this->favicons[$hash] . ').');
-        }
+        $this->assert(!array_key_exists($imageHash, $this->favicons), 'Seems like you use the standard favicon of your framework (' . $this->favicons[$imageHash] . ').');
     }
 }

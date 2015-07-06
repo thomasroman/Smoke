@@ -4,14 +4,13 @@ namespace whm\Smoke\Rules\Html;
 
 use whm\Html\Document;
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
+use whm\Smoke\Rules\StandardRule;
 
-abstract class CountRule implements Rule
+abstract class CountRule extends StandardRule
 {
     protected $maxCount;
 
-    protected $contentType;
+    protected $contentTypes = array('text/html');
 
     protected $errorMessage;
 
@@ -25,17 +24,11 @@ abstract class CountRule implements Rule
 
     abstract protected function getFilesToCount(Document $document, Response $response);
 
-    public function validate(Response $response)
+    protected function doValidation(Response $response)
     {
-        if (!$response->getContentType() === 'text/html') {
-            return;
-        }
-
         $document = new Document($response->getBody());
         $files = $this->getFilesToCount($document, $response);
 
-        if (count($files) > $this->maxCount) {
-            throw new ValidationFailedException(sprintf($this->errorMessage, count($files)));
-        }
+        $this->assert(count($files) <= $this->maxCount, sprintf($this->errorMessage, count($files)));
     }
 }
