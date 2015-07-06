@@ -34,9 +34,7 @@ class ScanCommand extends SmokeCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->init($output);
-
-        $this->writeSmokeCredentials($input->getArgument('url'));
+        $this->init($input, $output, $input->getArgument('url'));
 
         $this->initConfiguration(
             $input->getOption('num_urls'),

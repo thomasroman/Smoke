@@ -29,15 +29,9 @@ class ExplainCommand extends ConfigurableCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->init($output);
-
-        $this->writeSmokeCredentials();
+        $this->init($input, $output);
 
         $config = $this->initConfiguration($input->getOption('config_file'));
-
-        if ($input->getOption('bootstrap')) {
-            include $input->getOption('bootstrap');
-        }
 
         $rules = $config->getRules();
 

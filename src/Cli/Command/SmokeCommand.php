@@ -6,6 +6,7 @@ use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Http\MessageFactory;
@@ -17,13 +18,19 @@ class SmokeCommand extends Command
     protected $eventDispatcher;
     protected $config;
 
-    protected function init(OutputInterface $output)
+    protected function init(InputInterface $input, OutputInterface $output, $url = null)
     {
+        if ($input->hasOption('bootstrap')) {
+            include $input->getOption('bootstrap');
+        }
+
         $this->output = $output;
         $this->eventDispatcher = new Dispatcher();
 
         Init::registerGlobalParameter('_eventDispatcher', $this->eventDispatcher);
         Init::registerGlobalParameter('_output', $output);
+
+        $this->writeSmokeCredentials($url);
     }
 
     /**

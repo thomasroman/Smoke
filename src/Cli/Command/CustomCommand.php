@@ -27,9 +27,7 @@ class CustomCommand extends ConfigurableCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->init($output);
-
-        $this->writeSmokeCredentials();
+        $this->init($input, $output);
 
         $this->initConfiguration(
             $input->getOption('config_file'),

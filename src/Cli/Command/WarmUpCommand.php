@@ -33,7 +33,7 @@ class WarmUpCommand extends SmokeCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->init($output);
+        $this->init($input, $output, $input->getArgument('url'));
 
         $this->initConfiguration(
             new Uri($input->getArgument('url')),
