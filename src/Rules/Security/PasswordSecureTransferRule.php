@@ -5,19 +5,17 @@ namespace whm\Smoke\Rules\Security;
 use Symfony\Component\DomCrawler\Crawler;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
+use whm\Smoke\Rules\StandardRule;
 
 /**
  * This rule checks if a https request contains any insecure includes via http.
  */
-class PasswordSecureTransferRule implements Rule
+class PasswordSecureTransferRule extends StandardRule
 {
-    public function validate(Response $response)
-    {
-        if (!$response->getContentType() === 'text/html') {
-            return;
-        }
+    protected $contentTypes = array('text/html');
 
+    protected function doValidation(Response $response)
+    {
         $crawler = new Crawler($response->getBody());
         $actionNodes = $crawler->filterXPath('//form[//input[@type="password"]]/@action');
 
@@ -30,9 +28,7 @@ class PasswordSecureTransferRule implements Rule
                 continue;
             }
 
-            if (strpos($url, 'https://') === false) {
-                throw new ValidationFailedException('Password is transferred insecure using HTTP.');
-            }
+            $this->assert(strpos($url, 'https://') !== false, 'Password is transferred insecure using HTTP.');
         }
     }
 }

@@ -6,7 +6,6 @@ use whm\Html\Document;
 use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
-use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rules detects images that are not from the same domain as the request url.
@@ -42,6 +41,6 @@ class ForeignDomainImageRule extends StandardRule
             }
         }
 
-        $this->assert(count($foreignImages) == 0, 'Images from a foreign domain where found (' . implode(', ', $foreignImages) . ')');
+        $this->assert(count($foreignImages) === 0, 'Images from a foreign domain where found (' . implode(', ', $foreignImages) . ')');
     }
 }

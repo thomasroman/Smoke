@@ -3,7 +3,6 @@
 namespace whm\Smoke\Rules\Html;
 
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\StandardRule;
 
 /**
