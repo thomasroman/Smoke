@@ -24,7 +24,7 @@ class ExplainCommand extends ConfigurableCommand
     /**
      * Runs the analysis of the given website with all given parameters.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
