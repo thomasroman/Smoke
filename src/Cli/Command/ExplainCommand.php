@@ -4,12 +4,11 @@ namespace whm\Smoke\Cli\Command;
 
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Html\Uri;
 use whm\Smoke\Config\Configuration;
 
-class ExplainCommand extends SmokeCommand
+class ExplainCommand extends ConfigurableCommand
 {
     /**
      * Defines what arguments and options are available for the user. Can be listed using
@@ -17,20 +16,15 @@ class ExplainCommand extends SmokeCommand
      */
     protected function configure()
     {
-        $this
-            ->setDefinition([
-                new InputOption('config_file', 'c', InputOption::VALUE_OPTIONAL, 'config file'),
-                new InputOption('bootstrap', 'b', InputOption::VALUE_OPTIONAL, 'bootstrap file'),
-            ])
-            ->setDescription('explain the rules that are configured')
-            ->setHelp('The <info>explain</info> command explains all the rules that will be executed.')
-            ->setName('explain');
+        $this->configureCommand('explain the rules that are configured',
+            'The <info>explain</info> command explains all the rules that will be executed.',
+            'explain');
     }
 
     /**
      * Runs the analysis of the given website with all given parameters.
      *
-     * @param InputInterface  $input
+     * @param InputInterface $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
