@@ -19,7 +19,7 @@ class StandardCliReporter extends CliReporter
 
     public function init(OutputInterface $_output, Configuration $_configuration, $orderBy = 'url', $maxResults = 0)
     {
-        parent::init($_output);
+        $this->setOutputInterface($_output);
 
         $this->orderBy = $orderBy;
         $this->rules = $_configuration->getRules();

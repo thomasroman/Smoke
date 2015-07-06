@@ -6,6 +6,11 @@ use whm\Smoke\Scanner\Result;
 
 class LiveReporter extends CliReporter
 {
+    public function init(OutputInterface $_output)
+    {
+        $this->setOutputInterface($_output);
+    }
+
     public function processResult(Result $result)
     {
         if ($result->isSuccess()) {

@@ -12,9 +12,9 @@ abstract class CliReporter implements Reporter
      */
     protected $output;
 
-    public function init(OutputInterface $_output)
+    protected function setOutputInterface(OutputInterface $output)
     {
-        $this->output = $_output;
+        $this->output = $output;
     }
 
     protected function renderFailure(Result $result)
