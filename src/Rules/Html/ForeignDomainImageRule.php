@@ -5,15 +5,17 @@ namespace whm\Smoke\Rules\Html;
 use whm\Html\Document;
 use whm\Html\Uri;
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
+use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rules detects images that are not from the same domain as the request url.
  */
-class ForeignDomainImageRule implements Rule
+class ForeignDomainImageRule extends StandardRule
 {
     private $depth;
+
+    protected $contentTypes = array('text/html');
 
     /**
      * @param int $depth number of url parts that have to be the same
@@ -23,12 +25,8 @@ class ForeignDomainImageRule implements Rule
         $this->depth = $depth;
     }
 
-    public function validate(Response $response)
+    protected function doValidation(Response $response)
     {
-        if (!$response->getContentType() === 'text/html') {
-            return;
-        }
-
         $document = new Document($response->getBody());
         $images = $document->getImages($response->getUri());
 
@@ -44,9 +42,6 @@ class ForeignDomainImageRule implements Rule
             }
         }
 
-        if (count($foreignImages) > 0) {
-            $foreignImagesString = implode(', ', $foreignImages);
-            throw new ValidationFailedException('Images from a foreign domain where found (' . $foreignImagesString . ')');
-        }
+        $this->assert(count($foreignImages) == 0, 'Images from a foreign domain where found (' . implode(', ', $foreignImages) . ')');
     }
 }
