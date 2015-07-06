@@ -3,6 +3,8 @@
 
   "version": "1.0.0",
 
+  "description": "Smoke can be used to check if a web platform is basically working.",
+
   "require": {
     "php": ">= 5.4.0",
     "symfony/yaml": "~2.2",
