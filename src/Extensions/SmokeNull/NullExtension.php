@@ -2,6 +2,8 @@
 
 namespace whm\Smoke\Extensions\SmokeNull;
 
+use phmLabs\Components\Annovent\Annotation\Event;
+
 class NullExtension
 {
     /**
