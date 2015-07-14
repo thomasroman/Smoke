@@ -3,7 +3,8 @@
 - License: MIT
 - Build: [![Build Status](https://secure.travis-ci.org/phmLabs/Smoke.png)](http://travis-ci.org/phmLabs/Smoke)
 - Code Quality: [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/phmLabs/Smoke/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phmLabs/Smoke/?branch=master)
-- Smoke Online: [http://smoke.phmlabs.com/](http://smoke.phmlabs.com/)
+- Dependencies: [![Dependency Status](https://www.versioneye.com/user/projects/558a5d30306662001d000236/badge.svg?style=flat)](https://www.versioneye.com/user/projects/558a5d30306662001d000236)
+- Smoke Online: [http://smoke.phmlabs.com/](http://smoke.thewebhatesme.com/)
 - Homepage: [http://www.thewebhatesme.com/](http://www.thewebhatesme.com/)
 
 
