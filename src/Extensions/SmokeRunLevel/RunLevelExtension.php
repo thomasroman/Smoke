@@ -19,7 +19,7 @@ class RunLevelExtension
 
         foreach ($rulesArray as $key => $ruleElement) {
             if (array_key_exists('runLevel', $ruleElement)) {
-                $this->runLevels[$key] = (int)($ruleElement['runLevel']);
+                $this->runLevels[$key] = (int) ($ruleElement['runLevel']);
             } else {
                 $this->runLevels[$key] = 0;
             }
@@ -28,8 +28,8 @@ class RunLevelExtension
 
     public function setRunLevel($runLevel)
     {
-        echo "RunLevel: " . $runLevel;
-        $this->currentRunLevel = (int)$runLevel;
+        echo 'RunLevel: ' . $runLevel;
+        $this->currentRunLevel = (int) $runLevel;
     }
 
     /**
@@ -39,6 +39,7 @@ class RunLevelExtension
     {
         if ($this->runLevels[$ruleName] > $this->currentRunLevel) {
             $event->setProcessed();
+
             return true;
         }
 
