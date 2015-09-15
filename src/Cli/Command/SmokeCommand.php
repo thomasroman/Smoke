@@ -20,7 +20,7 @@ class SmokeCommand extends Command
 
     protected function init(InputInterface $input, OutputInterface $output, $url = null)
     {
-        if ($input->hasOption('bootstrap')) {
+        if ($input->hasOption('bootstrap') && $input->getOption('bootstrap') != "") {
             include $input->getOption('bootstrap');
         }
 

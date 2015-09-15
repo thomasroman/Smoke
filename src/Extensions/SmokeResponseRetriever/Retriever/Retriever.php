@@ -3,6 +3,7 @@
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 
 interface Retriever
@@ -13,4 +14,6 @@ interface Retriever
      * @return Response
      */
     public function next();
+
+    public function getComingFrom(Uri $uri);
 }

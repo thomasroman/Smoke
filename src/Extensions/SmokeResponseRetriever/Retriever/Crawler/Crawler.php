@@ -66,4 +66,9 @@ class Crawler implements Retriever
 
         return $next;
     }
+
+    public function getComingFrom(Uri $uri)
+    {
+        return $this->crawler->getComingFrom($uri);
+    }
 }
