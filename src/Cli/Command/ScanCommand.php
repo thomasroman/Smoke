@@ -60,14 +60,10 @@ class ScanCommand extends SmokeCommand
         $crawler = $config->getExtension('_ResponseRetriever')->getRetriever();
         $crawler->setStartPage($uri);
 
-        if ($num_urls) {
-            $config->getExtension('_SmokeStop')->getStrategy('_CountStop')->init($num_urls);
-            $config->getExtension('_ProgressBar')->setMax($num_urls);
-        }
+        $config->getExtension('_SmokeStop')->getStrategy('_CountStop')->init($num_urls);
+        $config->getExtension('_ProgressBar')->setMax($num_urls);
 
-        if ($run_level) {
-            $config->getExtension('_SmokeRunLevel')->setRunLevel($run_level);
-        }
+        $config->getExtension('_SmokeRunLevel')->setRunLevel($run_level);
 
         $this->config = $config;
     }
