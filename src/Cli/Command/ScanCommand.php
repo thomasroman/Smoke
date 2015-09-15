@@ -23,6 +23,7 @@ class ScanCommand extends SmokeCommand
             ->setDefinition([
                 new InputArgument('url', InputArgument::REQUIRED, 'the url to start with'),
                 new InputOption('num_urls', 'u', InputOption::VALUE_OPTIONAL, 'number of urls to be checked', 20),
+                new InputOption('run_level', 'l', InputOption::VALUE_OPTIONAL, 'limit the rules that are called', 10),
             ])
             ->setDescription('analyses a website')
             ->setHelp('The <info>analyse</info> command runs a cache test.')
@@ -38,6 +39,7 @@ class ScanCommand extends SmokeCommand
 
         $this->initConfiguration(
             $input->getOption('num_urls'),
+            $input->getOption('run_level'),
             new Uri($input->getArgument('url')),
             $this->eventDispatcher);
 
@@ -49,7 +51,7 @@ class ScanCommand extends SmokeCommand
      *
      * @return Configuration
      */
-    private function initConfiguration($num_urls, Uri $uri, Dispatcher $dispatcher)
+    private function initConfiguration($num_urls, $run_level, Uri $uri, Dispatcher $dispatcher)
     {
         $configArray = $this->getConfigArray(__DIR__ . '/../../settings/' . self::CONFIG_FILE);
 
@@ -61,6 +63,10 @@ class ScanCommand extends SmokeCommand
         if ($num_urls) {
             $config->getExtension('_SmokeStop')->getStrategy('_CountStop')->init($num_urls);
             $config->getExtension('_ProgressBar')->setMax($num_urls);
+        }
+
+        if ($run_level) {
+            $config->getExtension('_SmokeRunLevel')->setRunLevel($run_level);
         }
 
         $this->config = $config;

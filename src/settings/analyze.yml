@@ -21,6 +21,11 @@ extensions:
   _ResponseRetriever:
     class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
 
+  _SmokeRunLevel:
+    class: whm\Smoke\Extensions\SmokeRunLevel\RunLevelExtension
+    parameters:
+      runLevel: 10
+
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
@@ -47,11 +52,13 @@ stop:
 
 rules:
   _HtmlSize:
+   runLevel: 1
    class: whm\Smoke\Rules\Html\SizeRule
    parameters:
      maxSize: 300
 
   _HtmlCssCount:
+   runLevel: 1
    class: whm\Smoke\Rules\Html\CssFileCountRule
    parameters:
      maxCount: 10
@@ -71,6 +78,7 @@ rules:
     class: whm\Smoke\Rules\Html\InvalidUrlsRule
 
   _HtmlForeignDomainImageTag:
+    runLevel: 2
     class: whm\Smoke\Rules\Html\ForeignDomainImageRule
 
   _HtmlUnsecureContent:

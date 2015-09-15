@@ -22,6 +22,8 @@ class Configuration
 
     private $extensions = array();
 
+    private $runLevels = array();
+
     public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
         $this->eventDispatcher = $eventDispatcher;
@@ -38,7 +40,7 @@ class Configuration
         }
 
         $this->startUri = $uri;
-        $this->rules = Init::initializeAll($this->configArray['rules']);
+        $this->initRules($this->configArray['rules']);
     }
 
     private function initConfigArray(array $configArray, array $defaultSettings = null)
@@ -77,6 +79,34 @@ class Configuration
     public function getStartUri()
     {
         return $this->startUri;
+    }
+
+    /**
+     * This function initializes all the rules and sets the log level
+     *
+     * @param array $rulesArray
+     */
+    private function initRules(array $rulesArray)
+    {
+        foreach ($rulesArray as $key => $ruleElement) {
+            if (array_key_exists("logLevel", $ruleElement)) {
+                $this->runLevels[$key] = (int)$ruleElement["logLevel"];
+            } else {
+                $this->runLevels[$key] = 0;
+            }
+            $this->rules[$key] = Init::initialize($ruleElement);
+        }
+    }
+
+    /**
+     * Returns the log level of a given rule
+     *
+     * @param string $key
+     * @return int
+     */
+    public function getRuleRunLevel($key)
+    {
+        return $this->runLevels[$key];
     }
 
     /**
@@ -119,5 +149,16 @@ class Configuration
     {
         $this->extensions[$name] = $extension;
         $this->eventDispatcher->connectListener($extension);
+    }
+
+
+    /**
+     * Returns the config array
+     *
+     * @return array
+     */
+    public function getConfigArray()
+    {
+        return $this->configArray;
     }
 }
