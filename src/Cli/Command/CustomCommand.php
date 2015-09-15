@@ -11,7 +11,7 @@ use whm\Smoke\Config\Configuration;
 class CustomCommand extends ConfigurableCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -23,7 +23,7 @@ class CustomCommand extends ConfigurableCommand
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

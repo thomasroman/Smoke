@@ -13,7 +13,7 @@ use whm\Smoke\Config\Configuration;
 class WarmUpCommand extends SmokeCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -29,7 +29,7 @@ class WarmUpCommand extends SmokeCommand
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -82,15 +82,15 @@ class Configuration
     }
 
     /**
-     * This function initializes all the rules and sets the log level
+     * This function initializes all the rules and sets the log level.
      *
      * @param array $rulesArray
      */
     private function initRules(array $rulesArray)
     {
         foreach ($rulesArray as $key => $ruleElement) {
-            if (array_key_exists("logLevel", $ruleElement)) {
-                $this->runLevels[$key] = (int)$ruleElement["logLevel"];
+            if (array_key_exists('logLevel', $ruleElement)) {
+                $this->runLevels[$key] = (int) $ruleElement['logLevel'];
             } else {
                 $this->runLevels[$key] = 0;
             }
@@ -99,9 +99,10 @@ class Configuration
     }
 
     /**
-     * Returns the log level of a given rule
+     * Returns the log level of a given rule.
      *
      * @param string $key
+     *
      * @return int
      */
     public function getRuleRunLevel($key)
@@ -151,9 +152,8 @@ class Configuration
         $this->eventDispatcher->connectListener($extension);
     }
 
-
     /**
-     * Returns the config array
+     * Returns the config array.
      *
      * @return array
      */

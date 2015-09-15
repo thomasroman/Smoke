@@ -44,8 +44,8 @@ class ReporterExtension
      */
     public function getResponseRetriever(Retriever $responseRetriever)
     {
-        foreach($this->reporters as $reporter) {
-            if(method_exists($reporter, "setResponseRetriever")) {
+        foreach ($this->reporters as $reporter) {
+            if (method_exists($reporter, 'setResponseRetriever')) {
                 $reporter->setResponseRetriever($responseRetriever);
             }
         }
@@ -56,7 +56,6 @@ class ReporterExtension
      */
     public function process(Result $result)
     {
-
         foreach ($this->reporters as $reporter) {
             $reporter->processResult($result);
         }

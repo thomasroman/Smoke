@@ -20,7 +20,7 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run(InputInterface $input = null, OutputInterface $output = null)
     {
@@ -35,7 +35,7 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function doRun(InputInterface $input, OutputInterface $output)
     {

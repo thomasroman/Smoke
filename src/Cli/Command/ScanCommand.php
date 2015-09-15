@@ -15,7 +15,7 @@ class ScanCommand extends SmokeCommand
     const CONFIG_FILE = 'analyze.yml';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -31,7 +31,7 @@ class ScanCommand extends SmokeCommand
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -3,7 +3,6 @@
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Scanner\Result;
 
@@ -28,7 +27,7 @@ abstract class CliReporter implements Reporter
 
     protected function renderFailure(Result $result)
     {
-        $this->output->writeln('   <error> ' . $result->getUrl() . ' </error> coming from ' . (string)$this->retriever->getComingFrom($result->getUrl()));
+        $this->output->writeln('   <error> ' . $result->getUrl() . ' </error> coming from ' . (string) $this->retriever->getComingFrom($result->getUrl()));
         foreach ($result->getMessages() as $ruleName => $message) {
             $this->output->writeln('    - ' . $message . " [rule: $ruleName]");
         }
