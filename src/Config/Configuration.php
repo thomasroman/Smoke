@@ -88,14 +88,7 @@ class Configuration
      */
     private function initRules(array $rulesArray)
     {
-        foreach ($rulesArray as $key => $ruleElement) {
-            if (array_key_exists('logLevel', $ruleElement)) {
-                $this->runLevels[$key] = (int) $ruleElement['logLevel'];
-            } else {
-                $this->runLevels[$key] = 0;
-            }
-            $this->rules[$key] = Init::initialize($ruleElement);
-        }
+        $this->rules = Init::initializeAll($rulesArray);
     }
 
     /**
@@ -152,11 +145,6 @@ class Configuration
         $this->eventDispatcher->connectListener($extension);
     }
 
-    /**
-     * Returns the config array.
-     *
-     * @return array
-     */
     public function getConfigArray()
     {
         return $this->configArray;
