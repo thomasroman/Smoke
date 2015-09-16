@@ -57,7 +57,7 @@ class Crawler implements Retriever
                 throw new \RuntimeException('The crawler you are using needs a start page to work, but it is not defined. ');
             }
 
-            $this->crawler = new whmCrawler($this->httpClient, /*new PatternAwareContainer(),*/ $this->startPage, $this->parallelRequests);
+            $this->crawler = new whmCrawler($this->httpClient, new PatternAwareContainer(), $this->startPage, $this->parallelRequests);
 
             foreach ($this->filters as $filter) {
                 $this->crawler->addFilter($filter);
@@ -71,8 +71,6 @@ class Crawler implements Retriever
 
     public function getComingFrom(UriInterface $uri)
     {
-        return $uri;
-
         return $this->crawler->getComingFrom($uri);
     }
 }
