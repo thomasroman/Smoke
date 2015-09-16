@@ -4,7 +4,7 @@ namespace whm\Smoke\Test\Http;
 
 use Ivory\HttpAdapter\Message\Request;
 use Ivory\HttpAdapter\Parser\HeadersParser;
-use Phly\Http\Uri;
+use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase

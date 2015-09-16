@@ -4,8 +4,8 @@ namespace whm\Smoke\Http;
 
 use Ivory\HttpAdapter\Message\RequestInterface;
 use Ivory\HttpAdapter\Normalizer\HeadersNormalizer;
-use Phly\Http\Stream;
 use Psr\Http\Message\StreamInterface;
+use Zend\Diactoros\Stream;
 
 /**
  * MessageFactory.

@@ -2,12 +2,17 @@
 
 namespace whm\Smoke\Cli\Command;
 
+use Ivory\HttpAdapter\Event\Subscriber\RedirectSubscriber;
+use Ivory\HttpAdapter\Event\Subscriber\RetrySubscriber;
+use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
+use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
 use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Http\MessageFactory;
 use whm\Smoke\Scanner\Scanner;
@@ -56,10 +61,17 @@ class SmokeCommand extends Command
      */
     protected function getHttpClient()
     {
-        $httpAdapter = HttpAdapterFactory::guess();
-        $httpAdapter->getConfiguration()->setMessageFactory(new MessageFactory());
+        $eventDispatcher = new EventDispatcher();
+        $eventDispatcher->addSubscriber(new RedirectSubscriber());
+        $eventDispatcher->addSubscriber(new RetrySubscriber());
+        $eventDispatcher->addSubscriber(new StatusCodeSubscriber());
 
-        return $httpAdapter;
+        $adapter = new EventDispatcherHttpAdapter(HttpAdapterFactory::guess(), $eventDispatcher);
+        $adapter->getConfiguration()->setTimeout(30);
+        $adapter->getConfiguration()->setUserAgent('versioneye-php');
+        $adapter->getConfiguration()->setMessageFactory(new MessageFactory());
+
+        return $adapter;
     }
 
     protected function scan()

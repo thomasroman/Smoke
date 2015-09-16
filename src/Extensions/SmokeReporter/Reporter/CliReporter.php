@@ -13,6 +13,9 @@ abstract class CliReporter implements Reporter
      */
     protected $output;
 
+    /**
+     * @var Retriever
+     */
     protected $retriever;
 
     public function setResponseRetriever(Retriever $retriever)

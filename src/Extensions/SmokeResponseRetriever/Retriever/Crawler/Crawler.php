@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use PhmLabs\Components\Init\Init;
+use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
@@ -68,7 +69,7 @@ class Crawler implements Retriever
         return $next;
     }
 
-    public function getComingFrom(Uri $uri)
+    public function getComingFrom(UriInterface $uri)
     {
         return $this->crawler->getComingFrom($uri);
     }
