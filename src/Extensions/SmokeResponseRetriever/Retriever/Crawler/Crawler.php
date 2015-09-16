@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use PhmLabs\Components\Init\Init;
+use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
@@ -56,7 +57,7 @@ class Crawler implements Retriever
                 throw new \RuntimeException('The crawler you are using needs a start page to work, but it is not defined. ');
             }
 
-            $this->crawler = new whmCrawler($this->httpClient, new PatternAwareContainer(), $this->startPage, $this->parallelRequests);
+            $this->crawler = new whmCrawler($this->httpClient, /*new PatternAwareContainer(),*/ $this->startPage, $this->parallelRequests);
 
             foreach ($this->filters as $filter) {
                 $this->crawler->addFilter($filter);
@@ -68,8 +69,10 @@ class Crawler implements Retriever
         return $next;
     }
 
-    public function getComingFrom(Uri $uri)
+    public function getComingFrom(UriInterface $uri)
     {
+        return $uri;
+
         return $this->crawler->getComingFrom($uri);
     }
 }
