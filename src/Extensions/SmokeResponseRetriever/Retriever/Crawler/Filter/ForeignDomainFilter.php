@@ -20,7 +20,7 @@ class ForeignDomainFilter implements Filter
         $currentDomainLength = count($currentDomainElements);
 
         if ($currentDomainLength < $startDomainLength) {
-            return false;
+            return true;
         }
 
         return $currentUri->getHost($startDomainLength) !== $startUri->getHost($startDomainLength);
