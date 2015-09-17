@@ -4,7 +4,8 @@ namespace unit\Rules;
 
 use whm\Smoke\Rules\Http\Header\HttpStatusRule;
 
-class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
+class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase
+{
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
