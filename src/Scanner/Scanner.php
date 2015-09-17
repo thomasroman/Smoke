@@ -29,6 +29,8 @@ class Scanner
         $this->eventDispatcher = $eventDispatcher;
 
         $this->responseRetriever = $responseRetriever;
+
+        $this->eventDispatcher->simpleNotify('Scanner.Init.ResponseRetriever', array('responseRetriever' => $this->responseRetriever));
     }
 
     public function scan()
@@ -73,6 +75,9 @@ class Scanner
         $startTime = microtime(true);
         foreach ($this->rules as $name => $rule) {
             try {
+                if ($this->eventDispatcher->notifyUntil(new Event('Scanner.CheckResponse.isFiltered', array('ruleName' => $name, 'rule' => $rule, 'response' => $response)))) {
+                    continue;
+                }
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
                 $messages[$name] = $e->getMessage();

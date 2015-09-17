@@ -3,6 +3,8 @@ vendor/
 
 box.phar
 
+bauer
+
 composer.phar
 composer.lock
 
