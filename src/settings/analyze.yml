@@ -21,6 +21,11 @@ extensions:
   _ResponseRetriever:
     class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
 
+  _SmokeRunLevel:
+    class: whm\Smoke\Extensions\SmokeRunLevel\RunLevelExtension
+    parameters:
+      runLevel: 10
+
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
@@ -47,71 +52,91 @@ stop:
 
 rules:
   _HtmlSize:
+   runLevel: 1
    class: whm\Smoke\Rules\Html\SizeRule
    parameters:
      maxSize: 300
 
   _HtmlCssCount:
+   runLevel: 1
    class: whm\Smoke\Rules\Html\CssFileCountRule
    parameters:
      maxCount: 10
 
   _HtmlJsCount:
    class: whm\Smoke\Rules\Html\JsFileCountRule
+   runLevel: 1
    parameters:
      maxCount: 10
 
   _HtmlClosingTag:
+    runLevel: 0
     class: whm\Smoke\Rules\Html\ClosingHtmlTagRule
 
   _HtmlnoIndex:
+    runLevel: 1
     class: whm\Smoke\Rules\Html\NoIndexRule
 
   _HtmlInvalidUrlsTag:
+    runLevel: 1
     class: whm\Smoke\Rules\Html\InvalidUrlsRule
 
   _HtmlForeignDomainImageTag:
+    runLevel: 2
     class: whm\Smoke\Rules\Html\ForeignDomainImageRule
 
   _HtmlUnsecureContent:
+    runLevel: 1
     class: whm\Smoke\Rules\Html\InsecureContentRule
 
   _HttpDuration:
+    runLevel: 1
     class: whm\Smoke\Rules\Http\DurationRule
     parameters:
       maxDuration: 1000
 
   _HttpHeaderGzip:
+    runLevel: 1
     class: whm\Smoke\Rules\Http\Header\GZipRule
 
   _HttpHeaderSuccessStatus:
+    runLevel: 0
     class: whm\Smoke\Rules\Http\Header\SuccessStatusRule
 
   _HttpHeaderCacheExpires:
+    runLevel: 1
     class: whm\Smoke\Rules\Http\Header\Cache\ExpiresRule
 
   _HttpHeaderCacheMaxAge:
+    runLevel: 1
     class: whm\Smoke\Rules\Http\Header\Cache\MaxAgeRule
 
   _HttpHeaderCacheNoCache:
+    runLevel: 1
     class: whm\Smoke\Rules\Http\Header\Cache\PragmaNoCacheRule
 
   _ImageSize:
+    runLevel: 1
     class: whm\Smoke\Rules\Image\SizeRule
     parameters:
       maxSize: 100
 
   _ImageFavIcon:
+    runLevel: 1
     class: whm\Smoke\Rules\Image\FavIconRule
 
   _JsonValid:
+    runLevel: 1
     class: whm\Smoke\Rules\Json\ValidRule
 
   _RssValid:
+    runLevel: 1
     class: whm\Smoke\Rules\Xml\Rss\ValidRule
 
   _XmlDuplicateId:
+    runLevel: 1
     class: whm\Smoke\Rules\Xml\DuplicateIdRule
 
   _SecurityPasswordSecureTranfer:
+    runLevel: 1
     class: whm\Smoke\Rules\Security\PasswordSecureTransferRule

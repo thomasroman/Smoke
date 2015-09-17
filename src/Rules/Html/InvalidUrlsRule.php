@@ -15,7 +15,7 @@ class InvalidUrlsRule extends StandardRule
     protected $contentTypes = array('text/html');
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function doValidation(Response $response)
     {

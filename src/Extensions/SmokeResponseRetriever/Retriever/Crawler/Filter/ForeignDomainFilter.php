@@ -13,6 +13,16 @@ class ForeignDomainFilter implements Filter
         /* @var $currentUri Uri */
         /* @var $startUri Uri */
 
-        return $currentUri->getHost(2) !== $startUri->getHost(2);
+        $startDomainElements = explode('.', $startUri->getHost());
+        $currentDomainElements = explode('.', $currentUri->getHost());
+
+        $startDomainLength = count($startDomainElements);
+        $currentDomainLength = count($currentDomainElements);
+
+        if ($currentDomainLength < $startDomainLength) {
+            return true;
+        }
+
+        return $currentUri->getHost($startDomainLength) !== $startUri->getHost($startDomainLength);
     }
 }

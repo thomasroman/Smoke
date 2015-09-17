@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 abstract class ConfigurableCommand extends SmokeCommand
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function configureCommand($description, $help, $name)
     {
