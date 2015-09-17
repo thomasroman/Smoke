@@ -64,7 +64,6 @@ class SmokeCommand extends Command
         $eventDispatcher = new EventDispatcher();
         $eventDispatcher->addSubscriber(new RedirectSubscriber());
         $eventDispatcher->addSubscriber(new RetrySubscriber());
-        $eventDispatcher->addSubscriber(new StatusCodeSubscriber());
 
         $adapter = new EventDispatcherHttpAdapter(HttpAdapterFactory::guess(), $eventDispatcher);
         $adapter->getConfiguration()->setTimeout(30);
