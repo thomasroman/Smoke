@@ -1,6 +1,6 @@
 <?php
-namespace unit\Rules;
 
+namespace unit\Rules;
 
 use whm\Smoke\Rules\Http\Header\HttpStatusRule;
 
@@ -11,11 +11,13 @@ class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
      */
     private $response = null;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->response = $this->getMockBuilder('\whm\Smoke\Http\Response')->getMock();
     }
 
-    public function testValidateDefaultHandlingIsValid() {
+    public function testValidateDefaultHandlingIsValid()
+    {
         $testStatus = 200;
         $rule = new HttpStatusRule();
         $this->response->method('getStatus')->willReturn($testStatus);
@@ -28,10 +30,10 @@ class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
         }
 
         $this->assertFalse($exceptionWasThrown);
-
     }
 
-    public function testValidateDefaultHandlingStatusDoesNotMatch() {
+    public function testValidateDefaultHandlingStatusDoesNotMatch()
+    {
         $testStatus = 301;
         $rule = new HttpStatusRule();
         $this->response->method('getStatus')->willReturn($testStatus);
@@ -44,10 +46,10 @@ class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
         }
 
         $this->assertTrue($exceptionWasThrown);
-
     }
 
-    public function testValidateGivenStatus() {
+    public function testValidateGivenStatus()
+    {
         $testStatus = 301;
         $rule = new HttpStatusRule();
         $this->response->method('getStatus')->willReturn($testStatus);
@@ -61,10 +63,10 @@ class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
         }
 
         $this->assertFalse($exceptionWasThrown);
-
     }
 
-    public function testValidateGivenStatusDoesNotMatch() {
+    public function testValidateGivenStatusDoesNotMatch()
+    {
         $testStatus = 301;
         $rule = new HttpStatusRule();
         $this->response->method('getStatus')->willReturn($testStatus);
@@ -78,7 +80,5 @@ class HttpStatusRuleTest extends \PHPUnit_Framework_TestCase {
         }
 
         $this->assertTrue($exceptionWasThrown);
-
     }
-
 }
