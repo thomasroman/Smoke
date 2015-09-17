@@ -1,5 +1,4 @@
 <?php
-
 namespace whm\Smoke\Rules\Http\Header;
 
 use whm\Smoke\Http\Response;
@@ -24,8 +23,7 @@ class HttpStatusRule implements Rule
 
     public function validate(Response $response)
     {
-        if ($response->getStatus() != $this->expectedStatus)
-        {
+        if ($response->getStatus() != $this->expectedStatus) {
             throw new ValidationFailedException('Status code ' . $response->getStatus() . ' found, ' . $this->expectedStatus . ' expected.');
         }
     }
