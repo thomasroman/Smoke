@@ -3,7 +3,6 @@
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
-use Ivory\HttpAdapter\MultiHttpAdapterException;
 use PhmLabs\Components\Init\Init;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
@@ -64,13 +63,8 @@ class Crawler implements Retriever
                 $this->crawler->addFilter($filter);
             }
         }
-        try {
-            $next = $this->crawler->next();
-        } catch (MultiHttpAdapterException $e) {
-            throw new \RuntimeException();
-        }
 
-        return $next;
+        return $this->crawler->next();
     }
 
     public function getComingFrom(UriInterface $uri)
