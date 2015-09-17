@@ -4,7 +4,6 @@ namespace whm\Smoke\Cli\Command;
 
 use Ivory\HttpAdapter\Event\Subscriber\RedirectSubscriber;
 use Ivory\HttpAdapter\Event\Subscriber\RetrySubscriber;
-use Ivory\HttpAdapter\Event\Subscriber\StatusCodeSubscriber;
 use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
 use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
