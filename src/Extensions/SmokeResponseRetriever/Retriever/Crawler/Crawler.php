@@ -69,6 +69,7 @@ class Crawler implements Retriever
         } catch (MultiHttpAdapterException $e) {
             throw new \RuntimeException();
         }
+
         return $next;
     }
 

@@ -4,7 +4,6 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use Psr\Http\Message\UriInterface;
-use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 
 interface Retriever
