@@ -34,6 +34,10 @@ responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
  parameters:
    parallelRequests: 5
+
+   pageContainer:
+     class: whm\Crawler\PageContainer\PatternAwareContainer
+
    filters:
     _BlackWhiteListFilter:
       class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
@@ -73,7 +77,7 @@ rules:
     runLevel: 0
     class: whm\Smoke\Rules\Html\ClosingHtmlTagRule
 
-  _HtmlnoIndex:
+  _HtmlNoIndex:
     runLevel: 1
     class: whm\Smoke\Rules\Html\NoIndexRule
 
@@ -82,7 +86,7 @@ rules:
     class: whm\Smoke\Rules\Html\InvalidUrlsRule
 
   _HtmlForeignDomainImageTag:
-    runLevel: 2
+    runLevel: 3
     class: whm\Smoke\Rules\Html\ForeignDomainImageRule
 
   _HtmlUnsecureContent:
@@ -134,7 +138,7 @@ rules:
     class: whm\Smoke\Rules\Xml\Rss\ValidRule
 
   _XmlDuplicateId:
-    runLevel: 1
+    runLevel: 2
     class: whm\Smoke\Rules\Xml\DuplicateIdRule
 
   _SecurityPasswordSecureTranfer:

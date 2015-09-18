@@ -74,10 +74,10 @@ class Scanner
 
         $startTime = microtime(true);
         foreach ($this->rules as $name => $rule) {
+            if ($this->eventDispatcher->notifyUntil(new Event('Scanner.CheckResponse.isFiltered', array('ruleName' => $name, 'rule' => $rule, 'response' => $response)))) {
+                continue;
+            }
             try {
-                if ($this->eventDispatcher->notifyUntil(new Event('Scanner.CheckResponse.isFiltered', array('ruleName' => $name, 'rule' => $rule, 'response' => $response)))) {
-                    continue;
-                }
                 $rule->validate($response);
             } catch (ValidationFailedException $e) {
                 $messages[$name] = $e->getMessage();

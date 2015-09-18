@@ -28,7 +28,6 @@ class RunLevelExtension
 
     public function setRunLevel($runLevel)
     {
-        echo 'RunLevel: ' . $runLevel;
         $this->currentRunLevel = (int) $runLevel;
     }
 
