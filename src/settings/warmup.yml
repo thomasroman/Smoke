@@ -21,6 +21,10 @@ extensions:
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
  parameters:
+
+   pageContainer:
+     class: whm\Crawler\PageContainer\PatternAwareContainer
+
    filters:
     _BlackWhiteListFilter:
       class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
