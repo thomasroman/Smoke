@@ -8,10 +8,12 @@ use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\StartPageAwareRetriever;
 use whm\Smoke\Http\Response;
 
-class Crawler implements Retriever
+class Crawler implements CrawlingRetriever
 {
     private $startPage;
     private $httpClient;
@@ -53,7 +55,12 @@ class Crawler implements Retriever
         }
     }
 
-    public function setStartPage(Uri $startPage)
+    public function getStartPage()
+    {
+        return $this->startPage;
+    }
+
+    public function setStartPage(UriInterface $startPage)
     {
         $this->startPage = $startPage;
     }

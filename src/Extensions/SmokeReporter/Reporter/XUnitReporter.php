@@ -4,12 +4,16 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\StartPageAwareRetriever;
 use whm\Smoke\Scanner\Result;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
+
 
 /**
  * Class XUnitReporter.
  */
-class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporter
+class XUnitReporter implements Reporter, OutputAwareReporter
 {
     private $filename = null;
 
@@ -20,20 +24,27 @@ class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporte
 
     private $output = null;
 
-    private $startUri;
+    private $config;
 
-    public function init($filename)
+    /**
+     * @var Retriever
+     */
+    protected $retriever;
+
+    public function setResponseRetriever(Retriever $retriever)
+    {
+        $this->retriever = $retriever;
+    }
+
+
+    public function init($filename, Configuration $_configuration)
     {
         $this->filename = $filename;
+        $this->config = $_configuration;
 
         if (!is_dir(dirname($this->filename))) {
             mkdir(dirname($this->filename));
         }
-    }
-
-    public function setConfig(Configuration $config)
-    {
-        $this->startUri = $config->getStartUri();
     }
 
     public function setOutput(OutputInterface $output)
@@ -58,6 +69,7 @@ class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporte
         $xml->appendChild($xmlRoot);
 
         $testSuite = $xml->createElement('testsuite');
+
         $xmlRoot->appendChild($testSuite);
 
         foreach ($this->results as $result) {
@@ -66,20 +78,27 @@ class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporte
             $testCase = $xml->createElement('testcase');
 
             $testCase->setAttribute('classname', $result->getUrl());
-            $testCase->setAttribute('name', '');
+            $testCase->setAttribute('name', $result->getUrl());
             $testCase->setAttribute('assertions', '1');
             $testCase->setAttribute('time', $result->getDuration());
 
             if ($result->isFailure()) {
                 ++$failures;
 
-                foreach ($result->getMessages() as $type => $message) {
+                foreach ($result->getMessages() as $ruleName => $message) {
                     $testFailure = $xml->createElement('failure');
+                    $testFailure->setAttribute('message', $message);
                     $testCase->appendChild($testFailure);
 
-                    $testFailure->setAttribute('type', $type);
+                    $testFailure->setAttribute('type', $ruleName);
                     $text = $xml->createTextNode($message);
                     $testFailure->appendChild($text);
+
+                    if ($this->retriever instanceof CrawlingRetriever) {
+                        $text = $result->getUrl() . ' coming from ' . (string)$this->retriever->getComingFrom($result->getUrl());
+                        $systemOut = $xml->createElement('system-out', $text);
+                        $testCase->appendChild($systemOut);
+                    }
                 }
             }
 
@@ -88,7 +107,13 @@ class XUnitReporter implements Reporter, OutputAwareReporter, ConfigAwareReporte
 
         // @TODO: differentiate between errors and failures
 
-        $testSuite->setAttribute('name', (string) $this->startUri);
+        if ($this->retriever instanceof CrawlingRetriever) {
+            $startPage = (string) $this->retriever->getStartPage();
+        } else {
+            $startPage = '';
+        }
+
+        $testSuite->setAttribute('name', $startPage);
         $testSuite->setAttribute('tests', count($this->results));
         $testSuite->setAttribute('failures', $failures);
         $testSuite->setAttribute('errors', '0');
