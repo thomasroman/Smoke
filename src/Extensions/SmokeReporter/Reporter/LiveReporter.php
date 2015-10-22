@@ -19,7 +19,6 @@ class LiveReporter extends CliReporter
         } else {
             $this->renderFailure($result);
         }
-        $this->output->writeln('');
     }
 
     public function finish()

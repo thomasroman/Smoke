@@ -4,10 +4,9 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
-use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
-use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\StartPageAwareRetriever;
-use whm\Smoke\Scanner\Result;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
+use whm\Smoke\Scanner\Result;
 
 
 /**
@@ -91,11 +90,10 @@ class XUnitReporter implements Reporter, OutputAwareReporter
                     $testCase->appendChild($testFailure);
 
                     $testFailure->setAttribute('type', $ruleName);
-                    $text = $xml->createTextNode($message);
-                    $testFailure->appendChild($text);
 
                     if ($this->retriever instanceof CrawlingRetriever) {
-                        $text = $result->getUrl() . ' coming from ' . (string)$this->retriever->getComingFrom($result->getUrl());
+                        $text = $result->getUrl() . ' coming from ' . (string)$this->retriever->getComingFrom($result->getUrl()) . PHP_EOL;
+                        $text .='    - ' . $message . " [rule: $ruleName]";
                         $systemOut = $xml->createElement('system-out', $text);
                         $testCase->appendChild($systemOut);
                     }
