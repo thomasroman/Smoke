@@ -40,7 +40,6 @@ class XUnitReporter implements Reporter
         $this->config = $_configuration;
         $this->output = $_output;
 
-
         if (!is_dir(dirname($this->filename))) {
             mkdir(dirname($this->filename));
         }
