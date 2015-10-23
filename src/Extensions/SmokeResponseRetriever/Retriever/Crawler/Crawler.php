@@ -9,8 +9,6 @@ use whm\Crawler\Crawler as whmCrawler;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
-use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
-use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\StartPageAwareRetriever;
 use whm\Smoke\Http\Response;
 
 class Crawler implements CrawlingRetriever
