@@ -11,7 +11,7 @@ use whm\Smoke\Scanner\Result;
 /**
  * Class XUnitReporter.
  */
-class XUnitReporter implements Reporter, OutputAwareReporter
+class XUnitReporter implements Reporter
 {
     private $filename = null;
 
@@ -34,19 +34,16 @@ class XUnitReporter implements Reporter, OutputAwareReporter
         $this->retriever = $retriever;
     }
 
-    public function init($filename, Configuration $_configuration)
+    public function init($filename, Configuration $_configuration, OutputInterface $_output)
     {
         $this->filename = $filename;
         $this->config = $_configuration;
+        $this->output = $_output;
+
 
         if (!is_dir(dirname($this->filename))) {
             mkdir(dirname($this->filename));
         }
-    }
-
-    public function setOutput(OutputInterface $output)
-    {
-        $this->output = $output;
     }
 
     public function processResult(Result $result)
