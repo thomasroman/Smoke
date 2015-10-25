@@ -22,7 +22,7 @@ Smoke.phar analyse "http://www.amilio.de"
 
 Download the phar archive using curl
 ```
-curl -O -LSs https://raw.github.com/phmLabs/Smoke/master/bin/Smoke.phar && chmod +x Smoke.phar
+curl -O -LSs http://pharchive.phmlabs.com/archive/phmLabs/Smoke/current/Smoke.phar && chmod +x Smoke.phar
 ```
 
 Installation complete.
