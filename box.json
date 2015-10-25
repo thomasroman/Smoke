@@ -10,7 +10,7 @@
             "exclude": [
                 "Tests",
                 "tests",
-                "example".
+                "example",
                 "test"
             ],
             "in": "vendor"
