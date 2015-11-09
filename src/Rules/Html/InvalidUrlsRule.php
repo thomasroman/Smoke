@@ -19,7 +19,7 @@ class InvalidUrlsRule extends StandardRule
      */
     protected function doValidation(Response $response)
     {
-        $document = new Document($response->getBody());
+        $document = new Document($response->getBody(), false);
 
         $urls = $document->getDependencies($response->getUri());
 
