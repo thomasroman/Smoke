@@ -9,7 +9,9 @@
             "name": "*.php",
             "exclude": [
                 "Tests",
-                "tests"
+                "tests",
+                "example",
+                "test"
             ],
             "in": "vendor"
         }

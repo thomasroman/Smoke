@@ -13,8 +13,8 @@
     "egeloen/http-adapter": "dev-timings",
     "phmlabs/annovent": "~1.0.0",
     "phmlabs/init": "~1.0.0",
-    "phmlabs/html": "~1.0.0",
-    "phmlabs/crawler": "~1.1.0"
+    "phmlabs/html": "~1.1.0",
+    "phmlabs/crawler": "~1.2.0"
   },
   "require-dev": {
     "fabpot/php-cs-fixer": "@stable"
