@@ -5,14 +5,14 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Scanner\Result;
 
-class WarmUpLiveReporter implements Reporter, OutputAwareReporter
+class WarmUpLiveReporter implements Reporter
 {
     private $output;
     private $urlCount = 0;
 
-    public function setOutput(OutputInterface $output)
+    public function init(OutputInterface $_output)
     {
-        $this->output = $output;
+        $this->output = $_output;
     }
 
     public function processResult(Result $result)

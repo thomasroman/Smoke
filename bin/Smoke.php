@@ -21,7 +21,7 @@ if (!defined('SMOKE_COMPOSER_INSTALL')) {
 
 $loader = require SMOKE_COMPOSER_INSTALL;
 
-define('SMOKE_VERSION', '1.0.7');
+define('SMOKE_VERSION', '1.0.8');
 
 $app = new \whm\Smoke\Cli\Application();
 $app->run();

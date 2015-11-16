@@ -48,6 +48,6 @@ class CustomCommand extends ConfigurableCommand
     private function initConfiguration($configFile, Dispatcher $dispatcher)
     {
         $configArray = $this->getConfigArray($configFile, true);
-        $this->config = new Configuration(new Uri('http://example.com'), $dispatcher, $configArray);
+        $this->config = new Configuration(new Uri('http://www.example.com'), $dispatcher, $configArray);
     }
 }
