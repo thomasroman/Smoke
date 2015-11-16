@@ -79,15 +79,13 @@ class XUnitReporter implements Reporter
                 ++$failures;
 
                 foreach ($result->getMessages() as $ruleName => $message) {
-                    $testCase->setFailure(new Failure($ruleName, $message));
+                    $testCase->addFailure(new Failure($ruleName, $message));
 
-                    /* @TODO: implement SystemOut Tag in XUnitReport to support more details in XUnitFiles
                     if ($this->retriever instanceof CrawlingRetriever) {
                         $stackTrace = $result->getUrl() . ' coming from ' . (string) $this->retriever->getComingFrom($result->getUrl()) . PHP_EOL;
                         $stackTrace .= '    - ' . $message . " [rule: $ruleName]";
                         $testCase->setSystemOut($stackTrace);
                     }
-                    */
                 }
             }
 
