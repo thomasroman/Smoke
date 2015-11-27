@@ -26,7 +26,7 @@ class RobotsDisallowAllRule implements Rule
         $content = file_get_contents($filename);
         $normalizedContent = str_replace(" ", '', $content);
 
-        if (strpos($normalizedContent, "Allow:/" . PHP_EOL) !== false) {
+        if (strpos($normalizedContent, "Disallow:/" . PHP_EOL) !== false) {
             throw new ValidationFailedException("The robots.txt contains disallow all (Disallow: /)");
         }
     }
