@@ -3,10 +3,10 @@
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Koalamon;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use Ivory\HttpAdapter\Message\Request;
 use Psr\Http\Message\UriInterface;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever as SmokeRetriever;
-use Ivory\HttpAdapter\Message\Request;
 
 class Retriever implements SmokeRetriever
 {
@@ -44,15 +44,15 @@ class Retriever implements SmokeRetriever
 
     private function prepareUrl($url)
     {
-        $preparedUrl = str_replace("#project#", $this->project, $url);
-        $preparedUrl = str_replace("#api_key#", $this->apiKey, $preparedUrl);
+        $preparedUrl = str_replace('#project#', $this->project, $url);
+        $preparedUrl = str_replace('#api_key#', $this->apiKey, $preparedUrl);
 
         return $preparedUrl;
     }
 
     public function next()
     {
-        if(empty($this->systems)) {
+        if (empty($this->systems)) {
             return false;
         }
 
@@ -65,6 +65,6 @@ class Retriever implements SmokeRetriever
 
     public function getComingFrom(UriInterface $uri)
     {
-        return new Uri("http://www.koalamon.com");
+        return new Uri('http://www.koalamon.com');
     }
 }

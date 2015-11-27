@@ -15,12 +15,12 @@ class KoalamonReporter implements Reporter
      */
     private $results;
 
-    private $koaloMon = "http://www.koalamon.com/app_dev.php/webhook/";
+    private $koaloMon = 'http://www.koalamon.com/app_dev.php/webhook/';
     private $apiKey;
     private $config;
 
-    const STATUS_SUCCESS = "success";
-    const STATUS_FAILURE = "failure";
+    const STATUS_SUCCESS = 'success';
+    const STATUS_FAILURE = 'failure';
 
     public function init($apiKey, Configuration $_configuration)
     {
@@ -37,6 +37,7 @@ class KoalamonReporter implements Reporter
         foreach ($this->config->getRules() as $key => $rule) {
             $keys[] = $key;
         }
+
         return $keys;
     }
 
@@ -53,24 +54,24 @@ class KoalamonReporter implements Reporter
             $failedTests = array();
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
-                    $identifier = "smoke_" . $ruleLKey . "_" . $result->getUrl();
-                    $system = str_replace("http://", "", $result->getUrl());
-                    $this->send($identifier, $system, 'smoke_' . $ruleLKey, $message, self::STATUS_FAILURE, (string)$result->getUrl());
+                    $identifier = 'smoke_' . $ruleLKey . '_' . $result->getUrl();
+                    $system = str_replace('http://', '', $result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $ruleLKey, $message, self::STATUS_FAILURE, (string) $result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
 
             foreach ($rules as $rule) {
-                if (!in_array($rule, $failedTests)) {
-                    $identifier = "smoke_" . $rule . "_" . $result->getUrl();
-                    $system = str_replace("http://", "", $result->getUrl());
-                    $this->send($identifier, $system, 'smoke_' . $rule, "", self::STATUS_SUCCESS, (string)$result->getUrl());
+                if (!in_array($rule, $failedTests, true)) {
+                    $identifier = 'smoke_' . $rule . '_' . $result->getUrl();
+                    $system = str_replace('http://', '', $result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string) $result->getUrl());
                 }
             }
         }
     }
 
-    public function send($identifier, $system, $tool, $message, $status, $url = "")
+    public function send($identifier, $system, $tool, $message, $status, $url = '')
     {
         $curl = curl_init();
         $responseBody = array(
@@ -79,24 +80,25 @@ class KoalamonReporter implements Reporter
             'message' => $message,
             'identifier' => $identifier,
             'type' => $tool,
-            'url' => $url
+            'url' => $url,
         );
 
-        $koalamonUrl = $this->koaloMon . "?api_key=" . $this->apiKey;
+        $koalamonUrl = $this->koaloMon . '?api_key=' . $this->apiKey;
         curl_setopt_array($curl, array(
             CURLOPT_URL => $koalamonUrl,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
+            CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => json_encode($responseBody),
         ));
         $response = curl_exec($curl);
 
         $err = curl_error($curl);
         curl_close($curl);
+
         return $err;
     }
 }
