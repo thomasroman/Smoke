@@ -113,7 +113,7 @@ class Configuration
 
     public function hasSection($section)
     {
-        return (array_key_exists($section, $this->configArray));
+        return array_key_exists($section, $this->configArray);
     }
 
     /**
