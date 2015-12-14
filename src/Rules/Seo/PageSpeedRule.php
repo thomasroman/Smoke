@@ -26,7 +26,7 @@ class RobotsDisallowAllRule implements Rule
         if(!file_exists($filename) ){
             return;
         }
-        
+
         $content = file_get_contents($filename);
         $normalizedContent = str_replace(' ', '', $content);
 

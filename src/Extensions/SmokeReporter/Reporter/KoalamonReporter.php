@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
+use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Scanner\Result;
 
@@ -18,14 +19,24 @@ class KoalamonReporter implements Reporter
     private $koaloMon = 'http://www.koalamon.com/app_dev.php/webhook/';
     private $apiKey;
     private $config;
+    private $system;
+    private $collect;
+    private $identifier;
+
+    private $output;
 
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, Configuration $_configuration)
+    public function init($apiKey, $system, $identifier = "", $collect = true, Configuration $_configuration, OutputInterface $_output)
     {
         $this->config = $_configuration;
         $this->apiKey = $apiKey;
+        $this->system = $system;
+        $this->collect = $collect;
+        $this->identifier = $identifier;
+
+        $this->output = $_output;
     }
 
     /**
@@ -48,25 +59,60 @@ class KoalamonReporter implements Reporter
 
     public function finish()
     {
-        $rules = $this->getRuleKeys();
+        $this->output->writeln("Sending results to www.koalamon.com ... \n");
 
+        if ($this->collect) {
+            $this->sendCollected();
+        } else {
+            $this->sendSingle();
+        }
+    }
+
+    private function sendSingle()
+    {
+        $rules = $this->getRuleKeys();
         foreach ($this->results as $result) {
             $failedTests = array();
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
                     $identifier = 'smoke_' . $ruleLKey . '_' . $result->getUrl();
-                    $system = str_replace('http://', '', $result->getUrl());
-                    $this->send($identifier, $system, 'smoke_' . $ruleLKey, $message, self::STATUS_FAILURE, (string) $result->getUrl());
+                    $this->send($identifier, $this->system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
-
             foreach ($rules as $rule) {
                 if (!in_array($rule, $failedTests, true)) {
                     $identifier = 'smoke_' . $rule . '_' . $result->getUrl();
-                    $system = str_replace('http://', '', $result->getUrl());
-                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string) $result->getUrl());
+                    $this->send($identifier, $this->system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string)$result->getUrl());
                 }
+            }
+        }
+    }
+
+    private function sendCollected()
+    {
+        $failureMessages = array();
+
+        foreach ($this->getRuleKeys() as $rule) {
+            $failureMessages[$rule] = "";
+        }
+
+        foreach ($this->results as $result) {
+            if ($result->isFailure()) {
+                foreach ($result->getMessages() as $ruleLKey => $message) {
+                    if ($failureMessages[$ruleLKey] == "") {
+                        $failureMessages[$ruleLKey] = "    The smoke test for " . $this->system . " failed (Rule: " . $ruleLKey . ").<ul>";
+                    }
+                    $failureMessages[$ruleLKey] .= "<li>" . $message . "(url: " . $result->getUrl() . ")</li>";
+                }
+            }
+        }
+
+        foreach ($failureMessages as $key => $failureMessage) {
+            if ($failureMessage != "") {
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, "");
+            } else {
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', "", self::STATUS_SUCCESS, "");
             }
         }
     }
