@@ -7,7 +7,7 @@ use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
- * This rule checks if a given json file is valid.
+ * This rule checks if robots.txt has no entry "Disallow:/".
  */
 class RobotsDisallowAllRule implements Rule
 {
@@ -26,7 +26,7 @@ class RobotsDisallowAllRule implements Rule
         if(!file_exists($filename) ){
             return;
         }
-        
+
         $content = file_get_contents($filename);
         $normalizedContent = str_replace(' ', '', $content);
 
