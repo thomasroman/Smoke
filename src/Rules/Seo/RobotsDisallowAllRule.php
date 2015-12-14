@@ -23,7 +23,7 @@ class RobotsDisallowAllRule implements Rule
             return;
         }
 
-        if(!file_exists($filename) ){
+        if (!file_exists($filename)) {
             return;
         }
 
