@@ -20,13 +20,13 @@ class DuplicateIdRule implements Rule
 
         $crawler = new Crawler($response->getBody());
 
-        $idList = $crawler->filterXPath('//*[@id]/@id');
+        $idList = $crawler->filterXPath('//*[@id!=""]');
 
         $foundIds = array();
         $duplicatedIds = array();
 
         foreach ($idList as $idElement) {
-            $id = $idElement->value;
+            $id = $idElement->getAttribute('id');
             if (array_key_exists($id, $foundIds)) {
                 $duplicatedIds[$id] = true;
             } else {

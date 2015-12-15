@@ -77,7 +77,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
             [new Rules\Json\ValidRule(), [], 'lolcat', 200, ['Content-Type' => ['application/json']]],
             //XML
             [new Rules\Xml\Rss\ValidRule(), [], '<rss>lolcat</rss', 200, ['Content-Type' => ['text/xml']]],
-            [new Rules\Xml\DuplicateIdRule(), [], '<html><input id="x"/><button id="x"/></html>', 200, ['Content-Type' => ['text/html']]],
+            [new Rules\Xml\DuplicateIdRule(), [], '<html><input id="test"/><button id="test"/></html>', 200, ['Content-Type' => ['text/html']]],
         ];
     }
 

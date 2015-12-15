@@ -7,9 +7,9 @@
 
   "require": {
     "php": ">= 5.4.0",
-    "symfony/yaml": "~2.2",
-    "symfony/console": "~2.2",
-    "symfony/dom-crawler": "~2.2",
+    "symfony/yaml": "~3.0",
+    "symfony/console": "~3.0",
+    "symfony/dom-crawler": "~3.0",
     "egeloen/http-adapter": "dev-timings",
     "phmlabs/annovent": "~1.0.0",
     "phmlabs/init": "~1.0.0",
