@@ -41,6 +41,8 @@ class KoalamonReporter implements Reporter
 
     /**
      * @param Rule [];
+     *
+     * @return array
      */
     private function getRuleKeys()
     {
@@ -76,6 +78,7 @@ class KoalamonReporter implements Reporter
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
                     $identifier = 'smoke_' . $ruleLKey . '_' . $result->getUrl();
+
                     if ($this->system === '') {
                         $system = str_replace('http://', '', $result->getUrl());
                     } else {
@@ -88,6 +91,7 @@ class KoalamonReporter implements Reporter
             foreach ($rules as $rule) {
                 if (!in_array($rule, $failedTests, true)) {
                     $identifier = 'smoke_' . $rule . '_' . $result->getUrl();
+
                     if ($this->system === '') {
                         $system = str_replace('http://', '', $result->getUrl());
                     } else {
@@ -150,6 +154,7 @@ class KoalamonReporter implements Reporter
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => json_encode($responseBody),
         ));
+
         $response = curl_exec($curl);
 
         $err = curl_error($curl);

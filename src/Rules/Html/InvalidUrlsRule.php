@@ -7,8 +7,7 @@ use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 
 /**
- * This rules counts the css files that are included in a document. If the number is higher
- * than a given value the test failes.
+ * This rule find invalid URLs which are hyperlinked in a given site.
  */
 class InvalidUrlsRule extends StandardRule
 {
