@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Yaml\Yaml;
 use whm\Smoke\Http\MessageFactory;
 use whm\Smoke\Scanner\Scanner;
+use whm\Smoke\Yaml\EnvAwareYaml;
 
 class SmokeCommand extends Command
 {
@@ -97,7 +98,7 @@ class SmokeCommand extends Command
 
         if ($configFile) {
             if (file_exists($configFile)) {
-                $configArray = Yaml::parse(file_get_contents($configFile));
+                $configArray = EnvAwareYaml::parse(file_get_contents($configFile));
             } else {
                 throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
             }

@@ -28,7 +28,7 @@ class KoalamonReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, $system, $identifier = "", $collect = true, Configuration $_configuration, OutputInterface $_output)
+    public function init($apiKey, $system = "", $identifier = "", $collect = true, Configuration $_configuration, OutputInterface $_output)
     {
         $this->config = $_configuration;
         $this->apiKey = $apiKey;
@@ -76,14 +76,24 @@ class KoalamonReporter implements Reporter
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
                     $identifier = 'smoke_' . $ruleLKey . '_' . $result->getUrl();
-                    $this->send($identifier, $this->system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
+                    if ($this->system == "") {
+                        $system = str_replace("http://", "", $result->getUrl());
+                    } else {
+                        $system = $this->system;
+                    }
+                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
             foreach ($rules as $rule) {
                 if (!in_array($rule, $failedTests, true)) {
                     $identifier = 'smoke_' . $rule . '_' . $result->getUrl();
-                    $this->send($identifier, $this->system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string)$result->getUrl());
+                    if ($this->system == "") {
+                        $system = str_replace("http://", "", $result->getUrl());
+                    } else {
+                        $system = $this->system;
+                    }
+                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string)$result->getUrl());
                 }
             }
         }
