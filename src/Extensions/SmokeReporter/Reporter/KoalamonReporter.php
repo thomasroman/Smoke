@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Scanner\Result;
 
 /**
@@ -23,6 +24,11 @@ class KoalamonReporter implements Reporter
     private $collect;
     private $identifier;
 
+    /*
+     * @var Retriever
+     */
+    private $retriever;
+
     private $output;
 
     const STATUS_SUCCESS = 'success';
@@ -37,6 +43,11 @@ class KoalamonReporter implements Reporter
         $this->identifier = $identifier;
 
         $this->output = $_output;
+    }
+
+    public function setResponseRetriever(Retriever $retriever)
+    {
+        $this->retriever = $retriever;
     }
 
     /**
@@ -117,7 +128,7 @@ class KoalamonReporter implements Reporter
                     if ($failureMessages[$ruleLKey] === '') {
                         $failureMessages[$ruleLKey] = '    The smoke test for ' . $this->system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
                     }
-                    $failureMessages[$ruleLKey] .= '<li>' . $message . '(url: ' . $result->getUrl() . ')</li>';
+                    $failureMessages[$ruleLKey] .= '<li>' . $message . '(url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . ')</li>';
                 }
             }
         }
