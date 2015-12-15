@@ -1,3 +1,3 @@
 <?php
 
-echo("bootstrap loaded \n");
+echo "bootstrap loaded \n";
