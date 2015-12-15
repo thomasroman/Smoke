@@ -28,7 +28,7 @@ class KoalamonReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, $system = "", $identifier = "", $collect = true, Configuration $_configuration, OutputInterface $_output)
+    public function init($apiKey, $system = '', $identifier = '', $collect = true, Configuration $_configuration, OutputInterface $_output)
     {
         $this->config = $_configuration;
         $this->apiKey = $apiKey;
@@ -76,24 +76,24 @@ class KoalamonReporter implements Reporter
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
                     $identifier = 'smoke_' . $ruleLKey . '_' . $result->getUrl();
-                    if ($this->system == "") {
-                        $system = str_replace("http://", "", $result->getUrl());
+                    if ($this->system === '') {
+                        $system = str_replace('http://', '', $result->getUrl());
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string) $result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
             foreach ($rules as $rule) {
                 if (!in_array($rule, $failedTests, true)) {
                     $identifier = 'smoke_' . $rule . '_' . $result->getUrl();
-                    if ($this->system == "") {
-                        $system = str_replace("http://", "", $result->getUrl());
+                    if ($this->system === '') {
+                        $system = str_replace('http://', '', $result->getUrl());
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string) $result->getUrl());
                 }
             }
         }
@@ -104,25 +104,25 @@ class KoalamonReporter implements Reporter
         $failureMessages = array();
 
         foreach ($this->getRuleKeys() as $rule) {
-            $failureMessages[$rule] = "";
+            $failureMessages[$rule] = '';
         }
 
         foreach ($this->results as $result) {
             if ($result->isFailure()) {
                 foreach ($result->getMessages() as $ruleLKey => $message) {
-                    if ($failureMessages[$ruleLKey] == "") {
-                        $failureMessages[$ruleLKey] = "    The smoke test for " . $this->system . " failed (Rule: " . $ruleLKey . ").<ul>";
+                    if ($failureMessages[$ruleLKey] === '') {
+                        $failureMessages[$ruleLKey] = '    The smoke test for ' . $this->system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
                     }
-                    $failureMessages[$ruleLKey] .= "<li>" . $message . "(url: " . $result->getUrl() . ")</li>";
+                    $failureMessages[$ruleLKey] .= '<li>' . $message . '(url: ' . $result->getUrl() . ')</li>';
                 }
             }
         }
 
         foreach ($failureMessages as $key => $failureMessage) {
-            if ($failureMessage != "") {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, "");
+            if ($failureMessage !== '') {
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, '');
             } else {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', "", self::STATUS_SUCCESS, "");
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', '', self::STATUS_SUCCESS, '');
             }
         }
     }

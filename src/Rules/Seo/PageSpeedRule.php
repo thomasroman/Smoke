@@ -9,7 +9,7 @@ use whm\Smoke\Rules\ValidationFailedException;
 /**
  * This rule checks if a given json file is valid.
  */
-class RobotsDisallowAllRule implements Rule
+class PageSpeedRule implements Rule
 {
     public function validate(Response $response)
     {
@@ -23,7 +23,7 @@ class RobotsDisallowAllRule implements Rule
             return;
         }
 
-        if(!file_exists($filename) ){
+        if (!file_exists($filename)) {
             return;
         }
 
