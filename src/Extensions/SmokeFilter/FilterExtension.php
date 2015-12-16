@@ -6,6 +6,19 @@ use phmLabs\Components\Annovent\Event\Event;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
+/**
+ * Class FilterExtension
+ *
+ * @example for filter file
+ *
+ * filters:
+ *   _HttpHeaderSuccessStatus:
+ *     - http://www.wunderweib.de/tag/
+ *     - http://www.amilio.de/old-but-mandatory-file/
+ *     - http://www.amilio.de/images/(.*)
+ *
+ * @package whm\Smoke\Extensions\SmokeFilter
+ */
 class FilterExtension
 {
     private $filters = array();
