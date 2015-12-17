@@ -25,11 +25,11 @@ class Response extends \Ivory\HttpAdapter\Message\Response
      */
     public function getUri()
     {
-        if ($this->getParameters('request') != null) {
-            if (array_key_exists("request", $this->getParameters('request'))) {
-                if ($this->getParameters('request')["request"]->getParameters() != null) {
-                    if (array_key_exists("parent_request", $this->getParameters('request')["request"]->getParameters())) {
-                        return $this->getParameters('request')["request"]->getParameters()["parent_request"]->getUri();
+        if ($this->getParameters('request') !== null) {
+            if (array_key_exists('request', $this->getParameters('request'))) {
+                if ($this->getParameters('request')['request']->getParameters() !== null) {
+                    if (array_key_exists('parent_request', $this->getParameters('request')['request']->getParameters())) {
+                        return $this->getParameters('request')['request']->getParameters()['parent_request']->getUri();
                     }
                 }
             }
