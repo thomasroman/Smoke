@@ -11,9 +11,16 @@ use whm\Smoke\Rules\ValidationFailedException;
  */
 class SuccessStatusRule implements Rule
 {
+    private $maxStatusCode;
+
+    public function init($maxStatusCode = 399)
+    {
+        $this->maxStatusCode = $maxStatusCode;
+    }
+
     public function validate(Response $response)
     {
-        if ($response->getStatus() >= 400) {
+        if ($response->getStatus() > $this->maxStatusCode) {
             throw new ValidationFailedException('Status code ' . $response->getStatus() . ' found.');
         }
     }
