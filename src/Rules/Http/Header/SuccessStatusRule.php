@@ -13,7 +13,7 @@ class SuccessStatusRule implements Rule
 {
     private $maxStatusCode;
 
-    public function init($maxStatusCode)
+    public function init($maxStatusCode = 399)
     {
         $this->maxStatusCode = $maxStatusCode;
     }
