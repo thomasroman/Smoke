@@ -2,6 +2,8 @@
 
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
+use Koalamon\Client\Reporter\Event;
+use Koalamon\Client\Reporter\Reporter as KoalaReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
@@ -18,11 +20,16 @@ class KoalamonReporter implements Reporter
     private $results;
 
     private $koaloMon = 'http://www.koalamon.com/app_dev.php/webhook/';
-    private $apiKey;
+
     private $config;
     private $system;
     private $collect;
     private $identifier;
+
+    /**
+     * @var KoalaReporter
+     */
+    private $reporter;
 
     /*
      * @var Retriever
@@ -36,8 +43,11 @@ class KoalamonReporter implements Reporter
 
     public function init($apiKey, $system = '', $identifier = '', $collect = true, Configuration $_configuration, OutputInterface $_output)
     {
+        $httpClient = new \GuzzleHttp\Client();
+        $this->reporter = new KoalaReporter('', $apiKey, $httpClient);
+
         $this->config = $_configuration;
-        $this->apiKey = $apiKey;
+
         $this->system = $system;
         $this->collect = $collect;
         $this->identifier = $identifier;
@@ -117,9 +127,11 @@ class KoalamonReporter implements Reporter
     private function sendCollected()
     {
         $failureMessages = array();
+        $counter = array();
 
         foreach ($this->getRuleKeys() as $rule) {
             $failureMessages[$rule] = '';
+            $counter[$rule] = 0;
         }
 
         foreach ($this->results as $result) {
@@ -128,6 +140,7 @@ class KoalamonReporter implements Reporter
                     if ($failureMessages[$ruleLKey] === '') {
                         $failureMessages[$ruleLKey] = '    The smoke test for ' . $this->system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
                     }
+                    ++$counter[$ruleLKey];
                     $failureMessages[$ruleLKey] .= '<li>' . $message . '(url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . ')</li>';
                 }
             }
@@ -135,42 +148,16 @@ class KoalamonReporter implements Reporter
 
         foreach ($failureMessages as $key => $failureMessage) {
             if ($failureMessage !== '') {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, '');
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, '', $counter[$key]);
             } else {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', '', self::STATUS_SUCCESS, '');
+                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', '', self::STATUS_SUCCESS, '', 0);
             }
         }
     }
 
-    public function send($identifier, $system, $tool, $message, $status, $url = '')
+    public function send($identifier, $system, $tool, $message, $status, $url = '', $value = 0)
     {
-        $curl = curl_init();
-        $responseBody = array(
-            'system' => $system,
-            'status' => $status,
-            'message' => $message,
-            'identifier' => $identifier,
-            'type' => $tool,
-            'url' => $url,
-        );
-
-        $koalamonUrl = $this->koaloMon . '?api_key=' . $this->apiKey;
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $koalamonUrl,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($responseBody),
-        ));
-
-        $response = curl_exec($curl);
-
-        $err = curl_error($curl);
-        curl_close($curl);
-
-        return $err;
+        $event = new Event($identifier, $system, $status, $tool, $message, $value);
+        $this->reporter->sendEvent($event);
     }
 }

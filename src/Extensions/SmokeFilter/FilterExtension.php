@@ -30,7 +30,7 @@ class FilterExtension
 
             $filterElements = EnvAwareYaml::parse(file_get_contents($filterFile));
 
-            foreach ($filterElements["filters"] as $rule => $uris) {
+            foreach ($filterElements['filters'] as $rule => $uris) {
                 foreach ($uris as $uri) {
                     $this->filters[] = array('rule' => $rule, 'uri' => $uri);
                 }
@@ -46,8 +46,9 @@ class FilterExtension
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
         foreach ($this->filters as $filter) {
-            if ($ruleName === $filter['rule'] && 0 < preg_match("$" . preg_quote($filter['uri']) . "$", (string)$response->getUri())) {
+            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . preg_quote($filter['uri']) . '$', (string) $response->getUri())) {
                 $event->setProcessed();
+
                 return true;
             }
         }
