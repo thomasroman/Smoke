@@ -20,6 +20,8 @@ class SuccessStatusRule implements Rule
 
     public function validate(Response $response)
     {
+        var_dump($this->maxStatusCode);
+
         if ($response->getStatus() > $this->maxStatusCode) {
             throw new ValidationFailedException('Status code ' . $response->getStatus() . ' found.');
         }

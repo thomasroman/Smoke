@@ -12,14 +12,14 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     public function testResponse()
     {
         $testBody = 'TestBodyWith<strong>special</strong>Chäräctörs';
-        $testHeader = HeadersParser::parse('Test Header ');
+        $testHeader = HeadersParser::parse(['Header1' => 'Test Header']);
         $testStatus = 200;
         $testUri = new Uri('http://smoke.phmlabs.com');
         $testRequest = new Request($testUri);
 
         $stream = fopen('data://text/plain,' . $testBody, 'r');
 
-        $response = new Response($stream, $testStatus, $testHeader, ['request' => $testRequest]);
+        $response = new Response($stream, $testStatus, array(), ['request' => $testRequest]);
 
         $this->assertEquals($testBody, $response->getBody());
         $this->assertEquals([], $response->getHeader('Test Header'));
