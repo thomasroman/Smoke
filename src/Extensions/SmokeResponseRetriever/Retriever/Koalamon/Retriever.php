@@ -39,7 +39,7 @@ class Retriever implements SmokeRetriever
 
         $systems = $httpClient->get(new Uri($url));
 
-        return json_decode($systems->getBody());
+        return json_decode($systems->getBody(), true);
     }
 
     private function prepareUrl($url)
@@ -57,7 +57,8 @@ class Retriever implements SmokeRetriever
         }
 
         $system = array_pop($this->systems);
-        $request = new Request(new Uri($system->url), 'GET', 'php://memory', ['Accept-Encoding' => 'gzip']);
+
+        $request = new Request(new Uri($system['url']), 'GET', 'php://memory', ['Accept-Encoding' => 'gzip']);
         $responses = $this->client->sendRequests(array($request));
 
         return $responses[0];

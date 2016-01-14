@@ -19,8 +19,6 @@ class KoalamonReporter implements Reporter
      */
     private $results;
 
-    private $koaloMon = 'http://www.koalamon.com/app_dev.php/webhook/';
-
     private $config;
     private $system;
     private $collect;
@@ -41,7 +39,7 @@ class KoalamonReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, $system = '', $identifier = '', $collect = true, Configuration $_configuration, OutputInterface $_output)
+    public function init($apiKey,  Configuration $_configuration, OutputInterface $_output, $system = '', $identifier = '', $collect = true)
     {
         $httpClient = new \GuzzleHttp\Client();
         $this->reporter = new KoalaReporter('', $apiKey, $httpClient);
