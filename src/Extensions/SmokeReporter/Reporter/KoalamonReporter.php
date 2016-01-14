@@ -23,6 +23,7 @@ class KoalamonReporter implements Reporter
     private $system;
     private $collect;
     private $identifier;
+    private $tool = 'smoke';
 
     /**
      * @var KoalaReporter
@@ -39,7 +40,7 @@ class KoalamonReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey,  Configuration $_configuration, OutputInterface $_output, $system = '', $identifier = '', $collect = true)
+    public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $system = '', $identifier = '', $tool = '', $collect = true)
     {
         $httpClient = new \GuzzleHttp\Client();
         $this->reporter = new KoalaReporter('', $apiKey, $httpClient);
@@ -49,6 +50,11 @@ class KoalamonReporter implements Reporter
         $this->system = $system;
         $this->collect = $collect;
         $this->identifier = $identifier;
+
+        if($tool) {
+            $this->tool = $tool;
+        }
+
 
         $this->output = $_output;
     }
@@ -116,7 +122,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke_' . $rule, '', self::STATUS_SUCCESS, (string) $result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule, self::STATUS_SUCCESS, (string) $result->getUrl());
                 }
             }
         }
@@ -146,16 +152,16 @@ class KoalamonReporter implements Reporter
 
         foreach ($failureMessages as $key => $failureMessage) {
             if ($failureMessage !== '') {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', $failureMessage . '</ul>', self::STATUS_FAILURE, '', $counter[$key]);
+                $this->send($this->identifier . '_' . $key, $this->system, $failureMessage . '</ul>', self::STATUS_FAILURE, '', $counter[$key]);
             } else {
-                $this->send($this->identifier . '_' . $key, $this->system, 'smoke', '', self::STATUS_SUCCESS, '', 0);
+                $this->send($this->identifier . '_' . $key, $this->system, '', self::STATUS_SUCCESS, '', 0);
             }
         }
     }
 
-    public function send($identifier, $system, $tool, $message, $status, $url = '', $value = 0)
+    public function send($identifier, $system, $message, $status, $url = '', $value = 0)
     {
-        $event = new Event($identifier, $system, $status, $tool, $message, $value);
+        $event = new Event($identifier, $system, $status, $this->tool, $message, $value);
         $this->reporter->sendEvent($event);
     }
 }
