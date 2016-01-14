@@ -1,8 +1,6 @@
 {
   "name": "phmlabs/smoke",
 
-  "version": "1.0.0",
-
   "description": "Smoke can be used to check if a web platform is basically working.",
 
   "require": {
