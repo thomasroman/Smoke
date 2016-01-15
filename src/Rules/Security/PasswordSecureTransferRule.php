@@ -21,7 +21,7 @@ class PasswordSecureTransferRule extends StandardRule
         $crawler = new Crawler($response->getBody());
         $actionNodes = $crawler->filterXPath('//form[//input[@type="password"]]');
 
-        $url = (string)$response->getUri();
+        $url = (string) $response->getUri();
 
         foreach ($actionNodes as $node) {
             $action = $node->getAttribute('action');
@@ -41,7 +41,7 @@ class PasswordSecureTransferRule extends StandardRule
                 }
             }
 
-            if (in_array($fullPath, $this->knownIdentifier)) {
+            if (in_array($fullPath, $this->knownIdentifier, true)) {
                 continue;
             }
 

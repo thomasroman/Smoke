@@ -51,10 +51,9 @@ class KoalamonReporter implements Reporter
         $this->collect = $collect;
         $this->identifier = $identifier;
 
-        if($tool) {
+        if ($tool) {
             $this->tool = $tool;
         }
-
 
         $this->output = $_output;
     }
