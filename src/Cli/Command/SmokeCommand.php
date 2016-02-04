@@ -96,11 +96,16 @@ class SmokeCommand extends Command
         $configArray = array();
 
         if ($configFile) {
-            if (file_exists($configFile)) {
-                $configArray = EnvAwareYaml::parse(file_get_contents($configFile));
+            if (strpos($configFile, 'http://') === 0) {
+                $fileContent = (string)$this->getHttpClient()->get($configFile)->getBody();
             } else {
-                throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
+                if (file_exists($configFile)) {
+                    $fileContent = file_get_contents($configFile);
+                } else {
+                    throw new \RuntimeException("Config file was not found ('" . $configFile . "').");
+                }
             }
+            $configArray = EnvAwareYaml::parse($fileContent);
         } else {
             if ($mandatory) {
                 throw new \RuntimeException('Config file was not defined.');
