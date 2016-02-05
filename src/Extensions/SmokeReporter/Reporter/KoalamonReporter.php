@@ -44,7 +44,7 @@ class KoalamonReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $server = "http://www.koalamon.com", $system = '', $identifier = '', $tool = '', $collect = true, $systemUseRetriever = false, $groupBy = false)
+    public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $server = 'http://www.koalamon.com', $system = '', $identifier = '', $tool = '', $collect = true, $systemUseRetriever = false, $groupBy = false)
     {
         $httpClient = new \GuzzleHttp\Client();
         $this->reporter = new KoalaReporter('', $apiKey, $httpClient, $server);
@@ -92,9 +92,9 @@ class KoalamonReporter implements Reporter
 
     public function finish()
     {
-        $this->output->writeln("Sending results to " . $this->server . " ... \n");
+        $this->output->writeln('Sending results to ' . $this->server . " ... \n");
 
-        if ($this->groupBy == 'prefix') {
+        if ($this->groupBy === 'prefix') {
             $this->sendGroupedByPrefix();
         } else {
             if ($this->collect) {
@@ -143,21 +143,19 @@ class KoalamonReporter implements Reporter
                     }
                     ++$counter[$ruleLKey];
                     $failureMessages[$identifer]['message'] .= '<li>' . $message . '(url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . ')</li>';
-
                 }
             }
         }
 
         foreach ($failureMessages as $key => $failureMessage) {
             if ($failureMessage['message'] !== '') {
-                var_dump("fehler");
+                var_dump('fehler');
                 $this->send($this->identifier . '_' . $key, $failureMessage['system'], $failureMessage['message'] . '</ul>', self::STATUS_FAILURE, '', $counter[$key], $failureMessage['tool']);
             } else {
                 $this->send($this->identifier . '_' . $key, $failureMessage['system'], '', self::STATUS_SUCCESS, '', 0, $failureMessage['tool']);
             }
         }
     }
-
 
     private function sendSingle()
     {
@@ -173,7 +171,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string) $result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
@@ -183,12 +181,12 @@ class KoalamonReporter implements Reporter
 
                     if ($this->systemUseRetriever) {
                         $system = $this->retriever->getSystem($result->getUrl());
-                    } else if ($this->system === '') {
+                    } elseif ($this->system === '') {
                         $system = str_replace('http://', '', $result->getUrl());
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string) $result->getUrl());
                 }
             }
         }

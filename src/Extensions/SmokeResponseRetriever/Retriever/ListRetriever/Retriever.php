@@ -17,7 +17,6 @@ class Retriever implements SmokeRetriever
     public function init(array $urls)
     {
         foreach ($urls as $key => $urlList) {
-
             foreach ($urlList as $url) {
                 $this->urls[$url] = ['url' => $url, 'system' => $key];
             }
@@ -42,7 +41,6 @@ class Retriever implements SmokeRetriever
             return $this->next();
         }
 
-
         return $responses[0];
     }
 
@@ -53,7 +51,7 @@ class Retriever implements SmokeRetriever
 
     public function getSystem(UriInterface $uri)
     {
-        return $this->urls[(string)$uri]['system'];
+        return $this->urls[(string) $uri]['system'];
     }
 
     public function getSystems()
