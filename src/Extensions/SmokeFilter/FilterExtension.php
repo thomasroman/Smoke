@@ -52,8 +52,9 @@ class FilterExtension
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
         foreach ($this->filters as $filter) {
-            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . preg_quote($filter['uri']) . '$', (string)$response->getUri())) {
+            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . preg_quote($filter['uri']) . '$', (string) $response->getUri())) {
                 $event->setProcessed();
+
                 return true;
             }
         }

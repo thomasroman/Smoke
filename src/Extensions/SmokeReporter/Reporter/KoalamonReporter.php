@@ -170,7 +170,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string) $result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
@@ -185,7 +185,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string)$result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string) $result->getUrl());
                 }
             }
         }

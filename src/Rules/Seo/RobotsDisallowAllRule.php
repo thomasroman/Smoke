@@ -13,7 +13,7 @@ class RobotsDisallowAllRule implements Rule
 {
     public function validate(Response $response)
     {
-        $url = (string)$response->getUri();
+        $url = (string) $response->getUri();
 
         if (substr_count($url, '/') === 2) {
             $filename = $robotsUrl = $url . '/robots.txt';
