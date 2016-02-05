@@ -119,12 +119,12 @@ class KoalamonReporter implements Reporter
 
         foreach ($this->getRuleKeys() as $rule) {
             foreach ($systems as $system) {
-                $identifer = $this->tool . '_' . $this->getPrefix($rule) . '_' . $system;
-                $failureMessages[$identifer]['message'] = '';
-                $failureMessages[$identifer]['system'] = $system;
-                $failureMessages[$identifer]['tool'] = $this->getPrefix($rule);
+                $identifier = $this->tool . '_' . $this->getPrefix($rule) . '_' . $system;
+                $failureMessages[$identifier]['message'] = '';
+                $failureMessages[$identifier]['system'] = $system;
+                $failureMessages[$identifier]['tool'] = $this->getPrefix($rule);
 
-                $counter[$identifer] = 0;
+                $counter[$identifier] = 0;
             }
         }
 
@@ -133,23 +133,22 @@ class KoalamonReporter implements Reporter
                 foreach ($result->getMessages() as $ruleLKey => $message) {
                     $system = $this->system;
                     if ($this->systemUseRetriever) {
-                        $system = $this->retriever->getSystem(new Uri($result->getUrl()));
+                        $system = $this->retriever->getSystem(($result->getUrl()));
                     }
 
                     $identifer = $this->tool . '_' . $this->getPrefix($ruleLKey) . '_' . $system;
 
-                    if ($failureMessages[$identifer] === '') {
-                        $failureMessages[$identifer]['message'] = '    The smoke test for ' . $system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
+                    if ($failureMessages[$identifer]['message'] === '') {
+                        $failureMessages[$identifer]['message'] = 'The smoke test for ' . $system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
                     }
-                    ++$counter[$ruleLKey];
-                    $failureMessages[$identifer]['message'] .= '<li>' . $message . '(url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . ')</li>';
+                    ++$counter[$identifer];
+                    $failureMessages[$identifer]['message'] .= '<li>' . $message . '<br>url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . '</li>';
                 }
             }
         }
 
         foreach ($failureMessages as $key => $failureMessage) {
             if ($failureMessage['message'] !== '') {
-                var_dump('fehler');
                 $this->send($this->identifier . '_' . $key, $failureMessage['system'], $failureMessage['message'] . '</ul>', self::STATUS_FAILURE, '', $counter[$key], $failureMessage['tool']);
             } else {
                 $this->send($this->identifier . '_' . $key, $failureMessage['system'], '', self::STATUS_SUCCESS, '', 0, $failureMessage['tool']);
@@ -171,7 +170,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string) $result->getUrl());
+                    $this->send($identifier, $system, 'smoke', $message, self::STATUS_FAILURE, (string)$result->getUrl());
                     $failedTests[] = $ruleLKey;
                 }
             }
@@ -186,7 +185,7 @@ class KoalamonReporter implements Reporter
                     } else {
                         $system = $this->system;
                     }
-                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string) $result->getUrl());
+                    $this->send($identifier, $system, 'smoke_' . $rule . '_' . $result->getUrl(), self::STATUS_SUCCESS, (string)$result->getUrl());
                 }
             }
         }
