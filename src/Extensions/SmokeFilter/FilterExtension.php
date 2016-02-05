@@ -54,8 +54,6 @@ class FilterExtension
         foreach ($this->filters as $filter) {
             if ($ruleName === $filter['rule'] && 0 < preg_match('$' . preg_quote($filter['uri']) . '$', (string)$response->getUri())) {
                 $event->setProcessed();
-                var_dump('hier');
-
                 return true;
             }
         }
