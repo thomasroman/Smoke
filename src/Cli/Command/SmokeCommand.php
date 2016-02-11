@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Cli\Command;
 
+use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\RedirectSubscriber;
 use Ivory\HttpAdapter\Event\Subscriber\RetrySubscriber;
 use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
@@ -64,9 +65,13 @@ class SmokeCommand extends Command
         $eventDispatcher->addSubscriber(new RedirectSubscriber());
         $eventDispatcher->addSubscriber(new RetrySubscriber());
 
-        $adapter = new EventDispatcherHttpAdapter(HttpAdapterFactory::guess(), $eventDispatcher);
+        // $guessedAdapter = HttpAdapterFactory::guess();
+        /** @var \Ivory\HttpAdapter\Guzzle6HttpAdapter $guessedAdapter */
+        $guessedAdapter = new CurlHttpAdapter();
+
+        $adapter = new EventDispatcherHttpAdapter($guessedAdapter, $eventDispatcher);
         $adapter->getConfiguration()->setTimeout(30);
-        $adapter->getConfiguration()->setUserAgent('versioneye-php');
+        //$adapter->getConfiguration()->setUserAgent('versioneye-php');
         $adapter->getConfiguration()->setMessageFactory(new MessageFactory());
 
         return $adapter;
