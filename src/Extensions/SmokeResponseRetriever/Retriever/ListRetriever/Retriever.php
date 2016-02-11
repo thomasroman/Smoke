@@ -42,17 +42,17 @@ class Retriever implements SmokeRetriever
             $responses = $this->httpClient->sendRequests(array($request));
         } catch (MultiHttpAdapterException $e) {
             $exceptions = $e->getExceptions();
-            $errorMessages = "";
+            $errorMessages = '';
             foreach ($exceptions as $exception) {
                 // @fixme this must be part of the http client
                 $message = $exception->getMessage();
-                if (strpos($message, "An error occurred when fetching the URI") === 0) {
-                    $corruptUrl = substr($message, "41", strpos($message, '"', 41) - 41);
+                if (strpos($message, 'An error occurred when fetching the URI') === 0) {
+                    $corruptUrl = substr($message, '41', strpos($message, '"', 41) - 41);
                     if (strpos($corruptUrl, '/') === 0) {
-                        /** @var \Ivory\HttpAdapter\HttpAdapterException $exception */
+                        /* @var \Ivory\HttpAdapter\HttpAdapterException $exception */
 
                         $mainUri = $request->getUri();
-                        $this->redirects[(string)$mainUri->getScheme() . '://' . $mainUri->getHost() . $corruptUrl] = (string)$mainUri;
+                        $this->redirects[(string) $mainUri->getScheme() . '://' . $mainUri->getHost() . $corruptUrl] = (string) $mainUri;
 
                         $this->urls[] = ['url' => $mainUri->getScheme() . '://' . $mainUri->getHost() . $corruptUrl, 'system' => $url['system']];
                         $this->urlStack[] = ['url' => $mainUri->getScheme() . '://' . $mainUri->getHost() . $corruptUrl, 'system' => $url['system']];
@@ -63,7 +63,7 @@ class Retriever implements SmokeRetriever
                     $errorMessages .= $exception->getMessage() . "\n";
                 }
             }
-            if ($errorMessages != "") {
+            if ($errorMessages !== '') {
                 throw new \RuntimeException($errorMessages);
             }
         }
@@ -78,10 +78,11 @@ class Retriever implements SmokeRetriever
 
     public function getSystem(UriInterface $uri)
     {
-        if (array_key_exists((string)$uri, $this->redirects)) {
-            return $this->urls[$this->redirects[(string)$uri]]['system'];
+        if (array_key_exists((string) $uri, $this->redirects)) {
+            return $this->urls[$this->redirects[(string) $uri]]['system'];
         }
-        return $this->urls[(string)$uri]['system'];
+
+        return $this->urls[(string) $uri]['system'];
     }
 
     public function getSystems()
