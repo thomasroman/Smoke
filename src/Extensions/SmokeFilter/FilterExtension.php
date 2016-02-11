@@ -35,7 +35,7 @@ class FilterExtension
                     $this->filters[] = array('rule' => $rule, 'uri' => $uri);
                 }
             }
-        } else {
+        } else if (!is_null($filters)) {
             foreach ($filters as $rule => $filteredUrls) {
                 if (!is_null($filteredUrls)) {
                     foreach ($filteredUrls as $uri) {
@@ -52,9 +52,8 @@ class FilterExtension
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
         foreach ($this->filters as $filter) {
-            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . preg_quote($filter['uri']) . '$', (string) $response->getUri())) {
+            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . $filter['uri'] . '$', (string)$response->getUri())) {
                 $event->setProcessed();
-
                 return true;
             }
         }
