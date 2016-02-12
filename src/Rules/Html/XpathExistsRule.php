@@ -6,7 +6,7 @@ use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 
 /**
- * This rule checks if xpath is found in a html document
+ * This rule checks if xpath is found in a html document.
  */
 class XPathExistsRule extends StandardRule
 {
@@ -22,7 +22,7 @@ class XPathExistsRule extends StandardRule
     public function doValidation(Response $response)
     {
         $domDocument = new \DOMDocument();
-        @$domDocument->loadHTML((string)$response->getBody());
+        @$domDocument->loadHTML((string) $response->getBody());
 
         $domXPath = new \DOMXPath($domDocument);
 
