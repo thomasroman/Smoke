@@ -35,8 +35,14 @@ class FilterExtension
                     $this->filters[] = array('rule' => $rule, 'uri' => $uri);
                 }
             }
-        } else {
-            $this->filters = $filters;
+        } elseif (!is_null($filters)) {
+            foreach ($filters as $rule => $filteredUrls) {
+                if (!is_null($filteredUrls)) {
+                    foreach ($filteredUrls as $uri) {
+                        $this->filters[] = array('rule' => $rule, 'uri' => $uri);
+                    }
+                }
+            }
         }
     }
 

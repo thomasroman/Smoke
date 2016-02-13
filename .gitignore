@@ -14,3 +14,5 @@ example/stern.yml
 .php_cs.cache
 
 test-reports
+
+phpunit.phar

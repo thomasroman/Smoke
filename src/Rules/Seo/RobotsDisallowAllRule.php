@@ -13,7 +13,7 @@ class RobotsDisallowAllRule implements Rule
 {
     public function validate(Response $response)
     {
-        $url = (string) $response->getUri();
+        $url = $response->getUri()->getScheme() . '://' . $response->getUri()->getHost();
 
         if (substr_count($url, '/') === 2) {
             $filename = $robotsUrl = $url . '/robots.txt';
@@ -23,15 +23,15 @@ class RobotsDisallowAllRule implements Rule
             return;
         }
 
-        if (!file_exists($filename)) {
-            return;
-        }
+        $headers = @get_headers($filename);
 
-        $content = file_get_contents($filename);
-        $normalizedContent = str_replace(' ', '', $content);
+        if (strpos($headers[0], '200') !== false) {
+            $content = file_get_contents($filename);
+            $normalizedContent = str_replace(' ', '', $content);
 
-        if (strpos($normalizedContent, 'Disallow:/' . PHP_EOL) !== false) {
-            throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
+            if (strpos($normalizedContent, 'Disallow:/' . PHP_EOL) !== false) {
+                throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
+            }
         }
     }
 }

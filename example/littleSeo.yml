@@ -1,0 +1,52 @@
+options:
+  extendDefault: false
+
+extensions:
+
+  _SmokeStop:
+    class: whm\Smoke\Extensions\SmokeStop\StopExtension
+
+  _Reporter:
+    class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
+
+  _ResponseRetriever:
+    class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
+
+  _Filter:
+    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+    parameters:
+      filters:
+        LittleSeo_Robots:
+          - http://www.google.de
+reporter:
+  _CliReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+
+  KoalamonReporter:
+     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
+     parameters:
+       systemUseRetriever: true
+       apiKey: 98208A01-9F93-4B54-B442-7CDE50C0BC0C
+       collect: false
+       identifier: smoke_little_seo
+       tool: Smoke
+       groupBy: prefix
+
+responseRetriever:
+  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever\Retriever
+  parameters:
+    urls:
+      srfg:
+        - http://www.dewfr.de
+      serf:
+        - http://www.web.de
+      www.amilio.de:
+        - http://www.amilio.de
+      www.prixdebeaute.de:
+        - http://www.prixdebeaute.de
+      www.thewebhatesme.com:
+        - http://www.thewebhatesme.com
+
+rules:
+   LittleSeo_Robots:
+    class: whm\Smoke\Rules\Seo\RobotsDisallowAllRule

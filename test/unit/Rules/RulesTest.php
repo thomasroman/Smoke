@@ -36,7 +36,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
             [new Rules\Http\Header\Cache\MaxAgeRule(), [], '', 200, ['Cache-Control' => ['max-age=200']]],
             [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Cache-Control' => ['max-age=200']]],
             [new Rules\Http\Header\GZipRule(), [], '', 200, ['Content-Encoding' => ['gzip']]],
-            [new Rules\Http\Header\SuccessStatusRule(), [], '', 200, []],
+            [new Rules\Http\Header\SuccessStatusRule(), [200], '', 200, []],
             //HTML
             [new Rules\Html\ClosingHtmlTagRule(), [], '</html>', 200, ['Content-Type' => ['text/html']]],
             [new Rules\Html\CssFileCountRule(), [10], '<html><link rel="stylesheet" href="/foo.css" /></html>', 200, ['Content-Type' => ['text/html']]],
@@ -64,7 +64,7 @@ class RulesTest extends \PHPUnit_Framework_TestCase
             [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Cache-Control' => ['no-cache']]],
             [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Pragma' => ['no-cache']]],
             [new Rules\Http\Header\GZipRule(), [], '', 200, []],
-            [new Rules\Http\Header\SuccessStatusRule(), [], '', 400, []],
+            [new Rules\Http\Header\SuccessStatusRule(), [200], '', 400, []],
             //HTML
             [new Rules\Html\ClosingHtmlTagRule(), [], '', 200, ['Content-Type' => ['text/html']]],
             [new Rules\Html\CssFileCountRule(), [1], '<html><link rel="stylesheet" href="/foo.css" /><link rel="stylesheet" href="/bar.css" /></html>', 200, ['Content-Type' => ['text/html']]],
