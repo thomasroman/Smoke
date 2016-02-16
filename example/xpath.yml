@@ -15,9 +15,10 @@ extensions:
   _Filter:
     class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
     parameters:
-      filters:
-        LittleSeo_Robots:
-          - http://www.google.de
+      exclusive:
+        _XPathCheck:
+          - http://ultrahocherhitzt.net
+
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
@@ -40,10 +41,10 @@ responseRetriever:
       _ForeignDomainFilter:
         class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\ForeignDomainFilter
 
-
 rules:
-   LittleSeo_Robots:
+   _XPathCheck:
     class: whm\Smoke\Rules\Html\XPathExistsRule
     parameters:
       xPaths:
         - "/html/head/title"
+        - "/html/bodyx"

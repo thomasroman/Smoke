@@ -16,13 +16,28 @@ use whm\Smoke\Yaml\EnvAwareYaml;
  *     - http://www.wunderweib.de/tag/
  *     - http://www.amilio.de/old-but-mandatory-file/
  *     - http://www.amilio.de/images/(.*)
+ *
+ * exclusive:
+ *   _HttpHeaderSuccessStatus:
+ *     - http://www.wunderweib.de/tag/
+ *     - http://www.amilio.de/old-but-mandatory-file/
  */
 class FilterExtension
 {
     private $filters = array();
+    private $exclusives = array();
 
-    public function init($filters = array(), $filterFile = '')
+    private $currentModus = self::MODUS_FILTER;
+
+    const MODUS_FILTER = 'filter';
+    const MODUS_EXCLUSIVE = 'exclusive';
+
+    public function init($filters = array(), $filterFile = '', $exclusive = array())
     {
+        if (count($exclusive) > 0 && (count($filters) > 0 || $filterFile !== '')) {
+            throw new \RuntimeException("It's not possible to define filter lists and an exclusive list at the same time [Extension: " . get_class($this) . '].');
+        }
+
         if ($filterFile !== '') {
             if (!file_exists($filterFile)) {
                 throw new \RuntimeException('Filter file not found: ' . $filterFile);
@@ -44,6 +59,11 @@ class FilterExtension
                 }
             }
         }
+
+        if (count($exclusive) > 0) {
+            $this->exclusives = $exclusive;
+            $this->currentModus = self::MODUS_EXCLUSIVE;
+        }
     }
 
     /**
@@ -51,14 +71,40 @@ class FilterExtension
      */
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
+        if ($this->currentModus === self::MODUS_FILTER) {
+            $isFiltered = $this->isFilteredByFilter($ruleName, $response);
+        } else {
+            $isFiltered = $this->isFilteredByExclusives($ruleName, $response);
+        }
+
+        if ($isFiltered) {
+            $event->setProcessed();
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function isFilteredByFilter($ruleName, Response $response)
+    {
         foreach ($this->filters as $filter) {
             if ($ruleName === $filter['rule'] && 0 < preg_match('$' . $filter['uri'] . '$', (string) $response->getUri())) {
-                $event->setProcessed();
-
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function isFilteredByExclusives($ruleName, Response $response)
+    {
+        if (array_key_exists($ruleName, $this->exclusives)) {
+            if (in_array((string) $response->getUri(), $this->exclusives[$ruleName], true)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
