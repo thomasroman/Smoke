@@ -68,4 +68,9 @@ class Retriever implements SmokeRetriever
     {
         return new Uri('http://www.koalamon.com');
     }
+
+    public function getOriginUri(UriInterface $uri)
+    {
+        return $uri;
+    }
 }

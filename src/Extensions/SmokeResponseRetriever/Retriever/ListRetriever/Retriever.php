@@ -59,6 +59,11 @@ class Retriever implements SmokeRetriever
 
                         return $this->next();
                     }
+
+                    // the error handling should be done withing the calling class
+                    echo "\n   " . $exception->getMessage() . "\n";
+
+                    return $this->next();
                 } else {
                     $errorMessages .= $exception->getMessage() . "\n";
                 }
@@ -69,6 +74,15 @@ class Retriever implements SmokeRetriever
         }
 
         return $responses[0];
+    }
+
+    public function getOriginUri(UriInterface $uri)
+    {
+        if (array_key_exists((string) $uri, $this->redirects)) {
+            return $this->urls[$this->redirects[(string) $uri]]['url'];
+        }
+
+        return $uri;
     }
 
     public function getComingFrom(UriInterface $uri)

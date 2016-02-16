@@ -94,4 +94,9 @@ class Crawler implements CrawlingRetriever
     {
         return $this->crawler->getComingFrom($uri);
     }
+
+    public function getOriginUri(UriInterface $uri)
+    {
+        return $uri;
+    }
 }

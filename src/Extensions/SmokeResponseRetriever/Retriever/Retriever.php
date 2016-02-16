@@ -16,4 +16,6 @@ interface Retriever
     public function next();
 
     public function getComingFrom(UriInterface $uri);
+
+    public function getOriginUri(UriInterface $uri);
 }

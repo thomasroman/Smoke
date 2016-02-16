@@ -3,6 +3,7 @@
 namespace whm\Smoke\Extensions\SmokeFilter;
 
 use phmLabs\Components\Annovent\Event\Event;
+use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
@@ -24,6 +25,11 @@ use whm\Smoke\Yaml\EnvAwareYaml;
  */
 class FilterExtension
 {
+    /**
+     * @var Retriever
+     */
+    private $retriever;
+
     private $filters = array();
     private $exclusives = array();
 
@@ -67,14 +73,24 @@ class FilterExtension
     }
 
     /**
+     * @Event("Scanner.Init.ResponseRetriever")
+     */
+    public function getResponseRetriever(Retriever $responseRetriever)
+    {
+        $this->retriever = $responseRetriever;
+    }
+
+    /**
      * @Event("Scanner.CheckResponse.isFiltered")
      */
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
+        $uri = (string) $this->retriever->getOriginUri($response->getUri());
+
         if ($this->currentModus === self::MODUS_FILTER) {
-            $isFiltered = $this->isFilteredByFilter($ruleName, $response);
+            $isFiltered = $this->isFilteredByFilter($ruleName, $uri);
         } else {
-            $isFiltered = $this->isFilteredByExclusives($ruleName, $response);
+            $isFiltered = $this->isFilteredByExclusives($ruleName, $uri);
         }
 
         if ($isFiltered) {
@@ -86,10 +102,10 @@ class FilterExtension
         }
     }
 
-    private function isFilteredByFilter($ruleName, Response $response)
+    private function isFilteredByFilter($ruleName, $uri)
     {
         foreach ($this->filters as $filter) {
-            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . $filter['uri'] . '$', (string) $response->getUri())) {
+            if ($ruleName === $filter['rule'] && 0 < preg_match('$' . $filter['uri'] . '$', $uri)) {
                 return true;
             }
         }
@@ -97,10 +113,10 @@ class FilterExtension
         return false;
     }
 
-    private function isFilteredByExclusives($ruleName, Response $response)
+    private function isFilteredByExclusives($ruleName, $uri)
     {
         if (array_key_exists($ruleName, $this->exclusives)) {
-            if (in_array((string) $response->getUri(), $this->exclusives[$ruleName], true)) {
+            if (in_array($uri, $this->exclusives[$ruleName], true)) {
                 return false;
             }
         }
