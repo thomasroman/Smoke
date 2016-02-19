@@ -59,10 +59,10 @@ class RulesTest extends \PHPUnit_Framework_TestCase
         return [
             //HTTP
             [new Rules\Http\DurationRule(), [2500], '', 200, [], ['duration' => 3000]],
-            [new Rules\Http\Header\Cache\ExpiresRule(), [], '', 200, ['Expires' => ['Thu, 19 Nov 2000 08:52:00 GMT']]],
-            [new Rules\Http\Header\Cache\MaxAgeRule(), [], '', 200, ['Cache-Control' => ['max-age=0']]],
-            [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Cache-Control' => ['no-cache']]],
-            [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [], '', 200, ['Pragma' => ['no-cache']]],
+            [new Rules\Http\Header\Cache\ExpiresRule(), [200], '', 200, ['Expires' => ['Thu, 19 Nov 2000 08:52:00 GMT']]],
+            [new Rules\Http\Header\Cache\MaxAgeRule(), [200], '', 200, ['Cache-Control' => ['max-age=0']]],
+            [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [200], '', 200, ['Cache-Control' => ['no-cache']]],
+            [new Rules\Http\Header\Cache\PragmaNoCacheRule(), [200], '', 200, ['Pragma' => ['no-cache']]],
             [new Rules\Http\Header\GZipRule(), [], '', 200, []],
             [new Rules\Http\Header\SuccessStatusRule(), [200], '', 400, []],
             //HTML
