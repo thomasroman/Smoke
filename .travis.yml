@@ -25,3 +25,7 @@ script:
    - php bin/Smoke.php warmup http://www.example.com/ -d1 -v
    - php bin/Smoke.php custom -cexample/custom.yml -v
    - phpunit --bootstrap vendor/autoload.php test/
+
+
+notifications:
+  webhooks: http://monitor.koalamon.com/webhook/travis/?api_key=7EFA898C-5226-41A9-A260-6F78A7B85066
