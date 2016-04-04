@@ -27,7 +27,7 @@ class ExistsRule extends StandardRule
 
             $currentValue = $response->getHeader($headerConfig['key'])[0];
 
-            if ($currentValue != $headerConfig['value']) {
+            if ($currentValue !== $headerConfig['value']) {
                 throw new ValidationFailedException('Header "' . $headerConfig['key'] . '" does not equal "' . $headerConfig['value'] . '". Current value is "' . $currentValue . '"');
             }
         }
