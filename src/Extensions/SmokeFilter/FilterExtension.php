@@ -85,7 +85,7 @@ class FilterExtension
      */
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
-        $uri = (string) $this->retriever->getOriginUri($response->getUri());
+        $uri = (string)$this->retriever->getOriginUri($response->getUri());
 
         if ($this->currentModus === self::MODUS_FILTER) {
             $isFiltered = $this->isFilteredByFilter($ruleName, $uri);
@@ -116,8 +116,10 @@ class FilterExtension
     private function isFilteredByExclusives($ruleName, $uri)
     {
         if (array_key_exists($ruleName, $this->exclusives)) {
-            if (in_array($uri, $this->exclusives[$ruleName], true)) {
-                return false;
+            if (is_array($this->exclusives[$ruleName])) {
+                if (in_array($uri, $this->exclusives[$ruleName], true)) {
+                    return false;
+                }
             }
         }
 
