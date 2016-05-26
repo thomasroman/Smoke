@@ -28,4 +28,4 @@ script:
 
 
 notifications:
-  webhooks: http://monitor.koalamon.com/webhook/travis/?api_key=7EFA898C-5226-41A9-A260-6F78A7B85066
+  webhooks: http://monitor.koalamon.com/webhook/travis/?api_key=$KOALAMON_API_KEY
