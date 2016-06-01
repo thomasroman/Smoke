@@ -8,7 +8,7 @@ use whm\Smoke\Rules\StandardRule;
 /**
  * This rule checks if xpath is found in a html document.
  */
-class XpathExistsRule extends StandardRule
+class XPathExistsRule extends StandardRule
 {
     protected $contentTypes = ['text/html'];
 
