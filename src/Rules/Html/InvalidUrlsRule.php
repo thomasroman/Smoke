@@ -25,7 +25,7 @@ class InvalidUrlsRule extends StandardRule
         $invalidUrls = array();
 
         foreach ($urls as $url) {
-            if (!filter_var((string) $url, FILTER_VALIDATE_URL)) {
+            if (!filter_var(trim((string) $url), FILTER_VALIDATE_URL)) {
                 $invalidUrls[] = (string) $url;
             }
         }
