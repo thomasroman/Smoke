@@ -20,6 +20,8 @@ class ExistsRule extends StandardRule
 
     public function doValidation(Response $response)
     {
+        // @todo the test should not fail with the first not found header
+
         foreach ($this->checkedHeaders as $headerConfig) {
             if (!$response->hasHeader($headerConfig['key'])) {
                 throw new ValidationFailedException('Header not found (' . $headerConfig['key'] . ')');
