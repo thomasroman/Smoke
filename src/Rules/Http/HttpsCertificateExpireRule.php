@@ -45,7 +45,7 @@ class HttpsCertificateExpireRule implements Rule
                 $errorMessage = 'Certificate is expired. [' . $validFrom . ' - ' . $validTo . ']';
                 throw new ValidationFailedException($errorMessage);
             } elseif ($certinfo['validTo_time_t'] < strtotime('+' . $this->expireWarningTime . 'days')) {
-                $errorMessage = 'Certificate warning, expires in lower than ' . $this->expireWarningTime . ' days. Certificate expires at: ' . $validTo;
+                $errorMessage = 'Certificate warning, expires in less than ' . $this->expireWarningTime . ' days. Certificate expires at: ' . $validTo;
                 throw new ValidationFailedException($errorMessage);
             }
         }
