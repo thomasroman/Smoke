@@ -27,7 +27,22 @@ class XPathExistsRule extends StandardRule
         $domXPath = new \DOMXPath($domDocument);
 
         foreach ($this->xPaths as $xpath) {
-            $this->assert($domXPath->query($xpath)->length > 0, 'The xpath ' . $xpath . ' was not found.');
+            $count = $domXPath->query($xpath['pattern'])->length;
+
+            if ($xpath['relation'] = 'equals') {
+                $result = $count === $xpath['value'];
+                $message = 'The xpath "' . $xpath['pattern'] . '" was found ' . $count . ' times. Expected were exact ' . $xpath['value'] . ' occurencies.';
+            } elseif ($xpath['relation'] === 'less than') {
+                $result = $count < $xpath['value'];
+                $message = 'The xpath "' . $xpath['pattern'] . '" was found ' . $count . ' times. Expected were less than ' . $xpath['value'] . '.';
+            } elseif ($xpath['relation'] === 'greater than') {
+                $result = $count > $xpath['value'];
+                $message = 'The xpath "' . $xpath['pattern'] . '" was found ' . $count . ' times. Expected were more than ' . $xpath['value'] . '.';
+            } else {
+                throw new \RuntimeException('Relation not defined. Given "' . $xpath['relation'] . '" expected [equals, greater than, less than]');
+            }
+
+            $this->assert($result, $message);
         }
     }
 }
