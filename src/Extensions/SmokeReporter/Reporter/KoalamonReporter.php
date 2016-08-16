@@ -213,7 +213,7 @@ class KoalamonReporter implements Reporter
                         $system = $this->retriever->getSystem(new Uri($result->getUrl()));
                     }
                     if ($failureMessages[$ruleLKey] === '') {
-                        $failureMessages[$ruleLKey]['message'] = '    The smoke test for ' . $system . ' failed (Rule: ' . $ruleLKey . ').<ul>';
+                        $failureMessages[$ruleLKey]['message'] = '    The smoke test for #system_name# failed (Rule: ' . $ruleLKey . ').<ul>';
                     }
                     ++$counter[$ruleLKey];
 
