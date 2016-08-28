@@ -102,7 +102,7 @@ class SmokeCommand extends Command
 
         if ($configFile) {
             if (strpos($configFile, 'http://') === 0 || strpos($configFile, 'https://') === 0) {
-                $fileContent = (string)$this->getHttpClient()->get($configFile)->getBody();
+                $fileContent = (string) $this->getHttpClient()->get($configFile)->getBody();
             } else {
                 if (file_exists($configFile)) {
                     $fileContent = file_get_contents($configFile);
