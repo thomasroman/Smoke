@@ -143,7 +143,7 @@ class KoalamonReporter implements Reporter
                     $identifer = $this->tool . '_' . $this->getPrefix($ruleLKey) . '_' . $system;
 
                     if ($failureMessages[$identifer]['message'] === '') {
-                        $failureMessages[$identifer]['message'] = 'The ' . $this->getPrefix($ruleLKey) . ' test for ' . $system . ' failed.<ul>';
+                        $failureMessages[$identifer]['message'] = 'The ' . $this->getPrefix($ruleLKey) . ' test for #system_name# failed.<ul>';
                     }
                     ++$counter[$identifer];
                     $failureMessages[$identifer]['message'] .= '<li>' . $message . '<br>url: ' . $result->getUrl() . ', coming from: ' . $this->retriever->getComingFrom($result->getUrl()) . '</li>';
