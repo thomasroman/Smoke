@@ -37,7 +37,7 @@ class Retriever implements SmokeRetriever
 
         $url = array_pop($this->urlStack);
 
-        $request = new Request(new Uri($url['url']), 'GET', 'php://memory', ['Accept-Encoding' => 'gzip']);
+        $request = new Request(new Uri($url['url']), 'GET', 'php://memory', ['Accept-Encoding' => 'gzip', 'Connection' => 'keep-alive']);
 
         try {
             $responses = $this->httpClient->sendRequests(array($request));

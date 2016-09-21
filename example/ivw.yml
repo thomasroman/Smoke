@@ -32,9 +32,24 @@ extensions:
     parameters:
       runLevel: 10
 
+#reporter:
+#  _CliReporter:
+#    class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+
+  KoalamonReporter:
+     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
+     parameters:
+       systemUseRetriever: false
+       identifier: ${IDENTIFIER}
+       system: ${SYSTEM}
+       apiKey: BED9198D-48FA-453E-BD57-D42103E41542
+       server: http://lean.xcel.io/webhook/
+       tool: SmokeBasic
+       collect: true
 
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
@@ -77,7 +92,7 @@ rules:
      regExs:
        - "iom.c\(iam_data(,1)?\);"
        - 'var iam_data = {'
-       - '"st":"wuweib",'
+       # - '"st":"wuweib",'
        - '"cp":"[A-Za-z0-9\-\_]*",'
        - '"sv":"[A-Za-z0-9\-\_]*"'
 

@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: nils.langner
- * Date: 01.08.16
- * Time: 14:49.
- */
 namespace whm\Smoke\Rules\Http;
 
 use whm\Smoke\Http\Response;
