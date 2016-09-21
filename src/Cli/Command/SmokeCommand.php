@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use whm\Smoke\Http\MessageFactory;
+use whm\Smoke\Http\RequestFactory;
 use whm\Smoke\Scanner\Scanner;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
@@ -68,6 +69,9 @@ class SmokeCommand extends Command
         // $guessedAdapter = HttpAdapterFactory::guess();
         /** @var \Ivory\HttpAdapter\Guzzle6HttpAdapter $guessedAdapter */
         $guessedAdapter = new CurlHttpAdapter();
+
+        RequestFactory::addStandardHeader('Accept-Encoding', 'gzip');
+        RequestFactory::addStandardHeader('Connection', 'keep-alive');
 
         $adapter = new EventDispatcherHttpAdapter($guessedAdapter, $eventDispatcher);
         $adapter->getConfiguration()->setTimeout(30);

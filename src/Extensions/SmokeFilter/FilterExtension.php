@@ -85,7 +85,7 @@ class FilterExtension
      */
     public function isFiltered(Event $event, $ruleName, Response $response)
     {
-        $uri = (string)$this->retriever->getOriginUri($response->getUri());
+        $uri = (string) $this->retriever->getOriginUri($response->getUri());
 
         if ($this->currentModus === self::MODUS_FILTER) {
             $isFiltered = $this->isFilteredByFilter($ruleName, $uri);
