@@ -6,7 +6,6 @@ use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\RedirectSubscriber;
 use Ivory\HttpAdapter\Event\Subscriber\RetrySubscriber;
 use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
-use Ivory\HttpAdapter\HttpAdapterFactory;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
@@ -14,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use whm\Smoke\Http\MessageFactory;
-use whm\Smoke\Http\RequestFactory;
+use whm\Crawler\Http\RequestFactory;
 use whm\Smoke\Scanner\Scanner;
 use whm\Smoke\Yaml\EnvAwareYaml;
 

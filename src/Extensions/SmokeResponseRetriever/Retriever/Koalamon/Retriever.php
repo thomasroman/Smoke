@@ -6,7 +6,7 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 use Psr\Http\Message\UriInterface;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever as SmokeRetriever;
-use whm\Smoke\Http\RequestFactory;
+use whm\Crawler\Http\RequestFactory;
 
 class Retriever implements SmokeRetriever
 {
