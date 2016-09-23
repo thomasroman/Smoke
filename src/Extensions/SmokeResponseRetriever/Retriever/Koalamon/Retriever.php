@@ -4,9 +4,9 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Koalamon;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use Psr\Http\Message\UriInterface;
+use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever as SmokeRetriever;
-use whm\Crawler\Http\RequestFactory;
 
 class Retriever implements SmokeRetriever
 {

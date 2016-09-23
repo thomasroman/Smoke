@@ -5,9 +5,9 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever;
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use Ivory\HttpAdapter\MultiHttpAdapterException;
 use Psr\Http\Message\UriInterface;
+use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever as SmokeRetriever;
-use whm\Crawler\Http\RequestFactory;
 
 class Retriever implements SmokeRetriever
 {
