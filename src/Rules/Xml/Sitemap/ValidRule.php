@@ -18,32 +18,61 @@ class ValidRule implements Rule
         return __DIR__ . '/' . self::SCHEMA;
     }
 
+    private function validateBody ($body) {
+        libxml_clear_errors();
+        $dom = new \DOMDocument();
+        @$dom->loadXML($body);
+        $lastError = libxml_get_last_error();
+        if ($lastError) {
+            throw new ValidationFailedException(
+                'The given sitemap file is not well formed (last error: ' . str_replace("\n", '', $lastError->message) . ').');
+        }
+        $valid = @$dom->schemaValidate($this->getSchema());
+        if (!$valid) {
+            $lastError = libxml_get_last_error();
+            throw new ValidationFailedException(
+                'The given sitemap file did not validate vs. sitemap.xsd (last error: ' . str_replace("\n", '', $lastError->message) . ').');
+        }
+    }
+
+    /**
+     * @param string
+     * @return array
+     */
+    private function getLocations($body) {
+        $locations = array();
+        $xml = simplexml_load_string($body);
+        $json = json_encode($xml);
+        $xmlValues = json_decode($json, TRUE);
+
+        if (isset($xmlValues['sitemap']['loc'])) {
+            $locations[] = $xmlValues['sitemap']['loc'];
+        }
+        else {
+            foreach ($xmlValues['sitemap'] AS $sitemap) {
+                $locations[] = $sitemap['loc'];
+            }
+        }
+        return $locations;
+    }
+
     public function validate(Response $response)
     {
-        if ($response->getContentType() !== 'text/xml') {
+        if (strtolower($response->getContentType()) !== 'text/xml') {
             return;
         }
-
         $body = $response->getBody();
-        if (preg_match('/<sitemap/', $body)) {
-            libxml_clear_errors();
-            $dom = new \DOMDocument();
-            @$dom->loadXML($body);
-            $lastError = libxml_get_last_error();
-            if ($lastError) {
-                throw new ValidationFailedException(
-                    'The given sitemap.xml file is not well formed (last error: ' .
-                    str_replace("\n", '', $lastError->message) . ').');
+
+        // sitemapindex or urlset
+        if (preg_match('/<sitemapindex/', $body)) {
+            $allSingleSitemapsUrls = $this->getLocations($body);
+            foreach ($allSingleSitemapsUrls AS $sitemapUrl) {
+                $singleSitemapXml = file_get_contents($sitemapUrl);
+                $this->validateBody($singleSitemapXml);
             }
-            $valid = @$dom->schemaValidate($this->getSchema());
-            if (!$valid) {
-                $lastError = libxml_get_last_error();
-                $lastErrorMessage = str_replace("\n", '', $lastError->message);
-                throw new ValidationFailedException(
-                    'The given sitemap.xml file did not validate vs. ' .
-                    $this->getSchema() . ' (last error: ' .
-                    $lastErrorMessage . ').');
-            }
+        }
+        elseif (preg_match('/<urlset/', $body)) {
+            $this->validateBody($body);
         }
     }
 }

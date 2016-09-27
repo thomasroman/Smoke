@@ -32,7 +32,10 @@ responseRetriever:
 
  parameters:
    parallelRequests: 1
-   startPage: http://wohnidee.wunderweib.de/sitemap.xml
+   #startPage: http://wohnidee.wunderweib.de/sitemap.xml
+   #startPage: http://www.tvmovie.de/sitemap.xml
+   startPage: https://www.thewebhatesme.com/sitemap_index.xml
+   #startPage: http://www.tvmovie.de/sitemap/standard/0
 
    pageContainer:
      class: whm\Crawler\PageContainer\PatternAwareContainer

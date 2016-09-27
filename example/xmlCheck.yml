@@ -33,6 +33,7 @@ responseRetriever:
  parameters:
    parallelRequests: 1
    startPage: http://lxappepgapi01:8080/solr/broadcast/select?q=*%3A*&wt=xml&indent=true
+   # startPage: http://www.chevez.de/upload/brokenxmlfile.xml
 
    pageContainer:
      class: whm\Crawler\PageContainer\PatternAwareContainer

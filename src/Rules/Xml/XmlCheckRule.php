@@ -15,8 +15,10 @@ class XmlCheckRule extends StandardRule
         $domDocument = new \DOMDocument();
         $success = @$domDocument->loadXML((string) $response->getBody());  // true/false
 
-        if (!$success) {
-            throw new \RuntimeException('XML called from "' . $response->getUri() . '" is not well-formed...');
+        $lastError = libxml_get_last_error();
+        if (!$success || $lastError) {
+            throw new \RuntimeException('The xml file '. $response->getUri() . ' is not well formed (last error: ' .
+                    str_replace("\n", '', $lastError->message) . ').');
         }
     }
 }
