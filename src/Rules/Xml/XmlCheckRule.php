@@ -17,7 +17,7 @@ class XmlCheckRule extends StandardRule
 
         $lastError = libxml_get_last_error();
         if (!$success || $lastError) {
-            throw new \RuntimeException('The xml file '. $response->getUri() . ' is not well formed (last error: ' .
+            throw new \RuntimeException('The xml file ' . $response->getUri() . ' is not well formed (last error: ' .
                     str_replace("\n", '', $lastError->message) . ').');
         }
     }
