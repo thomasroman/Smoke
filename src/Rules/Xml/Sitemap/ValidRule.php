@@ -3,7 +3,6 @@
 namespace whm\Smoke\Rules\Xml\Sitemap;
 
 use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -35,7 +34,7 @@ class ValidRule extends StandardRule
         if (!$valid) {
             $lastError = libxml_get_last_error();
             throw new ValidationFailedException(
-                'The given sitemap file (' . $filename . ') did not validate against the sitemap.xsd (last error: ' . str_replace("\n", '', $lastError->message) . ').');
+                'The given sitemap file (' . $filename . ') did not validate against the sitemap schema (last error: ' . str_replace("\n", '', $lastError->message) . ').');
         }
     }
 
