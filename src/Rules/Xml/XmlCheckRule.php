@@ -15,7 +15,7 @@ class XmlCheckRule extends StandardRule
     public function doValidation(Response $response)
     {
         $domDocument = new \DOMDocument();
-        $success = @$domDocument->loadXML((string)$response->getBody());  // true/false
+        $success = @$domDocument->loadXML((string) $response->getBody());  // true/false
 
         $lastError = libxml_get_last_error();
         if (!$success || $lastError) {
