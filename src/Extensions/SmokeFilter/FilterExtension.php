@@ -70,8 +70,6 @@ class FilterExtension
             $this->exclusives = $exclusive;
             $this->currentModus = self::MODUS_EXCLUSIVE;
         }
-
-        var_dump($this->filters);
     }
 
     /**

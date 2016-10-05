@@ -13,7 +13,7 @@ class ValidRule extends StandardRule
 {
     const SCHEMA = 'schema.xsd';
 
-    protected $contentTypes = array('text/xml');
+    protected $contentTypes = array('text/xml', 'application/xml');
 
     private function getSchema()
     {
