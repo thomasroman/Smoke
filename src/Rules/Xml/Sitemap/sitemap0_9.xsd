@@ -26,8 +26,8 @@
         <xsd:sequence>
             <xsd:element name="loc" type="tLoc"/>
             <xsd:element name="lastmod" type="tLastmod" minOccurs="0"/>
-            <xsd:element name="changefreq" type="tChangeFreq" minOccurs="0"/>
             <xsd:element name="priority" type="tPriority" minOccurs="0"/>
+            <xsd:element name="changefreq" type="tChangeFreq" minOccurs="0"/>
             <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="strict"/>
         </xsd:sequence>
     </xsd:complexType>
