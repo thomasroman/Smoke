@@ -32,8 +32,8 @@ responseRetriever:
 
  parameters:
    parallelRequests: 1
-   startPage: http://astrowoche.wunderweib.de/sitemap.xml
-   #startPage: http://astrowoche.wunderweib.de/sitemap/standard/1
+   #startPage: http://astrowoche.wunderweib.de/sitemap.xml
+   startPage: http://astrowoche.wunderweib.de/sitemap/standard/1
 
    pageContainer:
      class: whm\Crawler\PageContainer\PatternAwareContainer
@@ -55,4 +55,5 @@ rules:
   _IvwJsFile:
    runLevel: 1
    class: whm\Smoke\Rules\Xml\Sitemap\ValidRule
-
+   parameters:
+     strictMode: false

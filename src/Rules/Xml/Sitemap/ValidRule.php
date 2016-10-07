@@ -12,13 +12,29 @@ use whm\Smoke\Rules\ValidationFailedException;
 class ValidRule extends StandardRule
 {
     const SCHEMA = 'schema.xsd';
+    const NON_STRICT_SCHEMA = 'nonStrictSchema.xsd';
     const INDEX = 'siteindex.xsd';
+
+    private $strictMode;
 
     protected $contentTypes = array('text/xml', 'application/xml');
 
+    public function init($strictMode = true)
+    {
+        $this->strictMode = $strictMode;
+    }
+
     private function getSchema($isIndex)
     {
-        return ($isIndex) ?  __DIR__ . '/' . self::INDEX : __DIR__ . '/' . self::SCHEMA;
+        if ($isIndex) {
+            return __DIR__ . '/' . self::INDEX;
+        }
+
+        if ($this->strictMode) {
+            return __DIR__ . '/' . self::SCHEMA;
+        } else {
+            return __DIR__ . '/' . self::NON_STRICT_SCHEMA;
+        }
     }
 
     private function validateBody($body, $filename, $isIndex = TRUE)
@@ -63,10 +79,10 @@ class ValidRule extends StandardRule
         // sitemapindex or urlset
         if (preg_match('/<sitemapindex/', $body)) {
 
-            $this->validateBody($body, (string) $response->getUri());
-            
+            $this->validateBody($body, (string)$response->getUri());
+
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string) $response->getUri(), FALSE);
+            $this->validateBody($body, (string)$response->getUri(), FALSE);
         }
     }
 }
