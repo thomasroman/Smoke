@@ -30,7 +30,9 @@ class ValidRule extends StandardRule
             throw new ValidationFailedException(
                 'The given sitemap file (' . $filename . ') is not well formed (last error: ' . str_replace("\n", '', $lastError->message) . ').');
         }
+
         $valid = @$dom->schemaValidate($this->getSchema());
+
         if (!$valid) {
             $lastError = libxml_get_last_error();
             throw new ValidationFailedException(
@@ -73,7 +75,7 @@ class ValidRule extends StandardRule
                 $this->validateBody(file_get_contents($allSingleSitemapsUrls[0]), $allSingleSitemapsUrls[0]);
             }
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string) $response->getUri());
+            $this->validateBody($body, (string)$response->getUri());
         }
     }
 }
