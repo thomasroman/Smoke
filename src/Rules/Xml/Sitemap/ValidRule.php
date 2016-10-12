@@ -21,7 +21,6 @@ class ValidRule extends StandardRule
 
     public function init($strictMode = true)
     {
-        var_dump($strictMode);
         $this->strictMode = $strictMode;
     }
 
@@ -53,7 +52,6 @@ class ValidRule extends StandardRule
 
     /**
      * @param string
-     *
      * @return array
      */
     private function getLocations($body)
@@ -82,9 +80,9 @@ class ValidRule extends StandardRule
 
         // sitemapindex or urlset
         if (preg_match('/<sitemapindex/', $body)) {
-            $this->validateBody($body, (string) $response->getUri());
+            $this->validateBody($body, (string)$response->getUri());
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string) $response->getUri(), false);
+            $this->validateBody($body, (string)$response->getUri(), false);
         }
     }
 }
