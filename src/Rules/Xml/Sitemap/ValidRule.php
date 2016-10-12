@@ -12,27 +12,38 @@ use whm\Smoke\Rules\ValidationFailedException;
 class ValidRule extends StandardRule
 {
     const SCHEMA = 'schema.xsd';
+    const NON_STRICT_SCHEMA = 'nonStrictSchema.xsd';
+    const INDEX = 'siteindex.xsd';
+
+    private $strictMode;
 
     protected $contentTypes = array('text/xml', 'application/xml');
 
-    private function getSchema()
+    public function init($strictMode = true)
     {
-        return __DIR__ . '/' . self::SCHEMA;
+        var_dump($strictMode);
+        $this->strictMode = $strictMode;
     }
 
-    private function validateBody($body, $filename)
+    private function getSchema($isIndex)
     {
-        libxml_clear_errors();
-        $dom = new \DOMDocument();
-        @$dom->loadXML($body);
-        $lastError = libxml_get_last_error();
-        if ($lastError) {
-            throw new ValidationFailedException(
-                'The given sitemap file (' . $filename . ') is not well formed (last error: ' . str_replace("\n", '', $lastError->message) . ').');
+        if ($isIndex) {
+            return __DIR__ . '/' . self::INDEX;
         }
 
-        $valid = @$dom->schemaValidate($this->getSchema());
+        if ($this->strictMode) {
+            return __DIR__ . '/' . self::SCHEMA;
+        } else {
+            return __DIR__ . '/' . self::NON_STRICT_SCHEMA;
+        }
+    }
 
+    private function validateBody($body, $filename, $isIndex = true)
+    {
+        $dom = new \DOMDocument();
+        @$dom->loadXML($body);
+
+        $valid = @$dom->schemaValidate($this->getSchema($isIndex));
         if (!$valid) {
             $lastError = libxml_get_last_error();
             throw new ValidationFailedException(
@@ -65,17 +76,15 @@ class ValidRule extends StandardRule
 
     protected function doValidation(Response $response)
     {
+        var_dump((string)$response->getUri());
+
         $body = $response->getBody();
 
         // sitemapindex or urlset
         if (preg_match('/<sitemapindex/', $body)) {
-            $allSingleSitemapsUrls = $this->getLocations($body);
-            if (count($allSingleSitemapsUrls) > 0) {
-                // we only check the first sitemap we find
-                $this->validateBody(file_get_contents($allSingleSitemapsUrls[0]), $allSingleSitemapsUrls[0]);
-            }
+            $this->validateBody($body, (string) $response->getUri());
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string)$response->getUri());
+            $this->validateBody($body, (string) $response->getUri(), false);
         }
     }
 }
