@@ -43,6 +43,7 @@ class ValidRule extends StandardRule
         @$dom->loadXML($body);
 
         $valid = @$dom->schemaValidate($this->getSchema($isIndex));
+
         if (!$valid) {
             $lastError = libxml_get_last_error();
             throw new ValidationFailedException(
@@ -74,8 +75,6 @@ class ValidRule extends StandardRule
 
     protected function doValidation(Response $response)
     {
-        var_dump((string)$response->getUri());
-
         $body = $response->getBody();
 
         // sitemapindex or urlset
