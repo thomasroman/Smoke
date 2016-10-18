@@ -16,11 +16,13 @@ class ValidRule extends StandardRule
     const INDEX = 'siteindex.xsd';
 
     private $strictMode;
+    private $debug;
 
     protected $contentTypes = array('text/xml', 'application/xml');
 
-    public function init($strictMode = true)
+    public function init($strictMode = true, $debug = false)
     {
+        $this->debug = $debug;
         $this->strictMode = $strictMode;
     }
 
@@ -53,6 +55,7 @@ class ValidRule extends StandardRule
 
     /**
      * @param string
+     *
      * @return array
      */
     private function getLocations($body)
@@ -79,9 +82,10 @@ class ValidRule extends StandardRule
 
         // sitemapindex or urlset
         if (preg_match('/<sitemapindex/', $body)) {
-            $this->validateBody($body, (string)$response->getUri());
+            $this->validateBody($body, (string) $response->getUri());
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string)$response->getUri(), false);
+            var_dump('da');
+            $this->validateBody($body, (string) $response->getUri(), false);
         }
     }
 }

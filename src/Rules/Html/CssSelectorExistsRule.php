@@ -2,9 +2,9 @@
 
 namespace whm\Smoke\Rules\Html;
 
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
-use Symfony\Component\CssSelector\CssSelectorConverter;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
@@ -37,7 +37,7 @@ class CssSelectorExistsRule extends StandardRule
 
             $count = $domXPath->query($selectorAsXPath)->length;
 
-            if ($count == 0) {
+            if ($count === 0) {
                 $error = true;
                 $snotFoundSelectors[] = $selector['pattern'];
             }
@@ -46,7 +46,7 @@ class CssSelectorExistsRule extends StandardRule
         if ($error === true) {
             $allNotFoundSelectors = implode('", "', $snotFoundSelectors);
 
-            throw new ValidationFailedException('CSS Selector "' . $allNotFoundSelectors .'" not found in DOM.');
+            throw new ValidationFailedException('CSS Selector "' . $allNotFoundSelectors . '" not found in DOM.');
         }
     }
 }
