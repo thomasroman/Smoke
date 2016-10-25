@@ -53,29 +53,6 @@ class ValidRule extends StandardRule
         }
     }
 
-    /**
-     * @param string
-     *
-     * @return array
-     */
-    private function getLocations($body)
-    {
-        $locations = array();
-        $xml = simplexml_load_string($body);
-        $json = json_encode($xml);
-        $xmlValues = json_decode($json, true);
-
-        if (isset($xmlValues['sitemap']['loc'])) {
-            $locations[] = $xmlValues['sitemap']['loc'];
-        } else {
-            foreach ($xmlValues['sitemap'] as $sitemap) {
-                $locations[] = $sitemap['loc'];
-            }
-        }
-
-        return $locations;
-    }
-
     protected function doValidation(Response $response)
     {
         $body = $response->getBody();
@@ -84,7 +61,6 @@ class ValidRule extends StandardRule
         if (preg_match('/<sitemapindex/', $body)) {
             $this->validateBody($body, (string) $response->getUri());
         } elseif (preg_match('/<urlset/', $body)) {
-            var_dump('da');
             $this->validateBody($body, (string) $response->getUri(), false);
         }
     }
