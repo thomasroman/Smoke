@@ -15,7 +15,8 @@
     "phmlabs/crawler": "~1.2.0",
     "phmlabs/xunitreport": ">= 1.0.2",
     "koalamon/koalamonclient": "dev-master",
-    "peekmo/jsonpath": "dev-master"
+    "peekmo/jsonpath": "dev-master",
+    "justinrainbow/json-schema": "~4.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "@stable"

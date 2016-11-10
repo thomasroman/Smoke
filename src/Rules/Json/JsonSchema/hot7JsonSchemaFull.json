@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "broadcasts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "channelId": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "airTime": {
+            "type": "string"
+          },
+          "position": {
+            "type": "integer"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "genreName": {
+            "type": "string"
+          },
+          "episode": {
+            "type": "string"
+          },
+          "highlightCategory": {
+            "type": "string"
+          },
+          "isNew": {
+            "type": "boolean"
+          },
+          "isLive": {
+            "type": "boolean"
+          },
+          "isHd": {
+            "type": "boolean"
+          },
+          "isLastBroadcast": {
+            "type": "boolean"
+          },
+          "movieStarValue": {
+            "type": "integer"
+          },
+          "referenceNumber": {
+            "type": "string"
+          },
+          "weblink": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "channelId",
+          "title",
+          "airTime",
+          "weblink"
+        ]
+      }
+    }
+  },
+  "required": [
+    "broadcasts"
+  ]
+}

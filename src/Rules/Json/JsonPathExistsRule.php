@@ -2,10 +2,12 @@
 
 namespace whm\Smoke\Rules\Json;
 
-use Peekmo\JsonPath\JsonStore;
+use Doctrine\Tests\Common\Annotations\False;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
+use Peekmo\JsonPath\JsonPath;
+use Peekmo\JsonPath\JsonStore;
 
 /**
  * This rule checks if xpath is found in a html document.
@@ -25,8 +27,7 @@ class JsonPathExistsRule extends StandardRule
      * @param $relation string
      * @param $value int
      * @param $count int
-     *
-     * @return bool
+     * @return boolean
      */
     private function checkRelation($relation, $value, $count)
     {
@@ -47,7 +48,6 @@ class JsonPathExistsRule extends StandardRule
                 }
                 break;
         }
-
         return true;
     }
 
@@ -63,7 +63,7 @@ class JsonPathExistsRule extends StandardRule
             $jsonValue = $store->get($path['pattern']);
             $count = count($jsonValue);
 
-            if ($jsonValue === false || (is_array($jsonValue) && empty($jsonValue))) {
+            if ($jsonValue === FALSE || (is_array($jsonValue) && empty($jsonValue))) {
                 $error = true;
                 $noCorrectJsonPaths[] = $path['pattern'] . ' (JSON Path not found)';
             }
