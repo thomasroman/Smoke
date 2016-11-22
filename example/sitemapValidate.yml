@@ -33,7 +33,7 @@ responseRetriever:
  parameters:
    parallelRequests: 1
    #startPage: http://astrowoche.wunderweib.de/sitemap.xml
-   startPage: https://blog.leankoala.com/sitemap-pt-post-2016-10.xml
+   startPage: http://astrowoche.wunderweib.de/sitemap/standard/1
 
    pageContainer:
      class: whm\Crawler\PageContainer\PatternAwareContainer
