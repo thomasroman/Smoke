@@ -26,10 +26,15 @@ class RobotsDisallowAllRule implements Rule
         $headers = @get_headers($filename);
 
         if (strpos($headers[0], '200') !== false) {
-            $content = file_get_contents($filename);
-            $normalizedContent = str_replace(' ', '', $content);
 
-            if (strpos($normalizedContent, 'Disallow:/' . PHP_EOL) !== false) {
+            $content = file_get_contents($filename);
+            $normalizedContent = strtolower(str_replace(' ', '', $content));
+
+            if (strpos($normalizedContent, 'disallow:/' . PHP_EOL) !== false) {
+                throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
+            }
+
+            if (strpos($normalizedContent, 'disallow:/') === strlen($normalizedContent) - 10) {
                 throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
             }
         }
