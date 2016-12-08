@@ -4,6 +4,7 @@ namespace whm\Smoke\Rules\Html;
 
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
+use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rule will analyze any html document and checks if a given string is contained.
@@ -24,9 +25,31 @@ class RegExExistsRule extends StandardRule
 
     protected function doValidation(Response $response)
     {
+        $errors = [];
+
         foreach ($this->regExs as $regEx) {
-            $this->assert(preg_match('^' . $regEx . '^', (string) $response->getBody()) > 0,
-                'The given regular expression (' . $regEx . ') was not found in this document.');
+            if ($regEx['isRegEx']) {
+                if (preg_match('^' . $regEx['pattern'] . '^', (string)$response->getBody()) == 0) {
+                    $errors[] = 'Regular expression: ' . $regEx['pattern'];
+                }
+            } else {
+                var_dump(preg_match('^' . preg_quote($regEx['pattern']) . '^', (string)$response->getBody()));
+                if (preg_match('^' . preg_quote($regEx['pattern']) . '^', (string)$response->getBody()) == 0) {
+                    $errors[] = 'Text: ' . $regEx['pattern'];
+                }
+            }
+        }
+
+        if (count($errors) > 0) {
+            $errorString = "The following text elements where not found: <ul>";
+
+            foreach ($errors as $error) {
+                $errorString .= "<li>" . $error . "</li>";
+            }
+
+            $errorString .= "</ul>";
+
+            throw new ValidationFailedException($errorString);
         }
     }
 }
