@@ -53,7 +53,14 @@ class JsonPathExistsRule extends StandardRule
 
     public function doValidation(Response $response)
     {
-        $json = json_decode($response->getBody());
+	$body = (string)$response->getBody();
+
+        $json = json_decode($body);
+
+	if(!$json) {
+ 	    throw new ValidationFailedException('The given json document is empty or not valid json.');
+	}
+
         $store = new JsonStore($json);
 
         $error = false;
