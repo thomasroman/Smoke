@@ -2,16 +2,15 @@
 
 namespace whm\Smoke\Rules\Json\JsonSchema;
 
+use JsonSchema\Constraints\Constraint;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\Validator;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
-use JsonSchema\Validator;
-use JsonSchema\SchemaStorage;
-use JsonSchema\Constraints\Constraint;
-use JsonSchema\Constraints\Factory;
 
 /**
- * This rule checks if a JSON file is valid for a JSON schema file
+ * This rule checks if a JSON file is valid for a JSON schema file.
  */
 class JsonSchemaRule extends StandardRule
 {
@@ -29,7 +28,6 @@ class JsonSchemaRule extends StandardRule
     );
 
     public function init($jsonSchemaFiles)
-
     {
         $this->jsonSchemaFiles = $jsonSchemaFiles;
     }
@@ -39,31 +37,30 @@ class JsonSchemaRule extends StandardRule
         $data = json_decode($response->getBody());
         if ($data === null) {
             throw new ValidationFailedException("The given JSON data can not be validated (last error: '" . $this->json_errors[json_last_error()] . "').");
-        }
-        else {
+        } else {
             $error = false;
             $messageParts = array();
 
-            foreach ($this->jsonSchemaFiles AS $jsonSchemaFile) {
-                $factory = new Factory( null, null, Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE );
+            foreach ($this->jsonSchemaFiles as $jsonSchemaFile) {
+                $factory = new Factory(null, null, Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE);
                 $validator = new Validator($factory);
 
-                $jsonSchemaObject = (object)json_decode(file_get_contents($jsonSchemaFile['jsonschemafileurl']));
-                
+                $jsonSchemaObject = (object) json_decode(file_get_contents($jsonSchemaFile['jsonschemafileurl']));
+
                 $validator->check($data, $jsonSchemaObject);
 
                 if (!$validator->isValid()) {
                     $error = true;
                     $errorMessage = '';
                     foreach ($validator->getErrors() as $error) {
-                        $errorMessage = $errorMessage .  sprintf("[%s] %s\n", $error['property'], $error['message']);
+                        $errorMessage = $errorMessage . sprintf("[%s] %s\n", $error['property'], $error['message']);
                     }
                     $messageParts[] = $jsonSchemaFile['jsonschemafilename'] . ' - ' . $jsonSchemaFile['jsonschemafileurl'] . '(last error: ' . $errorMessage . ').';
                 }
             }
 
-            if ($error == true) {
-                $message = 'JSON file (' . (string)$response->getUri() . ')  does not validate against the following JSON Schema files: ' . implode(", ", $messageParts);
+            if ($error === true) {
+                $message = 'JSON file (' . (string) $response->getUri() . ')  does not validate against the following JSON Schema files: ' . implode(', ', $messageParts);
                 throw new ValidationFailedException($message);
             }
         }

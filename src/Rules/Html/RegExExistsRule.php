@@ -29,25 +29,24 @@ class RegExExistsRule extends StandardRule
 
         foreach ($this->regExs as $regEx) {
             if ($regEx['isRegEx']) {
-                if (preg_match('^' . $regEx['pattern'] . '^', (string)$response->getBody()) == 0) {
+                if (preg_match('^' . $regEx['pattern'] . '^', (string) $response->getBody()) === 0) {
                     $errors[] = 'Regular expression: ' . $regEx['pattern'];
                 }
             } else {
-                var_dump(preg_match('^' . preg_quote($regEx['pattern']) . '^', (string)$response->getBody()));
-                if (preg_match('^' . preg_quote($regEx['pattern']) . '^', (string)$response->getBody()) == 0) {
+                if (preg_match('^' . preg_quote($regEx['pattern']) . '^', (string) $response->getBody()) === 0) {
                     $errors[] = 'Text: ' . $regEx['pattern'];
                 }
             }
         }
 
         if (count($errors) > 0) {
-            $errorString = "The following text elements where not found: <ul>";
+            $errorString = 'The following text elements where not found: <ul>';
 
             foreach ($errors as $error) {
-                $errorString .= "<li>" . $error . "</li>";
+                $errorString .= '<li>' . $error . '</li>';
             }
 
-            $errorString .= "</ul>";
+            $errorString .= '</ul>';
 
             throw new ValidationFailedException($errorString);
         }

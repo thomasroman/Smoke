@@ -26,7 +26,6 @@ class RobotsDisallowAllRule implements Rule
         $headers = @get_headers($filename);
 
         if (strpos($headers[0], '200') !== false) {
-
             $content = file_get_contents($filename);
             $normalizedContent = strtolower(str_replace(' ', '', $content));
 

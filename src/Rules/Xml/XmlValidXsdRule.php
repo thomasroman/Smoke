@@ -27,12 +27,12 @@ class XmlValidXsdRule extends StandardRule
         $dom = new \DOMDocument();
         @$dom->loadXML($body);
 
-        $filename = (string)$response->getUri();
+        $filename = (string) $response->getUri();
 
         $error = false;
         $messageParts = array();
 
-        foreach ($this->xsdFiles AS $xsdFile) {
+        foreach ($this->xsdFiles as $xsdFile) {
             $valid = @$dom->schemaValidate($xsdFile['xsdfileurl']);
 
             if (!$valid) {
@@ -44,7 +44,7 @@ class XmlValidXsdRule extends StandardRule
         }
 
         if ($error === true) {
-            $message = 'XML file (' . $filename . ')  does not validate against the following XSD files: ' . implode(", ", $messageParts);
+            $message = 'XML file (' . $filename . ')  does not validate against the following XSD files: ' . implode(', ', $messageParts);
             throw new ValidationFailedException($message);
         }
     }
