@@ -8,7 +8,7 @@ use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rule can validate if a http request takes longer than a given max duration.
- * A website that is slower than one second is concidered as slow.
+ * A website that is slower than one second is considered as slow.
  */
 class DurationRule implements Rule
 {
@@ -25,7 +25,7 @@ class DurationRule implements Rule
     public function validate(Response $response)
     {
         if ($response->getDuration() > $this->maxDuration) {
-            throw new ValidationFailedException('the http request lasted ' . $response->getDuration() . ' milliseconds.');
+            throw new ValidationFailedException('The http request took ' . $response->getDuration() . ' milliseconds (limit was '.$this->maxDuration.'ms). ');
         }
     }
 }

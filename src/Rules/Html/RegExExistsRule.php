@@ -40,7 +40,7 @@ class RegExExistsRule extends StandardRule
         }
 
         if (count($errors) > 0) {
-            $errorString = 'The following text elements where not found: <ul>';
+            $errorString = 'The following text elements were not found: <ul>';
 
             foreach ($errors as $error) {
                 $errorString .= '<li>' . $error . '</li>';
