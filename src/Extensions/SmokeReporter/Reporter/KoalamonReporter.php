@@ -253,8 +253,6 @@ class KoalamonReporter implements Reporter
         }
         $event = new Event($identifier, $system, $status, $tool, $message, $value);
 
-        var_dump($event);
-
         $this->reporter->sendEvent($event);
     }
 }
