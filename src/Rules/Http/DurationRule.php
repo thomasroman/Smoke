@@ -25,7 +25,7 @@ class DurationRule implements Rule
     public function validate(Response $response)
     {
         if ($response->getDuration() > $this->maxDuration) {
-            throw new ValidationFailedException('The http request took ' . $response->getDuration() . ' milliseconds (limit was '.$this->maxDuration.'ms). ');
+            throw new ValidationFailedException('The http request took ' . $response->getDuration() . ' milliseconds (limit was ' . $this->maxDuration . 'ms). ');
         }
     }
 }

@@ -14,7 +14,7 @@ class GoogleMobileFriendlyRule implements Rule
     private function getEndpoint(Uri $uri)
     {
         // return str_replace('#url#', urlencode('http://www.phpgangsta.de'), self::ENDPOINT);
-        return str_replace('#url#', urlencode((string)$uri), self::ENDPOINT);
+        return str_replace('#url#', urlencode((string) $uri), self::ENDPOINT);
     }
 
     public function validate(Response $response)
