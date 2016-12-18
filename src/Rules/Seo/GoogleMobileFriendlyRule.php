@@ -13,7 +13,7 @@ class GoogleMobileFriendlyRule implements Rule
 
     private function getEndpoint(Uri $uri)
     {
-        // return str_replace('#url#', urlencode('http://www.phpgangsta.de'), self::ENDPOINT);
+        // return str_replace('#url#', urlencode('https://webhook.koalamon.com'), self::ENDPOINT);
         return str_replace('#url#', urlencode((string) $uri), self::ENDPOINT);
     }
 
@@ -23,7 +23,21 @@ class GoogleMobileFriendlyRule implements Rule
 
         $endpoint = $this->getEndpoint($uri);
 
-        $result = json_decode(file_get_contents($endpoint));
+        $result = json_decode(file_get_contents($endpoint, false,
+            stream_context_create(
+                array(
+                    'http' => array(
+                        'ignore_errors' => true,
+                    ),
+                )
+            )));
+
+        var_dump($result);
+
+        if ($result->error) {
+            throw new ValidationFailedException('Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
+        }
+
         $passResult = $result->ruleGroups->USABILITY;
 
         if (!$passResult->pass) {
