@@ -32,8 +32,6 @@ class GoogleMobileFriendlyRule implements Rule
                 )
             )));
 
-        var_dump($result);
-
         if ($result->error) {
             throw new ValidationFailedException('Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
         }

@@ -10,6 +10,7 @@ use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
 use whm\Smoke\Http\Response;
+use whm\Smoke\Scanner\SessionContainer;
 
 class Crawler implements CrawlingRetriever
 {
@@ -98,5 +99,9 @@ class Crawler implements CrawlingRetriever
     public function getOriginUri(UriInterface $uri)
     {
         return $uri;
+    }
+
+    public function setSessionContainer(SessionContainer $sessionContainer)
+    {
     }
 }

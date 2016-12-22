@@ -6,7 +6,9 @@ use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Yaml\Yaml;
 use whm\Html\Uri;
+use whm\Smoke\Http\Session;
 use whm\Smoke\Rules\Rule;
+use whm\Smoke\Scanner\SessionContainer;
 
 class Configuration
 {
@@ -24,12 +26,23 @@ class Configuration
 
     private $runLevels = array();
 
+    /**
+     * @var SessionContainer
+     */
+    private $sessionContainer;
+
     public function __construct(Uri $uri, Dispatcher $eventDispatcher, array $configArray, array $defaultSettings = null)
     {
         $this->eventDispatcher = $eventDispatcher;
         Init::registerGlobalParameter('_configuration', $this);
 
         $this->initConfigArray($configArray, $defaultSettings);
+
+        if (array_key_exists('sessions', $this->configArray)) {
+            $this->initSessionContainer($this->configArray['sessions']);
+        } else {
+            $this->sessionContainer = new SessionContainer();
+        }
 
         if (array_key_exists('extensions', $this->configArray)) {
             $this->addListener($this->configArray['extensions']);
@@ -62,6 +75,23 @@ class Configuration
         }
 
         $this->configArray = $configArray;
+    }
+
+    private function initSessionContainer(array $sessionsArray)
+    {
+        $this->sessionContainer = new SessionContainer();
+
+        foreach ($sessionsArray as $sessionName => $sessionsElement) {
+            $session = new Session();
+
+            if (array_key_exists('cookies', $sessionsElement)) {
+                foreach ($sessionsElement['cookies'] as $key => $value) {
+                    $session->addCookie($key, $value);
+                }
+            }
+
+            $this->sessionContainer->addSession($sessionName, $session);
+        }
     }
 
     private function addListener(array $listenerArray)
@@ -109,6 +139,11 @@ class Configuration
     public function getRules()
     {
         return $this->rules;
+    }
+
+    public function getSessionContainer()
+    {
+        return $this->sessionContainer;
     }
 
     public function hasSection($section)

@@ -8,6 +8,7 @@ use Psr\Http\Message\UriInterface;
 use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever as SmokeRetriever;
+use whm\Smoke\Scanner\SessionContainer;
 
 class Retriever implements SmokeRetriever
 {
@@ -17,16 +18,62 @@ class Retriever implements SmokeRetriever
 
     private $redirects = array();
 
+    /**
+     * @var SessionContainer
+     */
+    private $sessionContainer;
+
     public function init($urls)
     {
         if (is_array($urls)) {
             foreach ($urls as $key => $urlList) {
                 foreach ($urlList as $url) {
-                    $this->urls[$url] = ['url' => $url, 'system' => $key];
+                    if (is_array($url)) {
+                        $uri = new Uri($url['url']);
+                        if (array_key_exists('cookies', $url)) {
+                            foreach ($url['cookies'] as $cookie) {
+                                foreach ($cookie as $key => $value) {
+                                    $uri->addCookie($key, $value);
+                                }
+                            }
+                        }
+                        if (array_key_exists('session', $url)) {
+                            $sessionName = $url['session'];
+                            $uri->setSessionIdentifier($sessionName);
+                        }
+                        $this->urls[$url['url']] = ['url' => $uri, 'system' => $key];
+                    } else {
+                        $this->urls[$url] = ['url' => new Uri($url), 'system' => $key];
+                    }
                 }
             }
             $this->urlStack = $this->urls;
         }
+    }
+
+    /**
+     * @param Uri $uri
+     *
+     * @return \Ivory\HttpAdapter\Message\Request
+     */
+    private function createRequest(Uri $uri)
+    {
+        $headers = ['Accept-Encoding' => 'gzip', 'Connection' => 'keep-alive'];
+
+        if ($uri->getSessionIdentifier()) {
+            $session = $this->sessionContainer->getSession($uri->getSessionIdentifier());
+            foreach ($session->getCookies() as $key => $value) {
+                $uri->addCookie($key, $value);
+            }
+        }
+
+        if ($uri->hasCookies()) {
+            $headers['Cookie'] = $uri->getCookieString();
+        }
+
+        $request = RequestFactory::getRequest($uri, 'GET', 'php://memory', $headers);
+
+        return $request;
     }
 
     public function next()
@@ -37,7 +84,7 @@ class Retriever implements SmokeRetriever
 
         $url = array_pop($this->urlStack);
 
-        $request = RequestFactory::getRequest(new Uri($url['url']), 'GET', 'php://memory', ['Accept-Encoding' => 'gzip', 'Connection' => 'keep-alive']);
+        $request = $this->createRequest($url['url']);
 
         try {
             $responses = $this->httpClient->sendRequests(array($request));
@@ -113,5 +160,10 @@ class Retriever implements SmokeRetriever
     public function setHttpClient(HttpAdapterInterface $httpClient)
     {
         $this->httpClient = $httpClient;
+    }
+
+    public function setSessionContainer(SessionContainer $sessionContainer)
+    {
+        $this->sessionContainer = $sessionContainer;
     }
 }

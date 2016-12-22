@@ -1,0 +1,65 @@
+
+options:
+  extendDefault: false
+
+extensions:
+
+  CookieMaker:
+    class: whm\Smoke\Extensions\CookieMaker\CookieMakerExtension
+    parameters:
+      executable: "/usr/local/bin/php /Users/nils.langner/PhpstormProjects/CookieMaker/bin/CookieMaker.php"
+      sessions:
+         loginCM:
+           url: "https://monitor.leankoala.com/secure_area/login"
+           form_action: "/secure_area/login_check"
+           fields:
+              _username: "nils.langner"
+              _password: "langner"
+
+  _SmokeStop:
+    class: whm\Smoke\Extensions\SmokeStop\StopExtension
+
+  _Reporter:
+    class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
+
+  _ResponseRetriever:
+    class: whm\Smoke\Extensions\SmokeResponseRetriever\ResponseRetrieverExtension
+
+  _Filter:
+    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+    parameters:
+      exclusive:
+        httphead_89:
+          - https://monitor.leankoala.com/
+
+reporter:
+  _CliReporter:
+    class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+
+  KoalamonReporter:
+     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
+     parameters:
+       systemUseRetriever: true
+       apiKey: C921B726-0BA9-4993-9960-B08532241DE0
+       server: https://monitor.leankoala.com/webhook/
+       collect: false
+       groupBy: prefix
+       addComingFrom: false
+
+responseRetriever:
+  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever\Retriever
+  parameters:
+    urls:
+      www.amilio.de:
+        123:
+           url: https://monitor.leankoala.com/
+           session: loginCM
+
+rules:
+  httphead_89:
+    class: whm\Smoke\Rules\Http\Header\ExistsRule
+    parameters:
+      checkedHeaders:
+        -
+          key: X-Cache
+          value: HIT
