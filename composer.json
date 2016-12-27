@@ -1,17 +1,15 @@
 {
   "name": "phmlabs/smoke",
-
   "description": "Smoke can be used to check if a web platform is basically working.",
 
   "require": {
     "php": ">= 5.4.0",
     "symfony/yaml": "~3.1",
     "symfony/console": "~3.1",
-    "symfony/dom-crawler": "~3.1",
     "egeloen/http-adapter": "dev-timings",
     "phmlabs/annovent": "~1.0.0",
     "phmlabs/init": "~1.0.0",
-    "phmlabs/html": "dev-master",
+    "phmlabs/html": "~2.1",
     "phmlabs/crawler": "~1.2.0",
     "phmlabs/xunitreport": ">= 1.0.2",
     "koalamon/koalamonclient": "dev-master",
@@ -37,9 +35,9 @@
       "url": "git@github.com:digitalkaoz/ivory-http-adapter.git"
     }
   ],
-  "scripts" : {
-     "cs" : "vendor/bin/php-cs-fixer fix $1",
-     "test" : "vendor/bin/phpunit $1"
+  "scripts": {
+    "cs": "vendor/bin/php-cs-fixer fix $1",
+    "test": "vendor/bin/phpunit $1"
   },
   "bin": [
     "bin/Smoke.php"
