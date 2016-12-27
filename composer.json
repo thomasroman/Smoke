@@ -11,7 +11,7 @@
     "egeloen/http-adapter": "dev-timings",
     "phmlabs/annovent": "~1.0.0",
     "phmlabs/init": "~1.0.0",
-    "phmlabs/html": "~2.0",
+    "phmlabs/html": "dev-master",
     "phmlabs/crawler": "~1.2.0",
     "phmlabs/xunitreport": ">= 1.0.2",
     "koalamon/koalamonclient": "dev-master",

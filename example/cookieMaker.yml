@@ -36,16 +36,6 @@ reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
 
-  KoalamonReporter:
-     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
-     parameters:
-       systemUseRetriever: true
-       apiKey: C921B726-0BA9-4993-9960-B08532241DE0
-       server: https://monitor.leankoala.com/webhook/
-       collect: false
-       groupBy: prefix
-       addComingFrom: false
-
 responseRetriever:
   class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever\Retriever
   parameters:
