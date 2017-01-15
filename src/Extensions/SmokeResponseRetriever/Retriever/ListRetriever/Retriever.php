@@ -13,6 +13,10 @@ use whm\Smoke\Scanner\SessionContainer;
 class Retriever implements SmokeRetriever
 {
     private $urls = [];
+
+    /**
+     * @var HttpAdapterInterface
+     */
     private $httpClient;
     private $urlStack = [];
 
@@ -84,12 +88,13 @@ class Retriever implements SmokeRetriever
 
         $url = array_pop($this->urlStack);
 
-        $request = $this->createRequest($url['url']);
+        $request = $this->createRequest(new Uri($url['url']));
 
         try {
             $responses = $this->httpClient->sendRequests(array($request));
         } catch (MultiHttpAdapterException $e) {
             $exceptions = $e->getExceptions();
+            /** @var \Exception[] $exceptions */
             $errorMessages = '';
             foreach ($exceptions as $exception) {
                 // @fixme this must be part of the http client
