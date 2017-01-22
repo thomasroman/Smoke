@@ -18,27 +18,26 @@ extensions:
     parameters:
       exclusive:
         LittleSeo_258:
-          - http://watchlists.de
+          - https://www.ars-dessous.de
+        LittleSeo_289:
+          - http://tests.koalamon.com
 
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
 
-  KoalamonReporter:
-     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
-     parameters:
-       systemUseRetriever: true
-       apiKey: 88E585F4-CA03-4AA3-86C0-A58DF9405EA9
-       server: https://monitor.leankoala.com/webhook/
-       collect: false
-       groupBy: prefix
-
 responseRetriever:
   class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever\Retriever
   parameters:
     urls:
+      258:
+        - https://www.ars-dessous.de
+      289:
+        - http://tests.koalamon.com
 
 rules:
   LittleSeo_258:
     class: whm\Smoke\Rules\Seo\RobotsDisallowAllRule
 
+  LittleSeo_289:
+    class: whm\Smoke\Rules\Seo\RobotsDisallowAllRule

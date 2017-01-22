@@ -6,6 +6,7 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 use phmLabs\Components\Annovent\Dispatcher;
 use phmLabs\Components\Annovent\Event\Event;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
+use whm\Smoke\Http\ClientAware;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -25,12 +26,23 @@ class Scanner
     {
         $eventDispatcher->simpleNotify('Scanner.Init', array('rules' => $rules, 'httpClient' => $client, 'dispatcher' => $eventDispatcher));
 
-        $this->rules = $rules;
+        $this->initRules($rules, $client);
+
         $this->eventDispatcher = $eventDispatcher;
 
         $this->responseRetriever = $responseRetriever;
 
         $this->eventDispatcher->simpleNotify('Scanner.Init.ResponseRetriever', array('responseRetriever' => $this->responseRetriever));
+    }
+
+    private function initRules($rules, HttpAdapterInterface $client)
+    {
+        $this->rules = $rules;
+        foreach ($this->rules as $rule) {
+            if ($rule instanceof ClientAware) {
+                $rule->setClient($client);
+            }
+        }
     }
 
     public function scan()

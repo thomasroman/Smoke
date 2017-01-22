@@ -14,7 +14,7 @@ class GoogleMobileFriendlyRule implements Rule
     private function getEndpoint(Uri $uri)
     {
         // return str_replace('#url#', urlencode('https://webhook.koalamon.com'), self::ENDPOINT);
-        return str_replace('#url#', urlencode((string)$uri), self::ENDPOINT);
+        return str_replace('#url#', urlencode((string) $uri), self::ENDPOINT);
     }
 
     public function validate(Response $response)
@@ -32,7 +32,7 @@ class GoogleMobileFriendlyRule implements Rule
                 )
             )));
 
-        if (property_exists($result, "error")) {
+        if (property_exists($result, 'error')) {
             throw new ValidationFailedException('Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
         }
 

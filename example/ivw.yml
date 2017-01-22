@@ -40,17 +40,6 @@ reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
 
-  KoalamonReporter:
-     class: whm\Smoke\Extensions\SmokeReporter\Reporter\KoalamonReporter
-     parameters:
-       systemUseRetriever: false
-       identifier: ${IDENTIFIER}
-       system: ${SYSTEM}
-       apiKey: BED9198D-48FA-453E-BD57-D42103E41542
-       server: http://lean.xcel.io/webhook/
-       tool: SmokeBasic
-       collect: true
-
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
 
@@ -83,23 +72,36 @@ rules:
    class: whm\Smoke\Rules\Html\RegExExistsRule
    parameters:
      regExs:
-       - "//script.ioam.de/iam.js"
+       1:
+         isRegEx: false
+         pattern: "//script.ioam.de/iam.js"
 
   _IvwCall:
    runLevel: 1
    class: whm\Smoke\Rules\Html\RegExExistsRule
    parameters:
      regExs:
-       - "iom.c\(iam_data(,1)?\);"
-       - 'var iam_data = {'
-       # - '"st":"wuweib",'
-       - '"cp":"[A-Za-z0-9\-\_]*",'
-       - '"sv":"[A-Za-z0-9\-\_]*"'
+       2:
+         isRegEx: false
+         pattern: "var iam_data = {"
+       3:
+         isRegEx: true
+         pattern: '"cp":"[A-Za-z0-9\-\_]*",'
+       4:
+         isRegEx: true
+         pattern: '"sv":"[A-Za-z0-9\-\_]*"'
+       5:
+         isRegEx: false
+         pattern: "iom.c(iam_data);"
 
-  _IvwCNotall:
-   runLevel: 1
-   class: whm\Smoke\Rules\Html\RegExNotExistsRule
-   parameters:
-     regExs:
-       - '"var iam_data = {'
-       - '""st""'
+  #_IvwCNotall:
+  # runLevel: 1
+  # class: whm\Smoke\Rules\Html\RegExNotExistsRule
+  # parameters:
+  #   regExs:
+  #     1:
+  #       isRegEx: false
+  #       pattern: '"var iam_data = {'
+  #     2:
+  #       isRegEx: false
+  #       pattern: '""st""'

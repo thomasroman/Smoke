@@ -2,6 +2,8 @@
 
 namespace whm\Smoke\Rules\Seo;
 
+use Ivory\HttpAdapter\HttpAdapterInterface;
+use whm\Smoke\Http\ClientAware;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -9,8 +11,13 @@ use whm\Smoke\Rules\ValidationFailedException;
 /**
  * This rule checks if robots.txt has no entry "Disallow:/".
  */
-class RobotsDisallowAllRule implements Rule
+class RobotsDisallowAllRule implements Rule, ClientAware
 {
+    /**
+     * @var HttpAdapterInterface
+     */
+    private $client;
+
     public function validate(Response $response)
     {
         $url = $response->getUri()->getScheme() . '://' . $response->getUri()->getHost();
@@ -23,19 +30,37 @@ class RobotsDisallowAllRule implements Rule
             return;
         }
 
-        $headers = @get_headers($filename);
-
-        if (strpos($headers[0], '200') !== false) {
-            $content = file_get_contents($filename);
-            $normalizedContent = strtolower(str_replace(' ', '', $content));
-
-            if (strpos($normalizedContent, 'disallow:/' . PHP_EOL) !== false) {
-                throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
-            }
-
-            if (strpos($normalizedContent, 'disallow:/') === strlen($normalizedContent) - 10) {
-                throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
-            }
+        try {
+            $response = $this->client->get($filename);
+        } catch (\Exception $e) {
+            return;
         }
+
+        $content = (string) $response->getBody();
+
+        $normalizedContent = $this->normalizeContent($content);
+
+        if (strpos($normalizedContent, 'user-agent:* disallow:/' . PHP_EOL) !== false) {
+            throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
+        }
+
+        if (strpos($normalizedContent, 'user-agent:* disallow:/') === strlen($normalizedContent) - 23) {
+            throw new ValidationFailedException('The robots.txt contains disallow all (Disallow: /)');
+        }
+    }
+
+    private function normalizeContent($content)
+    {
+        $normalizedContent = strtolower($content);
+        $normalizedContent = str_replace(' ', '', $normalizedContent);
+
+        $normalizedContent = trim(preg_replace('/\s+/', ' ', $normalizedContent));
+
+        return $normalizedContent;
+    }
+
+    public function setClient(HttpAdapterInterface $client)
+    {
+        $this->client = $client;
     }
 }

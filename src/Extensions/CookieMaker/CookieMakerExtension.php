@@ -7,7 +7,7 @@ use whm\Smoke\Scanner\SessionContainer;
 
 class CookieMakerExtension
 {
-    private $executable = 'CookieMaker.phar';
+    private $executable = 'CookieMaker';
 
     private $sessionContainer;
 
