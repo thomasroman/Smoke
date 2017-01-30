@@ -8,6 +8,7 @@ class CheckResult
 {
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
+    const STATUS_NONE = 'none';
 
     private $status;
     private $value;

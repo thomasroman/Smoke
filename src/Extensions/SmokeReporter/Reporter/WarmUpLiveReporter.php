@@ -6,6 +6,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class WarmUpLiveReporter implements Reporter
 {
+    /**
+     * @var OutputInterface
+     */
     private $output;
     private $urlCount = 0;
 
@@ -16,9 +19,12 @@ class WarmUpLiveReporter implements Reporter
 
     public function processResults($results)
     {
-        ++$this->urlCount;
-        $this->output->writeln('   ' . array_pop($result)->getUrl());
-        $this->output->writeln('');
+        if (count($results) > 0) {
+            ++$this->urlCount;
+            $firstResult = array_pop($results);
+            $this->output->writeln('   ' . (string)$firstResult->getResponse()->getUri());
+            $this->output->writeln('');
+        }
     }
 
     public function finish()

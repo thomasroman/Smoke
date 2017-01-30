@@ -63,6 +63,12 @@ class Scanner
 
             $results = $this->checkResponse($response);
 
+            if(count($results) == 0) {
+                $checkResult = new CheckResult(CheckResult::STATUS_NONE, '');
+                $checkResult->setResponse($response);
+                $results = [$checkResult];
+            }
+
             $this->eventDispatcher->simpleNotify('Scanner.Scan.Validate', array('results' => $results, 'response' => $response));
         }
 
