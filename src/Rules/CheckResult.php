@@ -2,7 +2,9 @@
 
 namespace whm\Smoke\Rules;
 
-class Result
+use whm\Smoke\Http\Response;
+
+class CheckResult
 {
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
@@ -11,6 +13,12 @@ class Result
     private $value;
     private $message;
     private $attributes = array();
+    private $ruleName;
+
+    /**
+     * @var Response
+     */
+    private $response;
 
     /**
      * Result constructor.
@@ -64,5 +72,37 @@ class Result
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRuleName()
+    {
+        return $this->ruleName;
+    }
+
+    /**
+     * @param mixed $ruleName
+     */
+    public function setRuleName($ruleName)
+    {
+        $this->ruleName = $ruleName;
     }
 }

@@ -94,7 +94,7 @@ class Retriever implements SmokeRetriever
             $responses = $this->httpClient->sendRequests(array($request));
         } catch (MultiHttpAdapterException $e) {
             $exceptions = $e->getExceptions();
-            /** @var \Exception[] $exceptions */
+            /* @var \Exception[] $exceptions */
             $errorMessages = '';
             foreach ($exceptions as $exception) {
                 // @fixme this must be part of the http client

@@ -3,8 +3,8 @@
 namespace whm\Smoke\Rules\Http;
 
 use whm\Smoke\Http\Response;
+use whm\Smoke\Rules\CheckResult;
 use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rule can validate if a http request takes longer than a given max duration.
@@ -25,7 +25,15 @@ class DurationRule implements Rule
     public function validate(Response $response)
     {
         if ($response->getDuration() > $this->maxDuration) {
-            throw new ValidationFailedException('The http request took ' . $response->getDuration() . ' milliseconds (limit was ' . $this->maxDuration . 'ms). ');
+            return new CheckResult(
+                CheckResult::STATUS_FAILURE,
+                'The http request took ' . (int) $response->getDuration() . ' milliseconds (limit was ' . $this->maxDuration . 'ms).',
+                (int) $response->getDuration());
         }
+
+        return new CheckResult(
+            CheckResult::STATUS_SUCCESS,
+            'The http request took ' . (int) $response->getDuration() . ' milliseconds).',
+            (int) $response->getDuration());
     }
 }
