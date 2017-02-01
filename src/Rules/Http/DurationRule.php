@@ -33,7 +33,7 @@ class DurationRule implements Rule
 
         return new CheckResult(
             CheckResult::STATUS_SUCCESS,
-            'The http request took ' . (int) $response->getDuration() . ' milliseconds).',
+            'The http request took ' . (int) $response->getDuration() . ' milliseconds.',
             (int) $response->getDuration());
     }
 }

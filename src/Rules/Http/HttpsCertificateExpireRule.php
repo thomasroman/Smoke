@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Rules\Http;
 
+use whm\Smoke\Rules\CheckResult;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
@@ -26,10 +27,12 @@ class HttpsCertificateExpireRule extends HttpsRule
 
         if ($certInfo['validFrom_time_t'] > time() || $certInfo['validTo_time_t'] < time()) {
             $errorMessage = 'Certificate is expired. [' . $validFrom . ' - ' . $validTo . ']';
-            throw new ValidationFailedException($errorMessage);
+            return new CheckResult(CheckResult::STATUS_FAILURE, $errorMessage);
         } elseif ($certInfo['validTo_time_t'] < strtotime('+' . $this->expireWarningTime . 'days')) {
             $errorMessage = 'Certificate warning, expires in less than ' . $this->expireWarningTime . ' days. Certificate expires at: ' . $validTo;
-            throw new ValidationFailedException($errorMessage);
+            return new CheckResult(CheckResult::STATUS_FAILURE, $errorMessage);
         }
+
+        return new CheckResult(CheckResult::STATUS_SUCCESS, 'The certificate does not expire within the next ' . $this->expireWarningTime . ' days. Expire date: ' . $validTo . '.');
     }
 }
