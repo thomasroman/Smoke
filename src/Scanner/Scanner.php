@@ -96,6 +96,7 @@ class Scanner
             } catch (ValidationFailedException $e) {
                 $result = new CheckResult(CheckResult::STATUS_FAILURE, $e->getMessage());
             }
+
             $result->setResponse($response);
             $result->setRuleName($name);
             $results[$name] = $result;

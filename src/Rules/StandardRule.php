@@ -22,7 +22,7 @@ abstract class StandardRule implements Rule
                 return;
             }
         }
-        $this->doValidation($response);
+        return $this->doValidation($response);
     }
 
     abstract protected function doValidation(Response $response);

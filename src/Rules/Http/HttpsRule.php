@@ -11,7 +11,7 @@ abstract class HttpsRule implements Rule
     {
         if ('https' === $response->getUri()->getScheme()) {
             $certInfo = $this->getCertifacateInformation($response->getUri()->getHost());
-            $this->doValidate($certInfo);
+            return $this->doValidate($certInfo);
         }
     }
 
