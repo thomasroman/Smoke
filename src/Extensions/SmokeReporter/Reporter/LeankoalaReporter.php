@@ -132,7 +132,7 @@ class LeankoalaReporter implements Reporter
                     if ($this->addComingFrom && $this->retriever->getComingFrom($result->getResponse()->getUri())) {
                         $comingFrom = ', coming from: ' . $this->retriever->getComingFrom($result->getResponse()->getUri());
                     }
-                    $message .= '<li>' . $result->getMessage() . ' (url: ' . (string) $result->getResponse()->getUri() . $comingFrom . ')</li>';
+                    $message .= '<li>' . $result->getMessage() . ' (url: ' . (string)$result->getResponse()->getUri() . $comingFrom . ')</li>';
                     ++$failureCount;
                 }
             }
@@ -162,7 +162,7 @@ class LeankoalaReporter implements Reporter
                 $this->send(
                     $identifier,
                     $system,
-                    $result->getMessage() . ' (url: ' . (string) $result->getResponse()->getUri() . ')',
+                    $result->getMessage() . ' (url: ' . (string)$result->getResponse()->getUri() . ')',
                     $result->getStatus(),
                     $result->getValue(),
                     $tool,
@@ -184,7 +184,9 @@ class LeankoalaReporter implements Reporter
 
     private function send($identifier, $system, $message, $status, $value, $tool, $component)
     {
-        $event = new Event($identifier, $system, $status, $tool, $message, $value, '', $component);
-        $this->reporter->sendEvent($event);
+        if ($status != CheckResult::STATUS_NONE) {
+            $event = new Event($identifier, $system, $status, $tool, $message, $value, '', $component);
+            $this->reporter->sendEvent($event);
+        }
     }
 }
