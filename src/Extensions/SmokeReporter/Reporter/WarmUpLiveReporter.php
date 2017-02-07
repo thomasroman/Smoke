@@ -22,7 +22,7 @@ class WarmUpLiveReporter implements Reporter
         if (count($results) > 0) {
             ++$this->urlCount;
             $firstResult = array_pop($results);
-            $this->output->writeln('   ' . (string)$firstResult->getResponse()->getUri());
+            $this->output->writeln('   ' . (string) $firstResult->getResponse()->getUri());
             $this->output->writeln('');
         }
     }

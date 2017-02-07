@@ -63,7 +63,7 @@ class Scanner
 
             $results = $this->checkResponse($response);
 
-            if(count($results) == 0) {
+            if (count($results) === 0) {
                 $checkResult = new CheckResult(CheckResult::STATUS_NONE, '');
                 $checkResult->setResponse($response);
                 $results = [$checkResult];

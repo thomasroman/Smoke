@@ -2,8 +2,6 @@
 
 namespace whm\Smoke\Rules\Json\JsonSchema;
 
-use JsonSchema\Constraints\Constraint;
-use JsonSchema\Constraints\Factory;
 use JsonSchema\Validator;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
@@ -42,10 +40,9 @@ class JsonSchemaRule extends StandardRule
             $messageParts = array();
 
             foreach ($this->jsonSchemaFiles as $jsonSchemaFile) {
-                $factory = new Factory(null, null, Constraint::CHECK_MODE_TYPE_CAST | Constraint::CHECK_MODE_COERCE);
-                $validator = new Validator($factory);
+                $validator = new Validator();
 
-                $jsonSchemaObject = (object) json_decode(file_get_contents($jsonSchemaFile['jsonschemafileurl']));
+                $jsonSchemaObject = (object) json_decode(file_get_contents($jsonSchemaFile['jsonfileurl']));
 
                 $validator->check($data, $jsonSchemaObject);
 
@@ -55,7 +52,7 @@ class JsonSchemaRule extends StandardRule
                     foreach ($validator->getErrors() as $error) {
                         $errorMessage = $errorMessage . sprintf("[%s] %s\n", $error['property'], $error['message']);
                     }
-                    $messageParts[] = $jsonSchemaFile['jsonschemafilename'] . ' - ' . $jsonSchemaFile['jsonschemafileurl'] . '(last error: ' . $errorMessage . ').';
+                    $messageParts[] = $jsonSchemaFile['jsonfilename'] . ' - ' . $jsonSchemaFile['jsonfileurl'] . '(last error: ' . $errorMessage . ').';
                 }
             }
 
