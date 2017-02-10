@@ -17,7 +17,7 @@ extensions:
     parameters:
       exclusive:
         _XPathCheck:
-          - http://ultrahocherhitzt.net
+          - http://www.ultrahocherhitzt.net
 
 reporter:
   _CliReporter:
@@ -26,7 +26,7 @@ reporter:
 responseRetriever:
   class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
   parameters:
-    startPage: "http://ultrahocherhitzt.net"
+    startPage: "http://www.ultrahocherhitzt.net"
 
     pageContainer:
       class: whm\Crawler\PageContainer\PatternAwareContainer
@@ -46,5 +46,11 @@ rules:
     class: whm\Smoke\Rules\Html\XPathExistsRule
     parameters:
       xPaths:
-        - "/html/head/title"
-        - "/html/bodyx"
+        -
+          pattern: "/html/head/title"
+          relation: "equals"
+          value: 1
+        -
+          pattern: "/html/body"
+          relation: "equals"
+          value: 1
