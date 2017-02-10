@@ -71,3 +71,15 @@ rules:
    class: whm\Smoke\Rules\Http\HttpsCertificateExpireRule
    parameters:
      expireWarningTime: 7
+   _XPathCheck:
+    class: whm\Smoke\Rules\Html\XPathExistsRule
+    parameters:
+      xPaths:
+        -
+          pattern: "/html/head/title"
+          relation: "equals"
+          value: 1
+        -
+          pattern: "/html/body"
+          relation: "equals"
+          value: 1
