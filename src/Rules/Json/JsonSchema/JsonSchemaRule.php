@@ -36,7 +36,7 @@ class JsonSchemaRule extends StandardRule
         if ($data === null) {
             throw new ValidationFailedException("The given JSON data can not be validated (last error: '" . $this->json_errors[json_last_error()] . "').");
         } else {
-            $error = false;
+            $errorStatus = false;
             $messageParts = array();
 
             foreach ($this->jsonSchemaFiles as $jsonSchemaFile) {
@@ -47,7 +47,7 @@ class JsonSchemaRule extends StandardRule
                 $validator->check($data, $jsonSchemaObject);
 
                 if (!$validator->isValid()) {
-                    $error = true;
+                    $errorStatus = true;
                     $errorMessage = '';
                     foreach ($validator->getErrors() as $error) {
                         $errorMessage = $errorMessage . sprintf("[%s] %s\n", $error['property'], $error['message']);
@@ -56,7 +56,7 @@ class JsonSchemaRule extends StandardRule
                 }
             }
 
-            if ($error === true) {
+            if ($errorStatus === true) {
                 $message = 'JSON file (' . (string) $response->getUri() . ')  does not validate against the following JSON Schema files: ' . implode(', ', $messageParts);
                 throw new ValidationFailedException($message);
             }

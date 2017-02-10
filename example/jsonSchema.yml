@@ -57,8 +57,5 @@ rules:
     parameters:
       jsonSchemaFiles:
         -
-          jsonschemafilename: "Hot7 JSON Schema Full"
-          jsonschemafileurl: "http://www.chevez.de/upload/hot7JsonSchemaFull.json"
-        -
-          jsonschemafilename: "Hot7 JSON Schema Short"
-          jsonschemafileurl: "http://www.chevez.de/upload/hot7JsonSchemaShortform.json"
+          jsonfilename: "Hot7 JSON Schema Full"
+          jsonfileurl: "http://www.chevez.de/upload/hot7JsonSchemaFull.json"
