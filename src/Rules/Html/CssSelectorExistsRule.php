@@ -24,7 +24,7 @@ class CssSelectorExistsRule extends StandardRule
     public function doValidation(Response $response)
     {
         $domDocument = new \DOMDocument();
-        @$domDocument->loadHTML((string) $response->getBody());
+        @$domDocument->loadHTML((string)$response->getBody());
 
         $domXPath = new \DOMXPath($domDocument);
 
@@ -33,7 +33,12 @@ class CssSelectorExistsRule extends StandardRule
 
         foreach ($this->cssSelectors as $selector) {
             $converter = new CssSelectorConverter();
-            $selectorAsXPath = $converter->toXPath($selector['pattern']);
+
+            try {
+                $selectorAsXPath = $converter->toXPath($selector['pattern']);
+            } catch (\Exception $e) {
+                throw new ValidationFailedException('Invalid css selector (' . $selector['pattern'] . ').');
+            }
 
             $count = $domXPath->query($selectorAsXPath)->length;
 
