@@ -95,6 +95,8 @@ class Scanner
                 }
             } catch (ValidationFailedException $e) {
                 $result = new CheckResult(CheckResult::STATUS_FAILURE, $e->getMessage());
+            } catch (\Exception $e) {
+                $result = new CheckResult(CheckResult::STATUS_FAILURE, 'An error occured: ' . $e->getMessage());
             }
 
             $result->setResponse($response);
