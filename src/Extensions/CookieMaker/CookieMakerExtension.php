@@ -11,7 +11,7 @@ class CookieMakerExtension
 
     private $sessionContainer;
 
-    public function init(array $sessions, $executable = null)
+    public function init(array $sessions, $executable = null, $cacheDir = '/tmp/cookieMaker', $webdriverHost = 'webdriver')
     {
         if ($executable) {
             $this->executable = $executable;
@@ -20,7 +20,7 @@ class CookieMakerExtension
         $this->sessionContainer = new SessionContainer();
 
         foreach ($sessions as $sessionName => $session) {
-            $command = $this->executable . " '" . json_encode($session) . "'";
+            $command = $this->executable . " '" . json_encode($session) . "' '" . $cacheDir . "' '" . $webdriverHost . "'";
 
             exec($command, $output, $return);
 
