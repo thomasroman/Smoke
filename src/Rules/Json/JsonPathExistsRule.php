@@ -2,7 +2,6 @@
 
 namespace whm\Smoke\Rules\Json;
 
-use Doctrine\Tests\Common\Annotations\False;
 use Peekmo\JsonPath\JsonStore;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
