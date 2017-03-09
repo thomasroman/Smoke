@@ -3,6 +3,8 @@
 namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 
 use Koalamon\Client\Reporter\Event;
+use Koalamon\Client\Reporter\Event\Attribute;
+use Koalamon\Client\Reporter\Event\Processor\MongoDBProcessor;
 use Koalamon\Client\Reporter\Reporter as KoalaReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
@@ -21,6 +23,9 @@ class LeankoalaReporter implements Reporter
      */
     private $results = [];
 
+    /**
+     * @var Configuration
+     */
     private $config;
     private $system;
     private $collect;
@@ -54,7 +59,10 @@ class LeankoalaReporter implements Reporter
     public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $server = 'https://webhook.koalamon.com', $system = '', $identifier = '', $tool = '', $collect = true, $systemUseRetriever = false, $groupBy = false, $addComingFrom = true)
     {
         $httpClient = new \GuzzleHttp\Client();
+
         $this->reporter = new KoalaReporter('', $apiKey, $httpClient, $server);
+
+        $this->reporter->setEventProcessor(MongoDBProcessor::createByEnvironmentVars('leankoala'));
 
         $this->config = $_configuration;
         $this->systemUseRetriever = $systemUseRetriever;
@@ -132,7 +140,7 @@ class LeankoalaReporter implements Reporter
                     if ($this->addComingFrom && $this->retriever->getComingFrom($result->getResponse()->getUri())) {
                         $comingFrom = ', coming from: ' . $this->retriever->getComingFrom($result->getResponse()->getUri());
                     }
-                    $message .= '<li>' . $result->getMessage() . ' (url: ' . (string) $result->getResponse()->getUri() . $comingFrom . ')</li>';
+                    $message .= '<li>' . $result->getMessage() . ' (url: ' . (string)$result->getResponse()->getUri() . $comingFrom . ')</li>';
                     ++$failureCount;
                 }
             }
@@ -162,7 +170,7 @@ class LeankoalaReporter implements Reporter
                 $this->send(
                     $identifier,
                     $system,
-                    $result->getMessage() . ' (url: ' . (string) $result->getResponse()->getUri() . ')',
+                    $result->getMessage() . ' (url: ' . (string)$result->getResponse()->getUri() . ')',
                     $result->getStatus(),
                     $result->getValue(),
                     $tool,
@@ -186,6 +194,7 @@ class LeankoalaReporter implements Reporter
     {
         if ($status !== CheckResult::STATUS_NONE) {
             $event = new Event($identifier, $system, $status, $tool, $message, $value, '', $component);
+            $event->addAttribute(new Attribute('_config', json_encode($this->config->getConfigArray()), true));
             $this->reporter->sendEvent($event);
         }
     }
