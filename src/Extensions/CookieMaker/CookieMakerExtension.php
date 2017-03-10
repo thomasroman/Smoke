@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Extensions\CookieMaker;
 
+use Koalamon\CookieMakerHelper\CookieMaker;
 use whm\Smoke\Http\Session;
 use whm\Smoke\Scanner\SessionContainer;
 
@@ -11,7 +12,7 @@ class CookieMakerExtension
 
     private $sessionContainer;
 
-    public function init(array $sessions, $executable = null, $cacheDir = '/tmp/cookieMaker', $webdriverHost = 'webdriver')
+    public function init(array $sessions, $executable = null)
     {
         if ($executable) {
             $this->executable = $executable;
@@ -20,11 +21,8 @@ class CookieMakerExtension
         $this->sessionContainer = new SessionContainer();
 
         foreach ($sessions as $sessionName => $session) {
-            $command = $this->executable . " '" . json_encode($session) . "' '" . $cacheDir . "' '" . $webdriverHost . "'";
-
-            exec($command, $output, $return);
-
-            $cookies = json_decode($output[0]);
+            $cookieMaker = new CookieMaker($this->executable);
+            $cookies = $cookieMaker->getCookies($session);
 
             $session = new Session();
 

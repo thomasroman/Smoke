@@ -1,7 +1,6 @@
 {
   "name": "phmlabs/smoke",
   "description": "Smoke can be used to check if a web platform is basically working.",
-
   "require": {
     "php": ">= 5.4.0",
     "symfony/yaml": "~3.1",
@@ -13,6 +12,7 @@
     "phmlabs/crawler": "~1.2.0",
     "phmlabs/xunitreport": ">= 1.0.2",
     "koalamon/koalamonclient": "dev-master",
+    "koalamon/cookiemakerhelper": "dev-master",
     "peekmo/jsonpath": "dev-master",
     "justinrainbow/json-schema": "~4.0"
   },

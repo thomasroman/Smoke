@@ -16,3 +16,5 @@ example/stern.yml
 test-reports
 
 phpunit.phar
+
+CookieMaker
