@@ -26,7 +26,8 @@ class CookieMakerExtension
                 $cookieMaker = new CookieMaker($this->executable);
                 $cookies = $cookieMaker->getCookies($session);
             } catch (\Exception $e) {
-                die('FALLBACK');
+                echo 'FALLBACK';
+                exit(1);
             }
 
             $session = new Session();
