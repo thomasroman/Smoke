@@ -21,8 +21,13 @@ class CookieMakerExtension
         $this->sessionContainer = new SessionContainer();
 
         foreach ($sessions as $sessionName => $session) {
-            $cookieMaker = new CookieMaker($this->executable);
-            $cookies = $cookieMaker->getCookies($session);
+
+            try {
+                $cookieMaker = new CookieMaker($this->executable);
+                $cookies = $cookieMaker->getCookies($session);
+            } catch (\Exception $e) {
+                die('FALLBACK');
+            }
 
             $session = new Session();
 
