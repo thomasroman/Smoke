@@ -150,9 +150,7 @@ class LeankoalaReporter implements Reporter
                 $status = Event::STATUS_FAILURE;
                 $message .= '</ul>';
                 $firstResult = array_pop($results);
-                if ($firstResult) {
-                    $attributes[] = new Attribute('html-content', (string)$firstResult->getResponse()->getBody(), true);
-                }
+                $attributes[] = new Attribute('html-content', (string)$firstResult->getResponse()->getBody(), true);
             } else {
                 $message = 'All checks for system "#system_name#" succeeded [SmokeBasic:' . $toolName . '].';
             }
@@ -174,6 +172,11 @@ class LeankoalaReporter implements Reporter
                 $component = $this->getComponent($result->getRuleName());
                 $system = $this->leankoalaExtension->getSystem($component);
 
+                $attributes = array();
+                if ($result->getStatus() == CheckResult::STATUS_FAILURE) {
+                    $attributes[] = new Attribute('html-content', (string)$result->getResponse()->getBody());
+                }
+
                 $this->send(
                     $identifier,
                     $system,
@@ -181,7 +184,8 @@ class LeankoalaReporter implements Reporter
                     $result->getStatus(),
                     $result->getValue(),
                     $tool,
-                    $component
+                    $component,
+                    $attributes
                 );
             }
         }
