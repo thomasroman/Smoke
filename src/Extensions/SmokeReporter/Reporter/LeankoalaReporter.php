@@ -124,6 +124,8 @@ class LeankoalaReporter implements Reporter
         }
 
         foreach ($checks as $toolName => $results) {
+            $attributes = array();
+
             if (count($results) === 0) {
                 continue;
             }
@@ -147,11 +149,16 @@ class LeankoalaReporter implements Reporter
             if ($failureCount > 0) {
                 $status = Event::STATUS_FAILURE;
                 $message .= '</ul>';
+                $firstResult = array_pop($results);
+                if ($firstResult) {
+                    $attributes[] = new Attribute('html-content', (string)$firstResult->getResponse()->getBody(), true);
+                }
             } else {
                 $message = 'All checks for system "#system_name#" succeeded [SmokeBasic:' . $toolName . '].';
             }
 
-            $this->send($identifier, $this->system, $message, $status, $failureCount, $this->tool, $this->system);
+
+            $this->send($identifier, $this->system, $message, $status, $failureCount, $this->tool, $this->system, $attributes);
         }
     }
 
@@ -190,11 +197,24 @@ class LeankoalaReporter implements Reporter
         return substr($string, 0, strpos($string, '_'));
     }
 
-    private function send($identifier, $system, $message, $status, $value, $tool, $component)
+    /**
+     * @param $identifier
+     * @param $system
+     * @param $message
+     * @param $status
+     * @param $value
+     * @param $tool
+     * @param $component
+     * @param Attribute[] $attributes
+     */
+    private function send($identifier, $system, $message, $status, $value, $tool, $component, $attributes = [])
     {
         if ($status !== CheckResult::STATUS_NONE) {
             $event = new Event($identifier, $system, $status, $tool, $message, $value, '', $component);
             $event->addAttribute(new Attribute('_config', json_encode($this->config->getConfigArray()), true));
+            foreach ($attributes as $attribute) {
+                $event->addAttribute($attribute);
+            }
             $this->reporter->sendEvent($event);
         }
     }
