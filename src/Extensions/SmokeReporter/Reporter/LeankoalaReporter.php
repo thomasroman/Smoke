@@ -174,7 +174,8 @@ class LeankoalaReporter implements Reporter
 
                 $attributes = array();
                 if ($result->getStatus() == CheckResult::STATUS_FAILURE) {
-                    $attributes[] = new Attribute('html-content', (string)$result->getResponse()->getBody(), true);
+                    $attributes[] = new Attribute('html content', (string)$result->getResponse()->getBody(), true);
+                    $attributes[] = new Attribute('http status code', $result->getResponse()->getStatusCode());
                 }
 
                 $this->send(
