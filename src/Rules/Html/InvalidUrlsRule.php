@@ -24,9 +24,13 @@ class InvalidUrlsRule extends StandardRule
 
         $invalidUrls = array();
 
+
         foreach ($urls as $url) {
-            if (!filter_var(trim((string) $url), FILTER_VALIDATE_URL)) {
-                $invalidUrls[] = (string) $url;
+
+            $idnUrl = $url->getScheme() . '://' . idn_to_ascii($url->getHost()) .  $url->getPath();
+
+            if (!filter_var($idnUrl, FILTER_VALIDATE_URL)) {
+                $invalidUrls[] = (string)$url;
             }
         }
 
