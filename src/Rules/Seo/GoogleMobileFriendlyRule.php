@@ -34,9 +34,9 @@ class GoogleMobileFriendlyRule implements Rule
             )));
 
         if (property_exists($result, 'error')) {
-            $result = new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
-            $result->addAttribute(new Attribute('Google response', json_encode($result), true));
-            return $result;
+            $checkResult = new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
+            $checkResult->addAttribute(new Attribute('Google response', json_encode($result), true));
+            return $checkResult;
         }
 
         $passResult = $result->ruleGroups->USABILITY;
