@@ -180,7 +180,7 @@ class LeankoalaReporter implements Reporter
 
                 $checkResultAttributes = $result->getAttributes();
                 foreach ($checkResultAttributes as $checkResultAttribute) {
-                    $attributes[] = $checkResultAttribute;
+                    $attributes[] = new Attribute($checkResultAttribute->getKey(), $checkResultAttribute->getValue(), $checkResultAttribute->isIsStorable());
                 }
 
                 $this->send(
