@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Rules\Seo;
 
+use Doctrine\Common\Annotations\Annotation\Attribute;
 use whm\Html\Uri;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\CheckResult;
@@ -15,7 +16,7 @@ class GoogleMobileFriendlyRule implements Rule
     private function getEndpoint(Uri $uri)
     {
         // return str_replace('#url#', urlencode('https://webhook.koalamon.com'), self::ENDPOINT);
-        return str_replace('#url#', urlencode((string) $uri), self::ENDPOINT);
+        return str_replace('#url#', urlencode((string)$uri), self::ENDPOINT);
     }
 
     public function validate(Response $response)
@@ -34,15 +35,17 @@ class GoogleMobileFriendlyRule implements Rule
             )));
 
         if (property_exists($result, 'error')) {
-            throw new ValidationFailedException('Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
+            $result = new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
+            $result->setAttribute(new Attribute('Google response', json_encode($result), true));
+            return $result;
         }
 
         $passResult = $result->ruleGroups->USABILITY;
 
         if (!$passResult->pass) {
-            return new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Score ' . $passResult->score . '/100.', (int) $passResult->score);
+            return new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Score ' . $passResult->score . '/100.', (int)$passResult->score);
         }
 
-        return new CheckResult(CheckResult::STATUS_SUCCESS, 'Google mobile friendly test passed. Score ' . $passResult->score . '/100.', (int) $passResult->score);
+        return new CheckResult(CheckResult::STATUS_SUCCESS, 'Google mobile friendly test passed. Score ' . $passResult->score . '/100.', (int)$passResult->score);
     }
 }

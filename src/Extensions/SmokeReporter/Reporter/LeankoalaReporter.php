@@ -178,6 +178,11 @@ class LeankoalaReporter implements Reporter
                     $attributes[] = new Attribute('http status code', $result->getResponse()->getStatusCode());
                 }
 
+                $checkResultAttributes = $result->getAttributes();
+                foreach ($checkResultAttributes as $checkResultAttribute) {
+                    $attributes[] = $checkResultAttribute;
+                }
+
                 $this->send(
                     $identifier,
                     $system,
