@@ -2,12 +2,11 @@
 
 namespace whm\Smoke\Rules\Seo;
 
-use Doctrine\Common\Annotations\Annotation\Attribute;
 use whm\Html\Uri;
 use whm\Smoke\Http\Response;
+use whm\Smoke\Rules\Attribute;
 use whm\Smoke\Rules\CheckResult;
 use whm\Smoke\Rules\Rule;
-use whm\Smoke\Rules\ValidationFailedException;
 
 class GoogleMobileFriendlyRule implements Rule
 {
@@ -36,7 +35,7 @@ class GoogleMobileFriendlyRule implements Rule
 
         if (property_exists($result, 'error')) {
             $result = new CheckResult(CheckResult::STATUS_FAILURE, 'Google mobile friendly test was not passed. Error "' . $result->error->message . '"');
-            $result->setAttribute(new Attribute('Google response', json_encode($result), true));
+            $result->addAttribute(new Attribute('Google response', json_encode($result), true));
             return $result;
         }
 
