@@ -36,7 +36,7 @@ class CheckResult
     }
 
     /**
-     * @return array
+     * @return Attribute[]
      */
     public function getAttributes()
     {
@@ -46,9 +46,9 @@ class CheckResult
     /**
      * @param array $attributes
      */
-    public function setAttributes($attributes)
+    public function addAttribute(Attribute $attribute)
     {
-        $this->attributes = $attributes;
+        $this->attributes[] = $attribute;
     }
 
     /**
