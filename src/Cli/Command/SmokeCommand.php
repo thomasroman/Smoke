@@ -2,10 +2,13 @@
 
 namespace whm\Smoke\Cli\Command;
 
+use Cache\Adapter\Filesystem\FilesystemCachePool;
 use Ivory\HttpAdapter\CurlHttpAdapter;
 use Ivory\HttpAdapter\Event\Subscriber\RedirectSubscriber;
 use Ivory\HttpAdapter\Event\Subscriber\RetrySubscriber;
 use Ivory\HttpAdapter\EventDispatcherHttpAdapter;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use phmLabs\Components\Annovent\Dispatcher;
 use PhmLabs\Components\Init\Init;
 use Symfony\Component\Console\Command\Command;
@@ -13,14 +16,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use whm\Crawler\Http\RequestFactory;
+use whm\Smoke\Config\Configuration;
+use whm\Smoke\Extensions\SmokeHttpClient\CacheAware;
+use whm\Smoke\Http\CacheDecorator;
 use whm\Smoke\Http\MessageFactory;
 use whm\Smoke\Scanner\Scanner;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
 class SmokeCommand extends Command
 {
+    /**
+     * @var OutputInterface
+     */
     protected $output;
     protected $eventDispatcher;
+
+    /**
+     * @var Configuration
+     */
     protected $config;
 
     protected function init(InputInterface $input, OutputInterface $output, $url = null)
@@ -56,7 +69,6 @@ class SmokeCommand extends Command
      * This function return a http client.
      *
      * @throws \Ivory\HttpAdapter\HttpAdapterException
-     *
      * @return \Ivory\HttpAdapter\HttpAdapterInterface
      */
     protected function getHttpClient()
@@ -65,8 +77,6 @@ class SmokeCommand extends Command
         $eventDispatcher->addSubscriber(new RedirectSubscriber());
         $eventDispatcher->addSubscriber(new RetrySubscriber());
 
-        // $guessedAdapter = HttpAdapterFactory::guess();
-        /** @var \Ivory\HttpAdapter\Guzzle6HttpAdapter $guessedAdapter */
         $guessedAdapter = new CurlHttpAdapter();
 
         RequestFactory::addStandardHeader('Accept-Encoding', 'gzip');
@@ -74,10 +84,16 @@ class SmokeCommand extends Command
 
         $adapter = new EventDispatcherHttpAdapter($guessedAdapter, $eventDispatcher);
         $adapter->getConfiguration()->setTimeout(30);
-        //$adapter->getConfiguration()->setUserAgent('versioneye-php');
         $adapter->getConfiguration()->setMessageFactory(new MessageFactory());
 
-        return $adapter;
+        // add cache handling to adapter
+        // @todo create an extension
+        $filesystemAdapter = new Local('/tmp/cached/');
+        $filesystem = new Filesystem($filesystemAdapter);
+        $cachePoolInterface = new FilesystemCachePool($filesystem);
+        $cachedAdapter = new CacheDecorator($adapter, $cachePoolInterface);
+
+        return $cachedAdapter;
     }
 
     protected function scan()
@@ -105,7 +121,17 @@ class SmokeCommand extends Command
 
         if ($configFile) {
             if (strpos($configFile, 'http://') === 0 || strpos($configFile, 'https://') === 0) {
-                $fileContent = (string) $this->getHttpClient()->get($configFile)->getBody();
+                $httpClient = $this->getHttpClient();
+
+                if ($httpClient instanceof CacheAware) {
+                    $httpClient->disableCache();
+                }
+
+                $fileContent = (string)$httpClient->get($configFile)->getBody();
+
+                if ($httpClient instanceof CacheAware) {
+                    $httpClient->enableCache();
+                }
             } else {
                 if (file_exists($configFile)) {
                     $fileContent = file_get_contents($configFile);

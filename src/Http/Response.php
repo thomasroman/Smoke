@@ -4,8 +4,9 @@ namespace whm\Smoke\Http;
 
 use Ivory\HttpAdapter\Message\Request;
 use whm\Html\Uri;
+use Ivory\HttpAdapter\Message\Response as IvoryResponse;
 
-class Response extends \Ivory\HttpAdapter\Message\Response
+class Response extends IvoryResponse
 {
     private $contents;
 
@@ -65,5 +66,10 @@ class Response extends \Ivory\HttpAdapter\Message\Response
         }
 
         return $this->contents;
+    }
+
+    public function setBody($contents)
+    {
+        $this->contents = $contents;
     }
 }

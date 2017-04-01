@@ -155,7 +155,6 @@ class LeankoalaReporter implements Reporter
                 $message = 'All checks for system "#system_name#" succeeded [SmokeBasic:' . $toolName . '].';
             }
 
-
             $this->send($identifier, $this->system, $message, $status, $failureCount, $this->tool, $this->system, $attributes);
         }
     }
@@ -183,9 +182,15 @@ class LeankoalaReporter implements Reporter
                     $attributes[] = new Attribute($checkResultAttribute->getKey(), $checkResultAttribute->getValue(), $checkResultAttribute->isIsStorable());
                 }
 
+                if ($this->system) {
+                    $currentSystem = $this->system;
+                } else {
+                    $currentSystem = $system;
+                }
+
                 $this->send(
                     $identifier,
-                    $system,
+                    $currentSystem,
                     $result->getMessage() . ' (url: ' . (string)$result->getResponse()->getUri() . ')',
                     $result->getStatus(),
                     $result->getValue(),

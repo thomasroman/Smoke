@@ -9,7 +9,9 @@
 namespace whm\Smoke\Http\Client;
 
 
-class GuzzleClient
+use GuzzleHttp\Client;
+
+class GuzzleClient extends Client
 {
 
 }
