@@ -62,9 +62,9 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
         return $response;
     }
 
-    private function getHash($uri, $headers)
+    private function getHash($uri, $headers, $method = "")
     {
-        return md5(json_encode((string)$uri) . json_encode($headers));
+        return md5(json_encode((string)$uri) . json_encode($headers) . strtolower($method));
     }
 
     private function cacheResponse($key, Response $response)
@@ -73,7 +73,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
 
         $item = new CacheItem($key);
         $item->set($serializedResponse);
-        $item->expiresAfter(new \DateInterval('P5M'));
+        $item->expiresAfter(new \DateInterval('PT5M'));
 
         $this->cacheItemPool->save($item);
     }
@@ -83,7 +83,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
         if ($this->disabled) {
             return $this->client->get($uri, $headers);
         } else {
-            $key = $this->getHash($uri, $headers);
+            $key = $this->getHash($uri, $headers, 'GET');
 
             if ($this->cacheItemPool->hasItem($key)) {
                 $serializedResponse = $this->cacheItemPool->getItem($key)->get();
@@ -99,6 +99,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
 
     public function head($uri, array $headers = array())
     {
+        echo "Cache Decorator: the method head is not implemented yet";
         return $this->client->head($uri, $headers);
     }
 
@@ -135,7 +136,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
 
     public function send($uri, $method, array $headers = array(), $datas = array(), array $files = array())
     {
-        var_dump('send');
+        echo "Cache Decorator: the method send is not implemented yet";
         return $this->client->send($uri, $method, $headers, $datas, $files);
     }
 
@@ -151,7 +152,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
 
     public function sendRequest(RequestInterface $request)
     {
-        var_dump('sendRequest');
+        echo "Cache Decorator: the method sendRequest is not implemented yet";
         return $this->client->sendRequest($request);
     }
 
@@ -167,7 +168,7 @@ class CacheDecorator implements HttpAdapterInterface, CacheAware
             $responses = array();
 
             foreach ($requests as $id => $request) {
-                $key = $this->getHash($request->getUri(), $request->getHeaders());
+                $key = $this->getHash($request->getUri(), $request->getHeaders(), $request->getMethod());
                 if ($this->cacheItemPool->hasItem($key)) {
                     $responses[] = $this->unserializeResponse($this->cacheItemPool->getItem($key)->get());
                     unset($requests[$id]);
