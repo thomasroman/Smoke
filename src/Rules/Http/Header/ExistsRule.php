@@ -29,7 +29,7 @@ class ExistsRule extends StandardRule
 
             $currentValue = $response->getHeader($headerConfig['key'])[0];
 
-            if (!preg_match('^' . $headerConfig['value'] . '^', $currentValue, $matches)) {
+            if (!preg_match('%' . $headerConfig['value'] . '%', $currentValue, $matches)) {
                 throw new ValidationFailedException('Header "' . $headerConfig['key'] . '" does not match "' . $headerConfig['value'] . '". Current value is "' . $currentValue . '"');
             }
         }
