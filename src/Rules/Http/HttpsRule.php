@@ -32,8 +32,9 @@ abstract class HttpsRule implements Rule
         );
 
         $content = stream_context_get_params($request);
-        $certinfo = openssl_x509_parse($content['options']['ssl']['peer_certificate']);
 
-        return $certinfo;
+        $certInfo = openssl_x509_parse($content['options']['ssl']['peer_certificate']);
+
+        return $certInfo;
     }
 }
