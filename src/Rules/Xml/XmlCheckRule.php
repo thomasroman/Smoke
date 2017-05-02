@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Xml;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -13,7 +13,7 @@ class XmlCheckRule extends StandardRule
 {
     protected $contentTypes = array('text/xml', 'application/xml');
 
-    public function doValidation(Response $response)
+    public function doValidation(ResponseInterface $response)
     {
         $domDocument = new \DOMDocument();
         $success = @$domDocument->loadXML((string) $response->getBody());

@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Xml\Rss;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -18,7 +18,7 @@ class ValidRule implements Rule
         return __DIR__ . '/' . self::SCHEMA;
     }
 
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         if ($response->getContentType() !== 'text/xml') {
             return;

@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Extensions\SmokeResponseRetriever;
 
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use phm\HttpWebdriverClient\Http\Client\HttpClient;
 use phmLabs\Components\Annovent\Dispatcher;
 use phmLabs\Components\Annovent\Event\Event;
 use PhmLabs\Components\Init\Init;
@@ -32,7 +32,7 @@ class ResponseRetrieverExtension
     /**
      * @Event("Scanner.Init")
      */
-    public function setRetriever(HttpAdapterInterface $httpClient)
+    public function setRetriever(HttpClient $httpClient)
     {
         $this->retriever->setHttpClient($httpClient);
     }

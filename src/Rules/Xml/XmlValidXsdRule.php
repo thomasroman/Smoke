@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Xml;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -20,7 +20,7 @@ class XmlValidXsdRule extends StandardRule
         $this->xsdFiles = $xsdFiles;
     }
 
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $body = $response->getBody();
 

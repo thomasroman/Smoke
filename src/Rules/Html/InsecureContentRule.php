@@ -9,8 +9,8 @@
 
 namespace whm\Smoke\Rules\Html;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Html\Document;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -19,7 +19,7 @@ use whm\Smoke\Rules\ValidationFailedException;
  */
 class InsecureContentRule implements Rule
 {
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         $request = $response->getRequest();
 
@@ -33,7 +33,7 @@ class InsecureContentRule implements Rule
 
         foreach ($resources as $resource) {
             if ($resource->getScheme() && 'https' !== $resource->getScheme()) {
-                throw new ValidationFailedException('At least one dependency was found on a secure url, that was transfered insecure (' . (string) $resource . ')');
+                throw new ValidationFailedException('At least one dependency was found on a secure url, that was transfered insecure (' . (string)$resource . ')');
             }
         }
     }

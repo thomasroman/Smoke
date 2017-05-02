@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Rules\Http\Header;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -18,7 +19,7 @@ class ExistsRule extends StandardRule
         $this->checkedHeaders = $checkedHeaders;
     }
 
-    public function doValidation(Response $response)
+    public function doValidation(ResponseInterface $response)
     {
         // @todo the test should not fail with the first not found header
 

@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\StandardRule;
 
 /**
@@ -22,7 +22,7 @@ class StringExistsRule extends StandardRule
         $this->string = $string;
     }
 
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $this->assert(strpos($response->getBody(), $this->string) !== false,
             'The given string (' . $this->string . ') was not found in this document.');

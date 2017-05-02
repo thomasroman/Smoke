@@ -3,11 +3,11 @@
 namespace whm\Smoke\Extensions\SmokeReporter;
 
 use PhmLabs\Components\Init\Init;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
 use whm\Smoke\Extensions\SmokeReporter\Reporter\Reporter;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\CheckResult;
 
 class ReporterExtension
@@ -50,7 +50,7 @@ class ReporterExtension
      *
      * @Event("Scanner.Scan.Validate")
      */
-    public function process($results, Response $response)
+    public function process($results, ResponseInterface $response)
     {
         foreach ($this->reporters as $reporter) {
             $reporter->processResults($results, $response);

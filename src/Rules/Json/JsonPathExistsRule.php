@@ -3,6 +3,7 @@
 namespace whm\Smoke\Rules\Json;
 
 use Peekmo\JsonPath\JsonStore;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -51,7 +52,7 @@ class JsonPathExistsRule extends StandardRule
         return true;
     }
 
-    public function doValidation(Response $response)
+    public function doValidation(ResponseInterface $response)
     {
         $body = (string) $response->getBody();
 

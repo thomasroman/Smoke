@@ -2,8 +2,8 @@
 
 namespace whm\Smoke\Rules\Html;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Html\Document;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 
 /**
@@ -16,7 +16,7 @@ class InvalidUrlsRule extends StandardRule
     /**
      * {@inheritdoc}
      */
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $document = new Document($response->getBody(), false);
 

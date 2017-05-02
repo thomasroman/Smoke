@@ -2,8 +2,8 @@
 
 namespace whm\Smoke\Rules\Seo;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Html\Uri;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Attribute;
 use whm\Smoke\Rules\CheckResult;
 use whm\Smoke\Rules\Rule;
@@ -14,11 +14,10 @@ class GoogleMobileFriendlyRule implements Rule
 
     private function getEndpoint(Uri $uri)
     {
-        // return str_replace('#url#', urlencode('https://webhook.koalamon.com'), self::ENDPOINT);
         return str_replace('#url#', urlencode((string)$uri), self::ENDPOINT);
     }
 
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         $uri = $response->getUri();
 

@@ -3,6 +3,7 @@
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Koalamon;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use phm\HttpWebdriverClient\Http\HttpClient;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
@@ -28,13 +29,13 @@ class Retriever implements SmokeRetriever
         $this->project = $project;
     }
 
-    public function setHttpClient(HttpAdapterInterface $httpClient)
+    public function setHttpClient(HttpClient $httpClient)
     {
         $this->client = $httpClient;
         $this->systems = $this->getSystems($httpClient);
     }
 
-    public function getSystems(HttpAdapterInterface $httpClient)
+    public function getSystems(HttpClient $httpClient)
     {
         $url = $this->prepareUrl(self::ENDPOINT_SYSTEMS);
 

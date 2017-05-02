@@ -2,17 +2,17 @@
 
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever;
 
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use phm\HttpWebdriverClient\Http\Client\HttpClient;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Scanner\SessionContainer;
 
 interface Retriever
 {
-    public function setHttpClient(HttpAdapterInterface $httpClient);
+    public function setHttpClient(HttpClient $httpClient);
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
     public function next();
 

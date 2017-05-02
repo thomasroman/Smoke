@@ -2,12 +2,13 @@
 
 namespace whm\Smoke\Rules\Http;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
 
 abstract class HttpsRule implements Rule
 {
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         if ('https' === $response->getUri()->getScheme()) {
             $certInfo = $this->getCertifacateInformation($response->getUri()->getHost());

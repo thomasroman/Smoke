@@ -3,6 +3,7 @@
 namespace whm\Smoke\Rules\Seo;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\ClientAware;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\Rule;
@@ -11,14 +12,14 @@ use whm\Smoke\Rules\ValidationFailedException;
 /**
  * This rule checks if robots.txt has no entry "Disallow:/".
  */
-class RobotsDisallowAllRule implements Rule, ClientAware
+class RobotsDisallowAllRule implements Rule
 {
     /**
      * @var HttpAdapterInterface
      */
     private $client;
 
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         $url = $response->getUri()->getScheme() . '://' . $response->getUri()->getHost();
 
@@ -31,12 +32,10 @@ class RobotsDisallowAllRule implements Rule, ClientAware
         }
 
         try {
-            $response = $this->client->get($filename);
+            $content = file_get_contents($filename);
         } catch (\Exception $e) {
             return;
         }
-
-        $content = (string) $response->getBody();
 
         $normalizedContent = $this->normalizeContent($content);
 
@@ -57,10 +56,5 @@ class RobotsDisallowAllRule implements Rule, ClientAware
         $normalizedContent = trim(preg_replace('/\s+/', ' ', $normalizedContent));
 
         return $normalizedContent;
-    }
-
-    public function setClient(HttpAdapterInterface $client)
-    {
-        $this->client = $client;
     }
 }

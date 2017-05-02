@@ -67,4 +67,4 @@ rules:
    runLevel: 1
    class: whm\Smoke\Rules\Http\HttpsCertificateExpireRule
    parameters:
-     expireWarningTime: 400
+     expireWarningTime: 7

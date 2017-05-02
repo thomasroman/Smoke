@@ -2,9 +2,9 @@
 
 namespace whm\Smoke\Extensions\SmokeFilter;
 
+use phm\HttpWebdriverClient\Http\Response\UriAwareResponse;
 use phmLabs\Components\Annovent\Event\Event;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
 /**
@@ -83,7 +83,7 @@ class FilterExtension
     /**
      * @Event("Scanner.CheckResponse.isFiltered")
      */
-    public function isFiltered(Event $event, $ruleName, Response $response)
+    public function isFiltered(Event $event, $ruleName, UriAwareResponse $response)
     {
         $uri = (string)$this->retriever->getOriginUri($response->getUri());
 

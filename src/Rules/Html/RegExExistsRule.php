@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Html;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -23,17 +23,17 @@ class RegExExistsRule extends StandardRule
         $this->regExs = $regExs;
     }
 
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $errors = [];
 
         foreach ($this->regExs as $regEx) {
             if ($regEx['isRegEx']) {
-                if (preg_match('^' . $regEx['pattern'] . '^', (string) $response->getBody()) === 0) {
+                if (preg_match('^' . $regEx['pattern'] . '^', (string)$response->getBody()) === 0) {
                     $errors[] = 'Regular expression: ' . $regEx['pattern'];
                 }
             } else {
-                if (preg_match('^' . preg_quote($regEx['pattern']) . '^', (string) $response->getBody()) === 0) {
+                if (preg_match('^' . preg_quote($regEx['pattern']) . '^', (string)$response->getBody()) === 0) {
                     $errors[] = 'Text: ' . $regEx['pattern'];
                 }
             }

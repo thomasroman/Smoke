@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever;
 
 use Ivory\HttpAdapter\HttpAdapterInterface;
 use Ivory\HttpAdapter\MultiHttpAdapterException;
+use phm\HttpWebdriverClient\Http\Client\HttpClient;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
@@ -72,10 +73,6 @@ class Retriever implements SmokeRetriever
             }
         }
 
-        if ($uri->hasCookies()) {
-            $headers['Cookie'] = $uri->getCookieString();
-        }
-
         $request = RequestFactory::getRequest($uri, 'GET', 'php://memory', $headers);
 
         return $request;
@@ -91,7 +88,7 @@ class Retriever implements SmokeRetriever
 
         if ($url['url'] instanceof UriInterface) {
             $urlObject = $url['url'];
-        }else {
+        } else {
             $urlObject = new Uri($url['url']);
         }
 
@@ -169,7 +166,7 @@ class Retriever implements SmokeRetriever
         return $systems;
     }
 
-    public function setHttpClient(HttpAdapterInterface $httpClient)
+    public function setHttpClient(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }

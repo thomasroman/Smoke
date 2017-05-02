@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Rules\Xml\Sitemap;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -53,7 +54,7 @@ class ValidRule extends StandardRule
         }
     }
 
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $body = $response->getBody();
 

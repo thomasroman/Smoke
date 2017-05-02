@@ -2,14 +2,14 @@
 
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler;
 
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use phm\HttpWebdriverClient\Http\Client\HttpClient;
 use PhmLabs\Components\Init\Init;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Scanner\SessionContainer;
 
 class Crawler implements CrawlingRetriever
@@ -64,13 +64,13 @@ class Crawler implements CrawlingRetriever
         $this->startPage = $startPage;
     }
 
-    public function setHttpClient(HttpAdapterInterface $httpClient)
+    public function setHttpClient(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
     public function next()
     {

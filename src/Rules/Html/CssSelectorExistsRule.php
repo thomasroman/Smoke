@@ -2,8 +2,8 @@
 
 namespace whm\Smoke\Rules\Html;
 
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\CssSelector\CssSelectorConverter;
-use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -21,7 +21,7 @@ class CssSelectorExistsRule extends StandardRule
         $this->cssSelectors = $cssSelectors;
     }
 
-    public function doValidation(Response $response)
+    public function doValidation(ResponseInterface $response)
     {
         $domDocument = new \DOMDocument();
         @$domDocument->loadHTML((string)$response->getBody());

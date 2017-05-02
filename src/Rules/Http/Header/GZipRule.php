@@ -2,8 +2,8 @@
 
 namespace whm\Smoke\Rules\Http\Header;
 
-use whm\Smoke\Http\Response;
-use whm\Smoke\Rules\Rule;
+use phm\HttpWebdriverClient\Http\Response\ContentTypeAwareResponse;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -19,14 +19,16 @@ class GZipRule extends StandardRule
         $this->minFileSize = $minFileSize;
     }
 
-    public function doValidation(Response $response)
+    public function doValidation(ResponseInterface $response)
     {
-        if (strpos($response->getContentType(), 'image') === false
-            && strpos($response->getContentType(), 'pdf') === false
-            && strlen((string) $response->getBody()) >= $this->minFileSize
-        ) {
-            if (!$response->hasHeader('Content-Encoding') || $response->getHeader('Content-Encoding')[0] !== 'gzip') {
-                throw new ValidationFailedException('gzip compression not active');
+        if ($response instanceof ContentTypeAwareResponse) {
+            if (strpos($response->getContentType(), 'image') === false
+                && strpos($response->getContentType(), 'pdf') === false
+                && strlen((string)$response->getBody()) >= $this->minFileSize
+            ) {
+                if (!$response->hasHeader('Content-Encoding') || $response->getHeader('Content-Encoding')[0] !== 'gzip') {
+                    throw new ValidationFailedException('gzip compression not active');
+                }
             }
         }
     }

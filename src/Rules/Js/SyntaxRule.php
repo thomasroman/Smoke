@@ -2,7 +2,7 @@
 
 namespace whm\Smoke\Rules\Js;
 
-use whm\Smoke\Http\Response;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\Rule;
 use whm\Smoke\Rules\ValidationFailedException;
 
@@ -24,7 +24,7 @@ class SyntaxRule implements Rule
         $this->tmpDir = $tmpDir;
     }
 
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
         if ($response->getContentType() !== 'application/javascript') {
             return;

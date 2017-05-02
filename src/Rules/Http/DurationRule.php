@@ -2,7 +2,8 @@
 
 namespace whm\Smoke\Rules\Http;
 
-use whm\Smoke\Http\Response;
+use phm\HttpWebdriverClient\Http\Response\DurationAwareResponse;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\CheckResult;
 use whm\Smoke\Rules\Rule;
 
@@ -22,18 +23,20 @@ class DurationRule implements Rule
         $this->maxDuration = $maxDuration;
     }
 
-    public function validate(Response $response)
+    public function validate(ResponseInterface $response)
     {
-        if ($response->getDuration() > $this->maxDuration) {
-            return new CheckResult(
-                CheckResult::STATUS_FAILURE,
-                'The http request took ' . (int) $response->getDuration() . ' milliseconds (limit was ' . $this->maxDuration . 'ms).',
-                (int) $response->getDuration());
-        }
+        if ($response instanceof DurationAwareResponse) {
+            if ($response->getDuration() > $this->maxDuration) {
+                return new CheckResult(
+                    CheckResult::STATUS_FAILURE,
+                    'The http request took ' . (int)$response->getDuration() . ' milliseconds (limit was ' . $this->maxDuration . 'ms).',
+                    (int)$response->getDuration());
+            }
 
-        return new CheckResult(
-            CheckResult::STATUS_SUCCESS,
-            'The http request took ' . (int) $response->getDuration() . ' milliseconds.',
-            (int) $response->getDuration());
+            return new CheckResult(
+                CheckResult::STATUS_SUCCESS,
+                'The http request took ' . (int)$response->getDuration() . ' milliseconds.',
+                (int)$response->getDuration());
+        }
     }
 }

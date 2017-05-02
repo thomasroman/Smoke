@@ -2,6 +2,7 @@
 
 namespace whm\Smoke\Rules;
 
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 
 class CheckResult
@@ -86,7 +87,7 @@ class CheckResult
     /**
      * @param Response $response
      */
-    public function setResponse(Response $response)
+    public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
     }

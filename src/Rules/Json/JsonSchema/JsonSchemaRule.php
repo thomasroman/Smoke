@@ -3,6 +3,7 @@
 namespace whm\Smoke\Rules\Json\JsonSchema;
 
 use JsonSchema\Validator;
+use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Http\Response;
 use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
@@ -30,7 +31,7 @@ class JsonSchemaRule extends StandardRule
         $this->jsonSchemaFiles = $jsonSchemaFiles;
     }
 
-    protected function doValidation(Response $response)
+    protected function doValidation(ResponseInterface $response)
     {
         $data = json_decode($response->getBody());
         if ($data === null) {
