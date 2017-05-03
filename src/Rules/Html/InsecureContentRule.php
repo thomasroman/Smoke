@@ -21,15 +21,15 @@ class InsecureContentRule implements Rule
 {
     public function validate(ResponseInterface $response)
     {
-        $request = $response->getRequest();
+        $uri = $response->getUri();
 
-        if ('https' !== $request->getUri()->getScheme()) {
+        if ('https' !== $uri->getScheme()) {
             return;
         }
 
-        $htmlDocument = new Document($response->getBody());
+        $htmlDocument = new Document((string)$response->getBody());
 
-        $resources = $htmlDocument->getDependencies($response->getRequest()->getUri(), false);
+        $resources = $htmlDocument->getDependencies($uri, false);
 
         foreach ($resources as $resource) {
             if ($resource->getScheme() && 'https' !== $resource->getScheme()) {

@@ -33,7 +33,7 @@ class JsonSchemaRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $data = json_decode($response->getBody());
+        $data = json_decode((string)$response->getBody());
         if ($data === null) {
             throw new ValidationFailedException("The given JSON data can not be validated (last error: '" . $this->json_errors[json_last_error()] . "').");
         } else {

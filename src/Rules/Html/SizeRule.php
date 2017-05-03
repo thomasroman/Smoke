@@ -25,7 +25,7 @@ class SizeRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $size = strlen($response->getBody()) / 1000;
+        $size = strlen((string)$response->getBody()) / 1000;
         $this->assert($size <= $this->maxSize, 'The size of this html file is too big (' . $size . ' KB)');
     }
 }

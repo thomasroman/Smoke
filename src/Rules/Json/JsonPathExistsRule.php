@@ -54,7 +54,7 @@ class JsonPathExistsRule extends StandardRule
 
     public function doValidation(ResponseInterface $response)
     {
-        $body = (string) $response->getBody();
+        $body = (string)$response->getBody();
 
         $json = json_decode($body);
 

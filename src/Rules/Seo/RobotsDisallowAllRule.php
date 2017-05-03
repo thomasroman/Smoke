@@ -32,7 +32,7 @@ class RobotsDisallowAllRule implements Rule
         }
 
         try {
-            $content = file_get_contents($filename);
+            $content = @file_get_contents($filename);
         } catch (\Exception $e) {
             return;
         }

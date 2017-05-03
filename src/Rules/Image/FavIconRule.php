@@ -30,7 +30,7 @@ class FavIconRule extends StandardRule
             return;
         }
 
-        $imageHash = md5($response->getBody());
+        $imageHash = md5((string)$response->getBody());
 
         $this->assert(!array_key_exists($imageHash, $this->favicons), 'Seems like you use the standard favicon of your framework (' . $this->favicons[$imageHash] . ').');
     }

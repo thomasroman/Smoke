@@ -2,9 +2,9 @@
 
 namespace whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\ListRetriever;
 
-use Ivory\HttpAdapter\HttpAdapterInterface;
-use Ivory\HttpAdapter\MultiHttpAdapterException;
+use GuzzleHttp\Psr7\Request;
 use phm\HttpWebdriverClient\Http\Client\HttpClient;
+use phm\HttpWebdriverClient\Http\MultiRequestsException;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Http\RequestFactory;
 use whm\Html\Uri;
@@ -16,7 +16,7 @@ class Retriever implements SmokeRetriever
     private $urls = [];
 
     /**
-     * @var HttpAdapterInterface
+     * @var HttpClient
      */
     private $httpClient;
     private $urlStack = [];
@@ -59,7 +59,7 @@ class Retriever implements SmokeRetriever
     /**
      * @param Uri $uri
      *
-     * @return \Ivory\HttpAdapter\Message\Request
+     * @return Request
      */
     private function createRequest(Uri $uri)
     {
@@ -96,7 +96,7 @@ class Retriever implements SmokeRetriever
 
         try {
             $responses = $this->httpClient->sendRequests(array($request));
-        } catch (MultiHttpAdapterException $e) {
+        } catch (MultiRequestsException $e) {
             $exceptions = $e->getExceptions();
             /* @var \Exception[] $exceptions */
             $errorMessages = '';
@@ -106,7 +106,6 @@ class Retriever implements SmokeRetriever
                 if (strpos($message, 'An error occurred when fetching the URI') === 0) {
                     $corruptUrl = substr($message, '41', strpos($message, '"', 41) - 41);
                     if (strpos($corruptUrl, '/') === 0) {
-                        /* @var \Ivory\HttpAdapter\HttpAdapterException $exception */
 
                         $mainUri = $request->getUri();
                         $this->redirects[(string)$mainUri->getScheme() . '://' . $mainUri->getHost() . $corruptUrl] = (string)$mainUri;
@@ -130,7 +129,11 @@ class Retriever implements SmokeRetriever
             }
         }
 
-        return $responses[0];
+        if (empty($responses)) {
+            return $this->next();
+        } else {
+            return $responses[0];
+        }
     }
 
     public function getOriginUri(UriInterface $uri)

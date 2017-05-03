@@ -2,8 +2,8 @@
 options:
   extendDefault: false
 
-client:
-  class: phm\HttpWebdriverClient\Http\Client\Chrome\ChromeClient
+#client:
+#  class: phm\HttpWebdriverClient\Http\Client\Chrome\ChromeClient
 
 extensions:
 
@@ -165,7 +165,7 @@ reporter:
      class: whm\Smoke\Extensions\SmokeReporter\Reporter\LeankoalaReporter
      parameters:
        systemUseRetriever: true
-       apiKey: B125828A-D3AD-48DB-959C-2627970E0A28
+       apiKey: 
        server: https://monitor.leankoala.com/webhook/
        collect: false
        groupBy: prefix

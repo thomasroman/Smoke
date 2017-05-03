@@ -13,7 +13,7 @@ abstract class StandardRule implements Rule
         if (count($this->contentTypes) > 0) {
             $valid = false;
             foreach ($this->contentTypes as $validContentType) {
-                if (strpos($response->getContentType(), $validContentType) !== false) {
+                if (strpos(strtolower($response->getContentType()), strtolower($validContentType)) !== false) {
                     $valid = true;
                     break;
                 }

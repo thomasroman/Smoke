@@ -24,7 +24,7 @@ class StringExistsRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $this->assert(strpos($response->getBody(), $this->string) !== false,
+        $this->assert(strpos((string)$response->getBody(), $this->string) !== false,
             'The given string (' . $this->string . ') was not found in this document.');
     }
 }

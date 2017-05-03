@@ -3,6 +3,7 @@
 namespace whm\Smoke\Cli\Command;
 
 use Cache\Adapter\Filesystem\FilesystemCachePool;
+use GuzzleHttp\Client;
 use Ivory\HttpAdapter\CurlHttpAdapter;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -87,7 +88,7 @@ class SmokeCommand extends Command
 
         if ($configFile) {
             if (strpos($configFile, 'http://') === 0 || strpos($configFile, 'https://') === 0) {
-                $curlClient = new CurlHttpAdapter();
+                $curlClient = new Client();
                 $fileContent = (string)$curlClient->get($configFile)->getBody();
             } else {
                 if (file_exists($configFile)) {

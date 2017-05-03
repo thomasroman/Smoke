@@ -24,7 +24,7 @@ class ValidRule implements Rule
             return;
         }
 
-        $body = $response->getBody();
+        $body = (string)$response->getBody();
         if (preg_match('/<rss/', $body)) {
             libxml_clear_errors();
             $dom = new \DOMDocument();

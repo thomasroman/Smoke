@@ -19,10 +19,10 @@ class PasswordSecureTransferRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $crawler = new Crawler($response->getBody());
+        $crawler = new Crawler((string)$response->getBody());
         $actionNodes = $crawler->filterXPath('//form[//input[@type="password"]]');
 
-        $url = (string) $response->getUri();
+        $url = (string)$response->getUri();
 
         foreach ($actionNodes as $node) {
             $action = $node->getAttribute('action');

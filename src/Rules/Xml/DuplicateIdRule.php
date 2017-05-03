@@ -18,7 +18,7 @@ class DuplicateIdRule implements Rule
             return;
         }
 
-        $crawler = new Crawler($response->getBody());
+        $crawler = new Crawler((string)$response->getBody());
 
         $idList = $crawler->filterXPath('//*[@id!=""]');
 

@@ -56,13 +56,13 @@ class ValidRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $body = $response->getBody();
+        $body = (string)$response->getBody();
 
         // sitemapindex or urlset
         if (preg_match('/<sitemapindex/', $body)) {
-            $this->validateBody($body, (string) $response->getUri());
+            $this->validateBody($body, (string)$response->getUri());
         } elseif (preg_match('/<urlset/', $body)) {
-            $this->validateBody($body, (string) $response->getUri(), false);
+            $this->validateBody($body, (string)$response->getUri(), false);
         }
     }
 }

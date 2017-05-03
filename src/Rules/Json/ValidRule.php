@@ -26,7 +26,7 @@ class ValidRule extends StandardRule
 
     public function doValidation(ResponseInterface $response)
     {
-        $result = json_decode($response->getBody());
+        $result = json_decode((string)$response->getBody());
         if ($result === null) {
             throw new ValidationFailedException("The given JSON data can not be validated (last error: '" . $this->json_errors[json_last_error()] . "').");
         }

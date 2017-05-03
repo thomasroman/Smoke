@@ -26,7 +26,7 @@ class ForeignDomainImageRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $document = new Document($response->getBody());
+        $document = new Document((string)$response->getBody());
         $images = $document->getImages($response->getUri());
 
         $foreignImages = array();

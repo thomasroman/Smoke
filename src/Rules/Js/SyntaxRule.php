@@ -30,8 +30,8 @@ class SyntaxRule implements Rule
             return;
         }
 
-        $filename = $this->tmpDir . DIRECTORY_SEPARATOR . md5($response->getBody()) . '.js';
-        file_put_contents($filename, $response->getBody());
+        $filename = $this->tmpDir . DIRECTORY_SEPARATOR . md5((string)$response->getBody()) . '.js';
+        file_put_contents($filename, (string)$response->getBody());
         $conf = __DIR__ . DIRECTORY_SEPARATOR . 'jsHint.conf';
 
         $command = $this->jsHintExecutable . ' --config ' . $conf . ' --verbose ' . $filename . ' | grep -E E[0-9]+.$';

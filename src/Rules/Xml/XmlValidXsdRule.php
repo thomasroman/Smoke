@@ -22,12 +22,12 @@ class XmlValidXsdRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        $body = $response->getBody();
+        $body = (string)$response->getBody();
 
         $dom = new \DOMDocument();
         @$dom->loadXML($body);
 
-        $filename = (string) $response->getUri();
+        $filename = (string)$response->getUri();
 
         $error = false;
         $messageParts = array();

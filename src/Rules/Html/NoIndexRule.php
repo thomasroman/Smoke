@@ -16,11 +16,11 @@ class NoIndexRule extends StandardRule
 
     protected function doValidation(ResponseInterface $response)
     {
-        if ($response->getStatus() >= 300) {
+        if ($response->getStatusCode() >= 300) {
             return;
         }
 
-        $crawler = new Crawler($response->getBody());
+        $crawler = new Crawler((string)$response->getBody());
         $metaTags = $crawler->filterXPath("//meta[@name='robots']/@content");
 
         foreach ($metaTags as $metaTag) {
