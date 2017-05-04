@@ -165,7 +165,7 @@ reporter:
      class: whm\Smoke\Extensions\SmokeReporter\Reporter\LeankoalaReporter
      parameters:
        systemUseRetriever: true
-       apiKey: cd 
+       apiKey: cd
        server: https://monitor.leankoala.com/webhook/
        collect: false
        groupBy: prefix
