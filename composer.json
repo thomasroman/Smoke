@@ -31,12 +31,6 @@
       "whm\\Smoke\\Test\\": "test/unit"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:digitalkaoz/ivory-http-adapter.git"
-    }
-  ],
   "scripts": {
     "cs": "vendor/bin/php-cs-fixer fix $1",
     "test": "vendor/bin/phpunit $1"
