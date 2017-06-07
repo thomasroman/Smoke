@@ -56,13 +56,15 @@ class LeankoalaReporter implements Reporter
     const STATUS_SUCCESS = 'success';
     const STATUS_FAILURE = 'failure';
 
-    public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $server = 'https://webhook.koalamon.com', $system = '', $identifier = '', $tool = '', $collect = true, $systemUseRetriever = false, $groupBy = false, $addComingFrom = true)
+    public function init($apiKey, Configuration $_configuration, OutputInterface $_output, $server = 'https://webhook.koalamon.com', $system = '', $identifier = '', $tool = '', $collect = true, $systemUseRetriever = false, $groupBy = false, $addComingFrom = true, $useMongo = true)
     {
         $httpClient = new \GuzzleHttp\Client();
 
         $this->reporter = new KoalaReporter('', $apiKey, $httpClient, $server);
 
-        $this->reporter->setEventProcessor(MongoDBProcessor::createByEnvironmentVars('leankoala'));
+        if ($useMongo) {
+            $this->reporter->setEventProcessor(MongoDBProcessor::createByEnvironmentVars('leankoala'));
+        }
 
         $this->config = $_configuration;
         $this->systemUseRetriever = $systemUseRetriever;
