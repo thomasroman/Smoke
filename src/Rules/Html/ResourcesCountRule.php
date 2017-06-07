@@ -20,7 +20,7 @@ class ResourcesCountRule extends StandardRule
 
     public function init($maxElements = 200)
     {
-        $this->maxElements = $maxElements;
+        $this->maxElements = (int)$maxElements;
     }
 
     protected function doValidation(ResponseInterface $response)

@@ -27,8 +27,6 @@ class XmlValidXsdRule extends StandardRule
         $dom = new \DOMDocument();
         @$dom->loadXML($body);
 
-        $filename = (string)$response->getUri();
-
         $error = false;
         $messageParts = array();
 
@@ -39,12 +37,12 @@ class XmlValidXsdRule extends StandardRule
                 $error = true;
                 $lastError = libxml_get_last_error();
 
-                $messageParts[] = $xsdFile['xsdfilename'] . ' - ' . $xsdFile['xsdfileurl'] . '(last error: ' . str_replace("\n", '', $lastError->message) . ').';
+                $messageParts[] = $xsdFile['xsdfilename'] . ' - ' . $xsdFile['xsdfileurl'] . ' (last error: ' . str_replace("\n", '', $lastError->message) . ').';
             }
         }
 
         if ($error === true) {
-            $message = 'XML file (' . $filename . ')  does not validate against the following XSD files: ' . implode(', ', $messageParts);
+            $message = 'XML file (' . (string)$response->getUri() . ')  does not validate against the following XSD files: ' . implode(', ', $messageParts);
             throw new ValidationFailedException($message);
         }
     }
