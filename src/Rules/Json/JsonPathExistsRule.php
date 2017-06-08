@@ -29,21 +29,21 @@ class JsonPathExistsRule extends StandardRule
      *
      * @return bool
      */
-    private function checkRelation($relation, $value, $count)
+    private function checkRelation($relation, $expected, $current)
     {
         switch ($relation) {
             case 'equals':
-                if ($value !== $count) {
+                if ($expected !== $current) {
                     return false;
                 }
                 break;
             case 'less than':
-                if ($value >= $count) {
+                if ($expected <= $current) {
                     return false;
                 }
                 break;
             case 'greater than':
-                if ($value <= $count) {
+                if ($expected >= $current) {
                     return false;
                 }
                 break;
@@ -73,11 +73,11 @@ class JsonPathExistsRule extends StandardRule
 
             if ($jsonValue === false || (is_array($jsonValue) && empty($jsonValue))) {
                 $error = true;
-                $noCorrectJsonPaths[] = $path['pattern'] . ' (JSON Path not found)';
+                $noCorrectJsonPaths[] = $path['pattern'] . ' (JSON path not found)';
             }
-            if ($this->checkRelation($path['relation'], $path['value'], $count) === false) {
+            if ($this->checkRelation($path['relation'], (int)$path['value'], $count) === false) {
                 $error = true;
-                $noCorrectJsonPaths[] = $path['pattern'] . ' (number of JSONPaths is not correct corresponding to the given relation/value)';
+                $noCorrectJsonPaths[] = $path['pattern'] . ' (' . $count . ' elements found, expected ' . $path['relation'] . ' ' . $path['value'] . ')';
             }
         }
 
