@@ -65,7 +65,7 @@ class InsecureContentRule implements Rule
             $message .= '</ul>';
             return new CheckResult(CheckResult::STATUS_FAILURE, $message, count($unsecures));
         } else {
-            return new CheckResult(CheckResult::STATUS_SUCCESS, 'No http element on that https url found.', 0);
+            return new CheckResult(CheckResult::STATUS_SUCCESS, 'No insecure http element found.', 0);
         }
     }
 }
