@@ -6,8 +6,6 @@ blacklist:
  - ^png^
  - ^css^
  - ^.js^
- - ^http://wunderweib.de.intellitxt.com^
- - ^assets/field/image/^
 
 options:
   scanForeignDomains: false
@@ -62,9 +60,17 @@ stop:
   _CountStop:
     class: whm\Smoke\Extensions\SmokeStop\Strategy\CountStrategy
     parameters:
-      maxCount: 100
+      maxCount: 300
 
 rules:
   _Https:
    runLevel: 1
    class: whm\Smoke\Rules\Html\InsecureContentRule
+   parameters:
+     excludedFiles:
+       5308990:
+         file: 'intellitxt.com'
+       17461505:
+         file: 'assets/field/image/'
+       17461506:
+         file: 'video.bdu.rocks'
