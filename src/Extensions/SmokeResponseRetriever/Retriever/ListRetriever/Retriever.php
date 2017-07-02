@@ -99,6 +99,7 @@ class Retriever implements SmokeRetriever
         } catch (MultiRequestsException $e) {
             $exceptions = $e->getExceptions();
             /* @var \Exception[] $exceptions */
+
             $errorMessages = '';
             foreach ($exceptions as $exception) {
                 // @fixme this must be part of the http client
