@@ -7,7 +7,7 @@
     "symfony/console": "~3.1",
     "phmlabs/annovent": "~1.0.0",
     "phmlabs/init": "~1.0.0",
-    "phmlabs/html": "~2.1",
+    "phmlabs/html": "dev-master",
     "phmlabs/crawler": "dev-master",
     "phmlabs/xunitreport": ">= 1.0.2",
     "phmlabs/httpwebdriveradapter": "dev-master",
