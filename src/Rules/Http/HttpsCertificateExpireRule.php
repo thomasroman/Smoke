@@ -29,7 +29,12 @@ class HttpsCertificateExpireRule extends HttpsRule
             $errorMessage = 'Certificate is expired. [' . $validFrom . ' - ' . $validTo . ']';
 
             $result = new CheckResult(CheckResult::STATUS_FAILURE, $errorMessage);
-            $result->addAttribute(new Attribute('certificate information', json_encode($certInfo), true));
+            $infoJson = json_encode($certInfo);
+            if ($infoJson === false) {
+                $result->addAttribute(new Attribute('json_encode error', json_last_error_msg(), false));
+            } else {
+                $result->addAttribute(new Attribute('certificate information', $infoJson, true));
+            }
             return $result;
         } elseif ($certInfo['validTo_time_t'] < strtotime('+' . $this->expireWarningTime . 'days')) {
             $errorMessage = 'Certificate warning, expires in less than ' . $this->expireWarningTime . ' days. Certificate expires at: ' . $validTo;
