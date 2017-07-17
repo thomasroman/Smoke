@@ -20,7 +20,18 @@ class RegExExistsRule extends StandardRule
      */
     public function init(array $regExs)
     {
-        $this->regExs = $regExs;
+        $regExArray = array();
+
+        foreach ($regExs as $regEx) {
+            if (array_key_exists('regex', $regEx)) {
+                $isRegex = $regEx['isRegex'] == 'on';
+                $regExArray[] = ['pattern' => $regEx['regex'], 'isRegEx' => $isRegex];
+            } else {
+                $regExArray[] = $regEx;
+            }
+        }
+
+        $this->regExs = $regExArray;
     }
 
     protected function doValidation(ResponseInterface $response)
