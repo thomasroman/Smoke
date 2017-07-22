@@ -4,26 +4,25 @@ namespace whm\Smoke\Rules\Xml\Rss;
 
 use Psr\Http\Message\ResponseInterface;
 use whm\Smoke\Rules\Rule;
+use whm\Smoke\Rules\StandardRule;
 use whm\Smoke\Rules\ValidationFailedException;
 
 /**
  * This rule checks if a rss feed is valid.
  */
-class ValidRule implements Rule
+class ValidRule extends StandardRule
 {
     const SCHEMA = 'rss2_0.xsd';
+
+    protected $contentTypes = array('text/xml', 'application/xml', 'application/rss+xml');
 
     private function getSchema()
     {
         return __DIR__ . '/' . self::SCHEMA;
     }
 
-    public function validate(ResponseInterface $response)
+    public function doValidation(ResponseInterface $response)
     {
-        if ($response->getContentType() !== 'text/xml') {
-            return;
-        }
-
         $body = (string)$response->getBody();
         if (preg_match('/<rss/', $body)) {
             libxml_clear_errors();
@@ -40,7 +39,7 @@ class ValidRule implements Rule
                 $lastError = libxml_get_last_error();
                 $lastErrorMessage = str_replace("\n", '', $lastError->message);
                 throw new ValidationFailedException(
-                    'The given xml file did not Validate vs. ' .
+                    'The given xml file did not validate against ' .
                     $this->getSchema() . ' (last error: ' .
                     $lastErrorMessage . ').');
             }
