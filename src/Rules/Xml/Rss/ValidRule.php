@@ -39,8 +39,7 @@ class ValidRule extends StandardRule
                 $lastError = libxml_get_last_error();
                 $lastErrorMessage = str_replace("\n", '', $lastError->message);
                 throw new ValidationFailedException(
-                    'The given xml file did not validate against ' .
-                    $this->getSchema() . ' (last error: ' .
+                    'The given xml file is not a valid rss file (last error: ' .
                     $lastErrorMessage . ').');
             }
         }
