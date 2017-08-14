@@ -55,10 +55,14 @@ class Scanner
 
         while (($response = $this->responseRetriever->next()) && !$this->eventDispatcher->notifyUntil(new Event('Scanner.Scan.isStopped'))) {
 
+            var_dump((string)$response->getUri());
+
             // this is the url filter
             if ($this->eventDispatcher->notifyUntil(new Event('Scanner.ProcessHtml.isFiltered', array('uri' => $response->getUri())))) {
                 continue;
             }
+
+            var_dump((string)$response->getUri());
 
             $results = $this->checkResponse($response);
 

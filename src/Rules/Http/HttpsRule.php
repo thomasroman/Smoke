@@ -23,7 +23,7 @@ abstract class HttpsRule implements Rule
     {
         $sslOptions = stream_context_create(array('ssl' => array('capture_peer_cert' => true)));
 
-        $request = stream_socket_client(
+        $request = @stream_socket_client(
             'ssl://' . $host . ':443',
             $errno,
             $errstr,
@@ -32,7 +32,7 @@ abstract class HttpsRule implements Rule
             $sslOptions
         );
 
-        $content = stream_context_get_params($request);
+        $content = @stream_context_get_params($request);
 
         $certInfo = openssl_x509_parse($content['options']['ssl']['peer_certificate']);
 

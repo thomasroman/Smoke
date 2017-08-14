@@ -13,6 +13,7 @@
     "phmlabs/httpwebdriveradapter": "dev-master",
     "koalamon/koalamonclient": "dev-master",
     "koalamon/cookiemakerhelper": "dev-master",
+    "koalamon/fallbackhelper": "dev-master",
     "peekmo/jsonpath": "dev-master",
     "justinrainbow/json-schema": "~4.0",
     "psr/cache": "1.0.*",

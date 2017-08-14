@@ -67,7 +67,8 @@ stop:
       maxCount: ${SCAN_URL_COUNT}
 
 rules:
-  _IvwJsFile:
+
+  _IvwCall:
    runLevel: 1
    class: whm\Smoke\Rules\Html\RegExExistsRule
    parameters:
@@ -75,12 +76,6 @@ rules:
        1:
          isRegEx: false
          pattern: "//script.ioam.de/iam.js"
-
-  _IvwCall:
-   runLevel: 1
-   class: whm\Smoke\Rules\Html\RegExExistsRule
-   parameters:
-     regExs:
        2:
          isRegEx: false
          pattern: "var iam_data = {"
@@ -90,9 +85,9 @@ rules:
        4:
          isRegEx: true
          pattern: '"sv":"[A-Za-z0-9\-\_]*"'
-       5:
-         isRegEx: true
-         pattern: 'iom\.h\(iam_data(,1)?\);'
+       #5:
+       #  isRegEx: true
+       #  pattern: 'iom\.h\(iam_data(,1)?\);'
 
   #_IvwCNotall:
   # runLevel: 1

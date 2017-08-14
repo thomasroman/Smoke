@@ -3,6 +3,7 @@
 namespace whm\Smoke\Extensions\CookieMaker;
 
 use Koalamon\CookieMakerHelper\CookieMaker;
+use Koalamon\FallbackHelper\FallbackHelper;
 use whm\Smoke\Http\Session;
 use whm\Smoke\Scanner\SessionContainer;
 
@@ -26,8 +27,11 @@ class CookieMakerExtension
                 $cookieMaker = new CookieMaker($this->executable);
                 $cookies = $cookieMaker->getCookies($session);
             } catch (\Exception $e) {
-                echo 'FALLBACK';
-                exit(1);
+                $fallbackHelper = new FallbackHelper();
+                if (!$fallbackHelper->isFallbackServer()) {
+                    $fallbackHelper->doFallback($e->getMessage());
+                    exit(1);
+                }
             }
 
             $session = new Session();

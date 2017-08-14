@@ -3,7 +3,6 @@
 namespace whm\Smoke\Rules;
 
 use Psr\Http\Message\ResponseInterface;
-use whm\Smoke\Http\Response;
 
 class CheckResult
 {
@@ -18,7 +17,7 @@ class CheckResult
     private $ruleName;
 
     /**
-     * @var Response
+     * @var ResponseInterface
      */
     private $response;
 
@@ -77,7 +76,7 @@ class CheckResult
     }
 
     /**
-     * @return Response
+     * @return ResponseInterface
      */
     public function getResponse()
     {
@@ -85,7 +84,7 @@ class CheckResult
     }
 
     /**
-     * @param Response $response
+     * @param ResponseInterface $response
      */
     public function setResponse(ResponseInterface $response)
     {
