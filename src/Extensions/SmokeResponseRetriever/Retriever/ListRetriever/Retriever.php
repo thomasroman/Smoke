@@ -46,10 +46,10 @@ class Retriever implements SmokeRetriever
                             $sessionName = $url['session'];
                             $uri->setSessionIdentifier($sessionName);
                         }
-                        $this->urls[$url['url']] = ['url' => $uri, 'system' => $key];
                     } else {
-                        $this->urls[$url] = ['url' => new Uri($url), 'system' => $key];
+                        $uri = new Uri($url);
                     }
+                    $this->urls[(string)$uri] = ['url' => $uri, 'system' => $key];
                 }
             }
             $this->urlStack = $this->urls;

@@ -4,6 +4,7 @@ namespace whm\Smoke\Extensions\SmokeFilter;
 
 use phm\HttpWebdriverClient\Http\Response\UriAwareResponse;
 use phmLabs\Components\Annovent\Event\Event;
+use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Retriever;
 use whm\Smoke\Yaml\EnvAwareYaml;
 
@@ -67,7 +68,14 @@ class FilterExtension
         }
 
         if (count($exclusive) > 0) {
-            $this->exclusives = $exclusive;
+            foreach ($exclusive as $rule => $urls) {
+                if (is_array($urls)) {
+                    foreach ($urls as $url) {
+                        $uri = new Uri($url);
+                        $this->exclusives[$rule][] = (string)$uri;
+                    }
+                }
+            }
             $this->currentModus = self::MODUS_EXCLUSIVE;
         }
     }
