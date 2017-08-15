@@ -13,7 +13,7 @@ class RegExExistsRule extends StandardRule
 {
     private $regExs;
 
-    protected $contentTypes = array('text/html');
+    protected $contentTypes = array('text/html', 'application/json', 'application/xml');
 
     /**
      * @param int $string The string that the document must contain
@@ -40,7 +40,9 @@ class RegExExistsRule extends StandardRule
 
         foreach ($this->regExs as $regEx) {
             if ($regEx['isRegEx']) {
-                if (preg_match('^' . $regEx['pattern'] . '^', (string)$response->getBody()) === 0) {
+                $pattern = str_replace('', '\\~', $regEx['pattern']);
+
+                if (preg_match('~' . $pattern . '~', (string)$response->getBody()) === 0) {
                     $errors[] = 'Regular expression: ' . $regEx['pattern'];
                 }
             } else {
