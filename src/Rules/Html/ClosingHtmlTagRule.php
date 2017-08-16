@@ -16,8 +16,11 @@ class ClosingHtmlTagRule implements Rule
     {
         if ($response instanceof ContentTypeAwareResponse) {
             if (($response->getStatusCode() < 300 || $response->getStatusCode() >= 400) && $response->getContentType() === 'text/html') {
+                if (strlen((string)$response->getBody()) == 0) {
+                    return;
+                }
                 if (stripos((string)$response->getBody(), '</html>') === false) {
-                    throw new ValidationFailedException('Closing html tag is missing (document lengh: ' . strlen((string)$response->getBody()) . ').');
+                    throw new ValidationFailedException('Closing html tag is missing (document length: ' . strlen((string)$response->getBody()) . ').');
                 }
             }
         }
