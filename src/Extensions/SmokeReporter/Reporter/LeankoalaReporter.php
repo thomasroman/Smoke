@@ -5,6 +5,7 @@ namespace whm\Smoke\Extensions\SmokeReporter\Reporter;
 use Koalamon\Client\Reporter\Event;
 use Koalamon\Client\Reporter\Event\Attribute;
 use Koalamon\Client\Reporter\Event\Processor\MongoDBProcessor;
+use Koalamon\Client\Reporter\KoalamonException;
 use Koalamon\Client\Reporter\Reporter as KoalaReporter;
 use Symfony\Component\Console\Output\OutputInterface;
 use whm\Smoke\Config\Configuration;
@@ -46,6 +47,9 @@ class LeankoalaReporter implements Reporter
      */
     private $retriever;
 
+    /**
+     * @var OutputInterface
+     */
     private $output;
 
     /**
@@ -238,7 +242,17 @@ class LeankoalaReporter implements Reporter
             foreach ($attributes as $attribute) {
                 $event->addAttribute($attribute);
             }
-            $this->reporter->sendEvent($event);
+
+            try {
+                $this->reporter->sendEvent($event);
+            } catch (KoalamonException $e) {
+                $this->output->writeln("\n  <error> Error sending result to leankoala. </error>");
+                $this->output->writeln('   Url: ' . $e->getUrl());
+                $this->output->writeln('   Payload: ' . $e->getPayload());
+                $this->output->writeln("");
+            } catch (\Exception $e) {
+                $this->output->writeln($e->getMessage());
+            }
         }
     }
 }
