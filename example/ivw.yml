@@ -21,6 +21,11 @@ extensions:
       width: 100
       format: normal
 
+  _SmokeMemory:
+    class: whm\Smoke\Extensions\SmokeMemory\MemoryExtension
+    parameters:
+      memoryFile: /tmp/${IDENTIFIER}.yml
+
   _Reporter:
     class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
 

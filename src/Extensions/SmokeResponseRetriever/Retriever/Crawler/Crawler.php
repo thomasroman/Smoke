@@ -7,6 +7,7 @@ use PhmLabs\Components\Init\Init;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use whm\Crawler\Crawler as whmCrawler;
+use whm\Crawler\PageContainer\PageContainer;
 use whm\Crawler\PageContainer\PatternAwareContainer;
 use whm\Html\Uri;
 use whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\CrawlingRetriever;
@@ -21,6 +22,9 @@ class Crawler implements CrawlingRetriever
     private $started = false;
     private $filters;
 
+    /**
+     * @var PageContainer
+     */
     private $pageContainer;
 
     /**
@@ -34,10 +38,13 @@ class Crawler implements CrawlingRetriever
         if (!is_null($startPage)) {
             $this->startPage = new Uri($startPage);
         }
-
         $this->initPageContainer($pageContainer);
-
         $this->parallelRequests = $parallelRequests;
+    }
+
+    public function addPage(UriInterface $uri)
+    {
+        $this->pageContainer->push($uri, true);
     }
 
     private function initPageContainer($pageContainerArray)
