@@ -46,6 +46,11 @@ class MemoryExtension
     public function finish()
     {
         $yaml = Yaml::dump($this->memory);
+        $folder = dirname($this->memoryFile);
+
+        if (!file_exists($folder)) {
+            mkdir($folder, 0755, true);
+        }
         file_put_contents($this->memoryFile, $yaml);
     }
 
