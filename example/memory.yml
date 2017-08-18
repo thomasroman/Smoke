@@ -1,12 +1,3 @@
-whitelist:
- - ^^
-
-blacklist:
- - ^jpg^
- - ^png^
- - ^css^
- - ^.js^
-
 options:
   scanForeignDomains: false
 
@@ -15,16 +6,16 @@ extensions:
   _SmokeStop:
     class: whm\Smoke\Extensions\SmokeStop\StopExtension
 
+  _SmokeMemory:
+    class: whm\Smoke\Extensions\SmokeMemory\MemoryExtension
+    parameters:
+      memoryFile: /tmp/smoke_memory.yml
+
   _ProgressBar:
     class: whm\Smoke\Extensions\SmokeProgressBar\ProgressBar
     parameters:
       width: 100
       format: normal
-
-  _SmokeMemory:
-    class: whm\Smoke\Extensions\SmokeMemory\MemoryExtension
-    parameters:
-      memoryFile: /tmp/${IDENTIFIER}.yml
 
   _Reporter:
     class: whm\Smoke\Extensions\SmokeReporter\ReporterExtension
@@ -37,28 +28,30 @@ extensions:
     parameters:
       runLevel: 10
 
-#reporter:
-#  _CliReporter:
-#    class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+  _SmokeFilter:
+    class: whm\Smoke\Extensions\SmokeFilter\FilterExtension
+    parameters:
+      filters:
+        _HttpHeaderCacheNoCache:
+          - http://www.bravo.de/image_captcha(.*)
 
 reporter:
   _CliReporter:
     class: whm\Smoke\Extensions\SmokeReporter\Reporter\StandardCliReporter
+
+
 
 responseRetriever:
  class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Crawler
 
  parameters:
    parallelRequests: 5
-   startPage: "${SCAN_URL}"
+   startPage: http://www.bravo.de/image_captcha?sid=124057&ts=1475577937
 
    pageContainer:
      class: whm\Crawler\PageContainer\PatternAwareContainer
 
    filters:
-    _BlackWhiteListFilter:
-      class: whm\Smoke\Extensions\SmokeResponseRetriever\Retriever\Crawler\Filter\BlackWhiteListFilter
-
     _ValidUrlFilter:
       class: whm\Crawler\Filter\ValidUrlFilter
 
@@ -69,24 +62,9 @@ stop:
   _CountStop:
     class: whm\Smoke\Extensions\SmokeStop\Strategy\CountStrategy
     parameters:
-      maxCount: ${SCAN_URL_COUNT}
+      maxCount: 1
 
 rules:
-
-  _IvwCall:
+  _HttpHeaderCacheNoCache:
    runLevel: 1
-   class: whm\Smoke\Rules\Html\RegExExistsRule
-   parameters:
-     regExs:
-       1:
-         isRegEx: false
-         pattern: "//script.ioam.de/iam.js"
-       2:
-         isRegEx: false
-         pattern: "var iam_data = {"
-       3:
-         isRegEx: true
-         pattern: '"cp":"[A-Za-z0-9\-\_\/]*",'
-       4:
-         isRegEx: true
-         pattern: '"sv":"[A-Za-z0-9\-\_\/]*"'
+   class: whm\Smoke\Rules\Http\Header\Cache\PragmaNoCacheRule
